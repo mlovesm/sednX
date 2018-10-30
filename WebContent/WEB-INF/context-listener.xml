@@ -1,0 +1,1 @@
+<bean id="visitCountDAO" class="hanibal.ibs.dao.VisitCountDAO"/>

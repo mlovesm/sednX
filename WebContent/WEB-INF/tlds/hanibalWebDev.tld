@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+<description>Hanibal Sedn Library</description>
+	  <tlib-version>1.1</tlib-version>
+	  <short-name>hanibal</short-name>
+	  <function>
+			<name>getAuthorityInfo</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getAuthorityInfo(java.lang.String,java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getCategoryName</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getCategoryName(java.lang.String,java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getCategoryNames</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getCategoryNames(java.lang.String,java.lang.String,java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getFileLayout</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getFileLayout(java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getPhotoLayout</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getPhotoLayout(java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getLiveLayout</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getLiveLayout(java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getVodLayout</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getVodLayout(java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	   <function>
+			<name>getCategorySelect</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getCategorySelect(java.lang.String,java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getLiveTimeExpress</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getLiveTimeExpress(java.lang.String,java.lang.String)				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+			<name>getLiveSource</name> 
+			<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+			<function-signature>
+				java.lang.String getLiveSource()				
+			</function-signature>
+	  </function>
+	  
+	  <function>
+	  		<name>getBoardSelect</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getBoardSelect()
+	  		</function-signature>
+	  </function>
+	  
+	  <function>
+	  		<name>getDefaultLiveIdx</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getDefaultLiveIdx()
+	  		</function-signature>
+	  </function>
+	  
+	   <function>
+	  		<name>getDefaultLiveName</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getDefaultLiveName()
+	  		</function-signature>
+	  </function>
+	  
+	  <function>
+	  		<name>getDefaultContentsIdx</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getDefaultContentsIdx()
+	  		</function-signature>
+	  </function>
+	  
+	   <function>
+	  		<name>getDefaultContentsName</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getDefaultContentsName()
+	  		</function-signature>
+	  </function>
+	  
+	  <function>
+	  		<name>getDefaultContentsParentName</name>
+	  		<function-class>hanibal.ibs.library.HanibalWebDev</function-class>
+	  		<function-signature>
+	  			java.lang.String getDefaultContentsParentName()
+	  		</function-signature>
+	  </function>
+</taglib>
+
+
+
+

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ibsMybatis.ibsAppQuery">
+	<select id="checkId" parameterType="String" resultType="int">
+		select count(member_email) 
+		from tb_account_member 
+		where member_code_yn='Y' and member_email = #{auth_id};
+	</select>
+	
+	<select id="auth_token" parameterType="java.util.Map" resultType="String">
+		select member_tempcode 
+		from tb_account_member 
+		where member_code_yn='Y' and member_email = #{auth_id} and member_pass=#{auth_pass};
+	</select>
+	
+	<insert id="insertToken" parameterType="String">
+		insert into tb_member_token (token) values (#{jwtString});
+	</insert>
+	
+	<select id="checkToken" resultType="int" parameterType="String">
+		select count(token) from tb_member_token where token=#{token}
+	</select>
+	
+	<select id="getLayOutCategorys" resultType="java.util.Map" parameterType="int">
+		select wl_categorys,wl_sort from tb_web_layout where del_flag='N' and wl_category=#{category} and wl_type='A';
+	</select>
+	
+	<select id="bannerlist" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
+		select
+				(a.idx) as vod_idx,
+                (select vod_path from tb_vod_repository where idx=a.vod_repo) as vod_path,
+				(a.board_title) as vod_title,
+                (a.board_content) as vod_content,
+                ifnull(a.board_keyword,'') as vod_keyword,
+                (select vod_play_time from tb_vod_repository where idx=a.vod_repo) as vod_play_time,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as main_thumbnail,
+				(a.category_idx) as board_cate_idx,
+                (select category_name from tb_board_category where idx=a.category_idx) as board_cate_name,
+                (a.reg_dt) as vod_regdate
+			from tb_board_repository a  where 1=1 and a.del_flag='N'
+            
+        <if test='eachFlag!=""'>
+			and a.category_idx in
+	  		<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        		#{type}
+      		</foreach>
+	  	</if>
+	  	<if test='wl_sort=="R"'>
+	  		order by  a.reg_dt desc 
+	  	</if>
+	  	<if test='wl_sort=="F"'>
+	  		order by  a.view_count desc 
+	  	</if>
+	  		limit 0,5;
+	</select>
+	
+	<select id="layoutList" resultType="hanibal.ibs.model.app.LayoutDTO" parameterType="int">
+		select  idx,          
+ 				wl_title,     
+ 				wl_link_type, 
+ 				wl_link_idx,  
+ 				wl_type,  
+ 				wl_height,    
+ 				wl_unit,    
+ 				wl_categorys, 
+ 				wl_attribute, 
+ 				wl_sort,      
+ 				reg_dt,      
+ 				edit_dt,      
+ 				reg_ip,      
+ 				del_flag,     
+ 				wl_category   
+ 		from tb_web_layout 
+ 		where del_flag='N' and wl_category=#{category} and wl_type not in('A');
+	</select>
+	
+	<select id="mainLayoutlist" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
+		select
+				(a.idx) as vod_idx,
+                (select vod_path from tb_vod_repository where idx=a.vod_repo) as vod_path,
+				(a.board_title) as vod_title,
+                (a.board_content) as vod_content,
+                ifnull(a.board_keyword,'') as vod_keyword,
+                (select vod_play_time from tb_vod_repository where idx=a.vod_repo) as vod_play_time,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as main_thumbnail,
+				(select pid from tb_board_category where idx=a.category_idx) as board_cate_idx,
+                (select category_name from tb_board_category where idx=board_cate_idx) as board_cate_name
+			from tb_board_repository a  where 1=1 and a.del_flag='N'
+			
+        <if test='eachFlag!=""'>
+			and a.category_idx in
+	  		<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        		#{type}
+      		</foreach>
+	  	</if>
+	  	<if test='wl_sort=="R"'>
+	  		order by  a.reg_dt desc 
+	  	</if>
+	  	<if test='wl_sort=="F"'>
+	  		order by  a.view_count desc 
+	  	</if>
+	  		limit 0,10
+	</select>
+	
+	<select id="getChildIdx" resultType="int" parameterType="int">
+		select idx from tb_board_category where pid=#{category} order by position asc
+	</select>
+	
+	<select id="subLayoutlist" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
+		select
+				(a.idx) as vod_idx,
+                (select vod_path from tb_vod_repository where idx=a.vod_repo) as vod_path,
+				(a.board_title) as vod_title,
+                (a.board_content) as vod_content,
+                ifnull(a.board_keyword,'') as vod_keyword,
+                (select vod_play_time from tb_vod_repository where idx=a.vod_repo) as vod_play_time,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as main_thumbnail,
+				(a.category_idx) as board_cate_idx,
+                (select category_name from tb_board_category where idx=a.category_idx) as board_cate_name,
+                date_format(reg_dt,'%Y.%m.%d') as vod_regdate
+			from tb_board_repository a  where 1=1 and a.del_flag='N'
+        
+        <if test='eachFlag!=""'>
+			and a.category_idx in
+	  		<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        		#{type}
+      		</foreach>
+	  	</if>
+	  	<if test='wl_sort=="R"'>
+	  		order by  a.reg_dt desc 
+	  	</if>
+	  	<if test='wl_sort=="F"'>
+	  		order by  a.view_count desc 
+	  	</if>
+	  		limit #{start},#{end}
+	</select>
+	
+	<select id="getDetailView" resultType="java.util.Map" parameterType="java.util.Map">
+		select 
+			(a.idx) as vod_idx,           
+			(select vod_path from tb_vod_repository where idx=a.vod_repo) as vod_path,          
+			(a.board_title) as vod_title,         
+			(a.board_content) as vod_content,       
+			ifnull(a.board_keyword,'') as vod_keyword,       
+			(select vod_play_time from tb_vod_repository where idx=a.vod_repo) as vod_play_time,     
+			(a.favorite_count) as favorite_count,    
+			(a.view_count) as view_count,        
+			(select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as main_thumbnail,    
+			(a.category_idx) as board_cate_idx,   
+			(select category_name from tb_board_category where idx=a.category_idx) as board_cate_name,   
+			(select resolution from tb_vod_box where repoIdx=a.vod_repo) as vod_reoslution,
+    		date_format(reg_dt,'%Y.%m.%d') as vod_regdate,       
+			(select file_size from tb_vod_box where repoIdx=a.vod_repo) as vod_volume,
+    		(select count(idx) from tb_favorite_contents where member_account=#{member_id} and board_idx=#{vod_idx} and del_flag = "N") as favorite_yn
+		from 
+    		tb_board_repository a
+    	where idx= #{vod_idx}
+	</select>
+	
+	<resultMap id="menuResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="board_cate_idx" property="board_cate_idx"/>
+		 <result javaType="java.lang.String" column="board_cate_name" property="board_cate_name"/>
+	</resultMap>
+	
+	<select id="getParentList" resultMap="menuResult" parameterType="int">
+		select (idx) as board_cate_idx,(category_name) as board_cate_name from tb_board_category where pid=#{category} order by position asc;
+	</select>
+	
+	<select id="favorite_count" resultType="int" parameterType="java.util.Map">
+		select count(idx) from tb_favorite_contents where member_account=#{member_id} and board_idx=#{vod_idx} and del_flag='N';
+	</select>
+	
+	<insert id="insertFavorite">
+		insert into
+			tb_favorite_contents (member_account,board_idx,device)
+		values (#{member_id},#{vod_idx},#{device});
+	</insert>
+	
+	<update id="deleteFavorite" parameterType="java.util.Map">
+		update 
+			tb_favorite_contents
+		set
+			del_flag='Y'
+		where member_account=#{member_id} and board_idx=#{vod_idx}
+	</update>
+	
+	<select id="getFileRepoIdx" resultType="String" parameterType="java.util.Map">
+		select
+			file_repo
+		from 
+			tb_board_repository
+		where 
+			idx = #{vod_idx}
+		and 
+		del_flag = "N"
+	</select>
+	
+	<select id="getPhotoRepoIdx" resultType="String" parameterType="java.util.Map">
+		select
+			photo_repo
+		from
+			tb_board_repository
+		where
+			idx = #{vod_idx}
+		and 
+			del_flag = "N"
+	</select>
+	
+	<resultMap id="fileResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="file_path" property="file_path"/>
+		 <result javaType="java.lang.String" column="file_name" property="file_name"/>
+		 <result javaType="java.lang.String" column="file_volume" property="file_volume"/>
+		 <result javaType="java.lang.String" column="file_sort" property="file_sort"/>
+	</resultMap>
+	<select id="getFileInfo" resultMap="fileResult" parameterType="java.util.Map">
+		select
+			file_path,
+			file_title as file_name,
+			file_size as file_volume,
+			resolution as file_sort
+		from 
+			tb_file_repository 
+		where 
+			idx in 
+			<foreach collection="file_idx" item="type" index="index"  open="(" close=")" separator=",">
+	       		#{type}
+	   		</foreach>
+	   	and 
+	   		del_flag = "N"
+	</select>
+	
+	<resultMap id="photoResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="file_path" property="file_path"/>
+		 <result javaType="java.lang.String" column="file_name" property="file_name"/>
+		 <result javaType="java.lang.String" column="file_volume" property="file_volume"/>
+		 <result javaType="java.lang.String" column="file_sort" property="file_sort"/>
+	</resultMap>
+	<select id="getPhotoInfo" resultMap="photoResult" parameterType="java.util.Map">
+		select
+			photo_path as file_path,
+			photo_title as file_name,
+			file_size as file_volume,
+			resolution as file_sort
+		from 
+			tb_photo_repository 
+		where 
+			idx in 
+			<foreach collection="photo_idx" item="type" index="index"  open="(" close=")" separator=",">
+	       		#{type}
+	   		</foreach>
+	   	and 
+	   		del_flag = "N"
+	</select>
+	
+	<select id="getFavoriteIdx" resultType="hanibal.ibs.model.app.FavoriteListDTO" parameterType="java.util.Map">
+		select 
+			b.idx as vod_idx, 
+			c.vod_path, 
+			c.vod_title, 
+			c.vod_content, 
+			c.vod_keyword, 
+			c.vod_play_time, 
+			c.favorite_count, 
+			c.view_count, 
+			c.main_thumbnail, 
+			b.category_idx as board_cate_idx, 
+			b.board_title as board_cate_name, 
+			b.reg_dt as vod_regdate 
+		from 
+			tb_favorite_contents a 
+		left join 
+			tb_board_repository b on a.board_idx = b.idx 
+		left join 
+			tb_vod_repository c on b.vod_repo = c.idx 
+		where 
+			a.member_account = #{member_id}
+		and 
+			a.del_flag = "N"
+	</select>
+	
+    <select id="getLiveChannelTarget" resultType="String">
+    	select
+        	channel_idx
+        from
+            tb_live_channel_target a
+        left join
+            tb_live_category b on a.channel_idx = b.idx
+        where
+             a.group_idx = 0 and b.category_name is not null;
+    </select>
+	
+	<resultMap id="channelListResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="ch_idx" property="ch_idx"/>
+		 <result javaType="java.lang.String" column="ch_name" property="ch_name"/>
+		 <result javaType="java.lang.String" column="ch_thumbnail" property="ch_thumbnail"/>
+	</resultMap>	
+	<select id="getChannelList" resultMap="channelListResult" parameterType="java.util.Map">
+		select
+			a.idx as ch_idx,
+			b.category_name as ch_name
+		from
+			tb_stb_schedule a
+		left join
+			tb_live_category b on a.category_idx = b.idx
+		where
+			a.category_idx in
+			<foreach collection="category_idx" item="type" index="index"  open="(" close=")" separator=",">
+	       		#{type}
+	   		</foreach>
+	   	and 
+	   		date_format(start, '%Y-%m-%d') = #{date}
+	   	and 
+	   		del_flag = "N"
+	</select>
+	
+	<resultMap id="schListResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="sch_idx" property="sch_idx"/>
+		 <result javaType="java.lang.String" column="ch_name" property="ch_name"/>
+		 <result javaType="java.lang.String" column="sch_desc" property="sch_desc"/>
+		 <result javaType="java.lang.String" column="sch_start" property="sch_start"/>
+		 <result javaType="java.lang.String" column="sch_end" property="sch_end"/>
+		 <result javaType="java.lang.String" column="sch_stream_url" property="sch_stream_url"/>
+		 <result javaType="java.lang.String" column="sch_thumbnail" property="sch_thumbnail"/>
+		 <result javaType="java.lang.String" column="sch_subtitle" property="sch_subtitle"/>
+		 <result javaType="java.lang.String" column="source_type" property="source_type"/>
+	</resultMap>		
+	<select id="getSchList" resultMap="schListResult" parameterType="java.util.Map">
+		select
+			a.idx as sch_idx,
+			a.name as sch_name,
+			a.desc_text as sch_desc,
+			date_format(a.start, '%Y-%m-%d %H:%i:%s') as sch_start,
+			date_format(a.end, '%Y-%m-%d %H:%i:%s') as sch_end,
+			a.live_stream_url as sch_stream_url,
+			a.image_path as sch_thumbnail,
+			a.caption as sch_subtitle,
+			a.source_type
+		from
+			tb_stb_schedule a
+		left join
+			tb_live_category b on a.category_idx = b.idx
+		where
+			a.category_idx in
+			<foreach collection="category_idx" item="type" index="index"  open="(" close=")" separator=",">
+	       		#{type}
+	   		</foreach>
+	   	and
+	   		a.idx = #{ch_idx}
+	   	and 
+	   		date_format(a.start, '%Y-%m-%d') = #{date}
+	   	and 
+	   		a.del_flag = "N"
+	</select>
+	
+	<resultMap id="vodListResult" type="java.util.HashMap">
+		 <result javaType="java.lang.String" column="vod_idx" property="vod_idx"/>
+		 <result javaType="java.lang.String" column="play_order" property="play_order"/>
+		 <result javaType="java.lang.String" column="vod_path" property="vod_path"/>
+		 <result javaType="java.lang.String" column="vod_play_time" property="vod_play_time"/>	
+	</resultMap>
+	<select id="getVodList" resultMap="vodListResult" parameterType="java.util.Map">
+		select
+			c.idx as vod_idx,
+			a.play_order,
+			c.vod_path,
+			c.vod_play_time
+		from
+			tb_stb_schedule_vod a
+		left join
+			tb_stb_schedule b on a.schedule_id = b.idx
+		left join
+			tb_vod_repository c on a.vod_id = c.idx
+		where
+			b.idx = #{vod_idx}
+	   	and
+	   		c.del_flag = "N"					
+	</select>
+	
+	<resultMap id="userinfoResult" type="java.util.Map">
+		<result javaType="java.lang.String" column="member_name" property="member_name" />
+		<result javaType="java.lang.String" column="member_profile" property="member_profile" />
+	</resultMap>
+	<select id="getUserinfo" resultMap="userinfoResult" parameterType="java.util.Map">
+		select
+			member_name as user_name,
+			member_profile as user_profile_img
+		from 
+			tb_account_member
+		where
+			member_id = #{member_id}
+	</select>	
+</mapper>

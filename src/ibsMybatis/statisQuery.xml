@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ibsMybatis.statisQuery">
+	<!-- Statistics by MGS -->
+	
+	<!-- VOD list -->
+	<select id="statisticsVODList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT
+		  a.idx,
+		  a.vod_path,
+		  a.vod_title,
+		  <![CDATA[
+		  '<a href="test.do?idx='+a.idx+'" class="norgrid" title="'+ a.vod_title +'">'+ a.vod_title +'</a>' as vod_title_link,
+		  ]]>
+		  a.vod_play_time,
+		  DATE_FORMAT(a.reg_dt,'%Y-%m-%d') as reg_dt,
+		  a.reg_id,
+		  b.idx as categoryIdx,
+		  b.category_name,
+		  b.position
+		FROM 
+		tb_vod_repository a
+		LEFT OUTER JOIN tb_content_category b ON a.category_idx=b.idx
+		WHERE del_flag='N'
+		<if test='eachFlag!=""'>
+	  		AND b.idx in
+  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        		#{type}
+     		</foreach>
+  		</if>
+		<if test='searchWord!=""'>
+			and (vod_title like concat('%',#{searchWord},'%')
+			or vod_content like concat('%',#{searchWord},'%')
+			or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+			or vod_keyword like concat('%',#{searchWord},'%')) 
+		</if>
+	</select>
+	
+	<select id="statisticsVODDetail" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT
+		  a.idx,
+		  a.vod_path,
+		  a.vod_title,
+		  <![CDATA[
+		  '<a href="test.do?idx='+a.idx+'" class="norgrid" title="'+ a.vod_title +'">'+ a.vod_title +'</a>' as vod_title_link,
+		  ]]>
+		  a.vod_play_time,
+		  DATE_FORMAT(a.reg_dt,'%Y-%m-%d') as reg_dt,
+		  a.reg_id,
+		  a.main_thumbnail,
+		  b.idx as categoryIdx,
+		  b.category_name,
+		  b.position
+		FROM 
+		tb_vod_repository a
+		LEFT OUTER JOIN tb_content_category b ON a.category_idx=b.idx
+		WHERE del_flag='N' AND a.idx=#{idx}
+	</select>
+	
+    <insert id="tb_visitor_insert" parameterType="hanibal.ibs.model.statis.VisitCountVO">
+        INSERT
+        INTO tb_visitor
+        (
+            visit_ip,
+            visit_time,
+            <if test="visit_refer != null and visit_refer !=''">
+            visit_refer,
+            </if>
+            visit_agent
+        )
+        VALUES
+        (
+            #{visit_ip},
+            now(),
+            <if test="visit_refer != null and visit_refer !=''">
+            #{visit_refer},
+            </if>
+            #{visit_agent}
+        )
+    </insert>
+    
+</mapper>

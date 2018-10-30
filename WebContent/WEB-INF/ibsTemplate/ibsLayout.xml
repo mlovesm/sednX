@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<!-- 타일즈 적용 -->
+	<definition name="cmsLayout" template="/WEB-INF/ibsTemplate/cmsLayout.jsp">
+		<put-attribute name="top" value="/WEB-INF/ibsTemplate/topMenu.jsp"></put-attribute>
+		<put-attribute name="left" value="/WEB-INF/ibsTemplate/leftMenu.jsp"/>
+		<put-attribute name="body" value=""></put-attribute>
+	</definition>
+
+	<definition name="*.cms" extends="cmsLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*.cms" extends="cmsLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*/*.cms" extends="cmsLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+	
+	
+	<!-- User view -->
+	<definition name="UserLayout" template="/WEB-INF/ibsTemplate/userLayout.jsp">
+		<put-attribute name="top" value="/WEB-INF/ibsTemplate/userTopMenu.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+	</definition>
+
+	<definition name="*.usr" extends="UserLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*.usr" extends="UserLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*/*.usr" extends="UserLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+	
+
+	
+	<!-- inc view -->
+	<definition name="viewLayout" template="/WEB-INF/ibsTemplate/viewLayout.jsp">
+		<put-attribute name="body" value=""></put-attribute>
+	</definition>
+	
+	<definition name="*.inc" extends="viewLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*.inc" extends="viewLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*/*.inc" extends="viewLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+	
+	<!-- Statis view -->
+	<definition name="StatisLayout" template="/WEB-INF/ibsTemplate/statisLayout.jsp">
+		<put-attribute name="left" value="/WEB-INF/statisticsView/leftMenu.jsp"/>
+		<put-attribute name="body" value=""></put-attribute>
+	</definition>
+
+	<definition name="*.statis" extends="StatisLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*.statis" extends="StatisLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}.jsp"></put-attribute>
+	</definition>
+	<definition name="*/*/*.statis" extends="StatisLayout">
+		<put-attribute name="body" value="/WEB-INF/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+</tiles-definitions>
+

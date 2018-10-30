@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ibsMybatis.ibsStbApiQuery">
+	
+	<select id="apiVersion" resultType="java.util.HashMap" parameterType="String">	
+		select firmware_version,(concat(#{repositoryPath},"APK/",firmware_path)) as firmware_path,(date_format(firmware_modify_dt,'%Y%m%d%H%i%s')) as firmware_modify_dt from tb_stb_firmware; 
+	</select>
+	<select id="serverInfo" resultType="java.util.HashMap">
+		select server_ip from tb_stb_server;
+	</select>
+	<select id="logoInfo" resultType="java.util.HashMap" parameterType="java.util.Map">
+		select 
+			idx,
+			stb_group,
+			logo_img_yn,
+			(concat(#{repositoryPath},"LOGO/",logo_img_path)) as logo_img_path,
+			logo_text,
+			(date_format(logo_modify_dt,'%Y%m%d%H%i%s')) as logo_modify_dt	
+		from tb_stb_logo where stb_group=#{TMPGROUP};
+	</select>
+	<select id="bgInfo" resultType="java.util.HashMap" parameterType="java.util.Map">
+		select 
+			idx,
+			stb_group,
+			bg_img_yn,
+			(concat(#{repositoryPath},"BGIMG/",bg_img_path)) as bg_img_path,
+			bg_vod,
+			(date_format(bg_modify_dt,'%Y%m%d%H%i%s')) as bg_modify_dt	
+		from tb_stb_bg where stb_group=#{TMPGROUP};
+	</select>
+	<insert id="insertVodHistory" parameterType="java.util.Map">
+		insert into tb_stb_vod_history values(null,#{vod_idx},#{stb_idx},now(),#{play_time})
+	</insert>
+	
+	<select id="stbInfo" resultType="java.util.HashMap" parameterType="String">
+		select 
+			a.idx as idx, 
+			a.name as stb_name, 
+			a.category_idx as group_id, 
+			b.category_name as group_name 
+		from 
+			tb_stb a, 
+			tb_stb_category b
+		where a.category_idx=b.idx and mac=#{mac};
+	</select>
+	<select id="insertStbInfo">
+		insert into tb_stb 
+		(name, mac, ip_addr, group_id, status, last_on_time, reg_dt,category_idx) 
+		values 
+		(#{name}, #{mac}, #{ip}, #{group}, #{status},now(),now(),#{group});
+	</select>
+	<update id="updateStbStatus" parameterType="java.util.Map">
+		update tb_stb set
+		<if test='timestamp=="1"'>
+	 	last_on_time=now(),
+		</if>
+		status=#{status}
+		where mac=#{mac}
+	</update>
+	
+	<update id="updateSendPing" parameterType="String">
+		update tb_stb set last_ping_time = now() where mac=#{mac}
+	</update>
+	
+	<select id="stbBannerInfo" resultType="java.util.HashMap"  parameterType="java.util.Map">
+		select
+			(concat(#{repositoryPath},"BANNER/",banner_one_path)) as banner_one_path,
+			(concat(#{repositoryPath},"BANNER/",banner_two_path)) as banner_two_path 
+		from 
+			tb_stb_banner 
+		where
+			stb_group=#{TMPGROUP};
+	</select>
+	<select id="vodMenuInfo" resultType="hanibal.ibs.model.stb.VodMenuDTO">
+		select 
+			(idx) as menu_seq,
+    			(pid) as up_menu_seq,
+    			(category_name) as menu_name
+		from
+			tb_board_category 
+		order by idx asc; 
+	</select>
+	<select id="vodListInfo" resultType="hanibal.ibs.model.stb.VodListDTO" parameterType="String">
+		SELECT
+			(a.idx) AS id,
+			(a.board_title) AS title,
+			a.board_content AS vod_content,
+			CONCAT((a.category_idx), ',', (SELECT pid FROM tb_board_category WHERE idx=a.category_idx)) AS menu,
+			-- (select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as thumbnail_path, 
+			c.main_thumbnail AS thumbnail_path,
+			-- (select vod_path from tb_vod_repository where idx=a.vod_repo) as video_path,
+			c.vod_path AS video_path,
+			-- a.reg_dt as register_dt2,
+			DATE_FORMAT(a.reg_dt, '%Y-%m-%d %H:%i') AS register_dt,
+			-- (select vod_play_time from tb_vod_repository where idx=a.vod_repo) as vod_play_time,
+			c.vod_play_time,
+			(b.resolution) AS resolution,
+			(b.bitrate) AS bitrate,
+			(b.video_codec) AS video_codec,
+			(b.audio_codec) AS audio_codec,
+			(SELECT COUNT(*) AS hit FROM tb_stb_vod_history WHERE vod_idx =a.idx) AS hit 
+		FROM 
+			tb_board_repository a
+			LEFT JOIN tb_vod_box b ON a.vod_repo=b.repoIdx 
+			LEFT OUTER JOIN tb_vod_repository c ON a.vod_repo=c.idx
+			WHERE a.del_flag='N'  AND a.vod_repo NOT IN('')
+			
+		ORDER BY a.idx DESC
+	</select>
+	
+	<select id="stbChannelList" resultType="java.util.HashMap" parameterType="String">
+		select distinct(a.channel_idx)  as ch_idx,(select category_name from tb_live_category where idx=a.channel_idx) as ch_nm from tb_live_channel_target a where group_idx=#{group_id} group by channel_idx;
+	</select>
+	<select id="todayScheduleInfo" resultType="hanibal.ibs.model.stb.TodayScheduleDTO" parameterType="java.util.Map">
+		select 
+			(a.idx) as id,
+			(name) as name,
+			concat(substring(time(start), 1, 5), ' ~ ', substring(time(end), 1, 5)) as duration,
+			target_type,
+			(concat(#{repositoryPath},"SCHIMG/",image_path)) as image_path,
+			desc_text
+		from tb_stb_schedule a
+		left outer join tb_live_channel_target b 
+			on a.category_idx = b.channel_idx
+		where 
+			start > now() 
+			and b.group_idx =#{groupId} group by a.idx order by start;
+	</select>
+	<select id="idByGroupName" resultType="String" parameterType="int">
+		select B.category_name from tb_stb_schedule_group A, tb_stb_category B where A.group_id = B.idx and schedule_id=#{id}
+	</select>
+	<select id="liveScheduleInfo" resultType="hanibal.ibs.model.stb.LiveScheduleDTO" parameterType="int">
+		select 
+			(idx) as id,
+			(name) as name,
+			date(start) as play_date,
+			TIMEDIFF(end, start) as play_time,
+			concat(substring(time(start), 1, 5),' ~ ', substring(time(end), 1, 5)) as duration,
+			hour(start) * 60 + minute(start) start, hour(end) * 60 + minute(end) as end,
+			target_type,
+			image_path,
+			desc_text, 
+			color 
+		from 
+			tb_stb_schedule
+        where 
+        		category_idx=#{chIdx} 
+        		and <![CDATA[!((date(start) < date(now()) and date(end) < date(now())) or (date(start) > date(now()) and date(end) > date(now()))) ]]>
+        	order by start;
+	</select>
+	<select id="totalScheduleInfo" resultType="hanibal.ibs.model.stb.TotalScheduleDTO" parameterType="int">
+        select 
+			a.idx as id, 
+			name, 
+			start, 
+			end, 
+			source_type, 
+			ifnull(a.caption,'') as caption, 
+			ifnull(a.caption_size,1) as caption_size, 
+			ifnull(a.caption_speed,1) as caption_speed, 
+			ifnull(a.caption_text_color,'#ffffff') as caption_text_color, 
+			ifnull(a.caption_bg_color,'') as caption_bg_color,
+			live_stream_url as live_stream_url,
+			desc_text,
+			category_idx as channel_idx,
+			image_path,
+			forceLive,
+			color
+		from 
+			tb_stb_schedule a 
+		left join 
+			tb_live_channel_target b 
+		on 
+			a.category_idx = b.channel_idx
+        where <![CDATA[!((date(start) < date(now()) and date(end) < date(now())) or (date(start) > date(now()) and date(end) > date(now()))) ]]> and b.group_idx =#{group_id} and a.del_flag='N' group by a.idx order by start;
+	</select>
+ 	<select id="relativeVodList" resultType="hanibal.ibs.model.stb.VodSchduleDTO" parameterType="int">
+ 		select
+			(a.vod_id) as vod_id,
+    		(b.vod_path) as file_path,
+    		(b.vod_play_time) as vod_play_time
+		from 
+			tb_stb_schedule_vod a
+		left join 
+			tb_vod_repository b on 	b.idx=a.vod_id
+		where a.schedule_id=#{id}
+		order by a.play_order asc;
+	</select>
+	<select id="configInfo" parameterType="java.util.Map" resultType="hanibal.ibs.model.stb.STB_configDTO">
+		select 
+			(a.logo_img_yn) as logo_img_yn ,
+			(concat(#{repositoryPath},"LOGO/",a.logo_img_path)) as logo_img_path, 
+			(a.logo_text) as logo_text,
+			(a.logo_modify_dt) as logo_modify_dt, 
+			(b.bg_img_yn) as bg_img_yn,
+			(concat(#{repositoryPath},"BGIMG/",b.bg_img_path)) as bg_img_path, 
+			(concat(#{repositoryPath},"BGIMG/",b.bg_vod)) as bg_video_path,
+			(b.bg_modify_dt) as bg_modify_dt,
+			(select server_ip from tb_stb_server ) as streaming_server_url
+		from tb_stb_logo a 
+		left join 
+			tb_stb_bg b on a.stb_group=b.stb_group 
+		where a.stb_group=1;
+	</select>
+	
+	<select id="getPlayTime" parameterType="int" resultType="String">
+		select vod_play_time from tb_vod_repository where idx=#{vod_idx};
+	</select>
+	<select id="getVodId" parameterType="int" resultType="int">
+		select vod_repo from tb_board_repository where idx=#{vod_id};
+	</select>
+</mapper>

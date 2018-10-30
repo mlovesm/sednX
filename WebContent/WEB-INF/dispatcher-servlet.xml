@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop 
+		
+		http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<!-- viewResolver -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/"></property>
+		<property name="suffix" value=".jsp"></property>
+		<property name="contentType" value="text/html; charset=UTF-8"></property>
+	</bean>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <property name="messageConverters">
+        <list>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </list>
+    </property>
+	</bean>
+	
+	<!--  max file upload start-->
+    <bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+		<property name="maxUploadSize"  value="8073741824"/>
+	</bean>
+	
+	<bean id="VisitListener" class="hanibal.ibs.model.statis.VisitListener"/>
+
+	
+	<!-- Resources properties -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:ibsResources/ibsDBConnect.properties</value>
+				<value>classpath:ibsResources/ibsPath.properties</value>
+				<value>classpath:ibsResources/ibsServerInfo.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- MyBatis -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	<bean id="sqlFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:ibsMybatis/ibsWebApiQuery.xml</value>
+				<value>classpath:ibsMybatis/ibsStbApiQuery.xml</value>
+				<value>classpath:ibsMybatis/ibsAppQuery.xml</value><!-- [2018.03.29 KJS] -->
+				<value>classpath:ibsMybatis/ibsUserQuery.xml</value><!--[2018.02.12 KSA]  -->
+				<value>classpath:ibsMybatis/conferenceQuery.xml</value><!-- [2018.03.29 KJS] -->
+				<value>classpath:ibsMybatis/statisQuery.xml</value><!-- [2018.10.30 MGS] -->
+			</list>
+		</property>
+	</bean>
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlFactory"></constructor-arg>
+	</bean>
+	
+	<!-- SPRING TILES  -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/ibsTemplate/ibsLayout.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	     <property name="order" value="0" />
+	</bean>
+	
+	<!--  USE VIEW FOR TILES - VIEWRESOLVER--> 
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="order" value="1"></property>
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"></property>
+	</bean>
+	
+	<!-- USE JSP FOR TILE - INTERNALRESOURCEVIEWRESOLVER--> 
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2"></property>
+	</bean>
+	
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+	    <property name="contentType" value="application/json;charset=UTF-8"></property>
+	</bean>
+	
+	
+	<!--COMMON VIEW PAGE CONTROOLER -->
+	<bean class="hanibal.ibs.controller.MainController" />
+	
+	<!-- WEB API  DAO & CONTROLLER--> 
+	<bean id="ibsWebApiDAO" class="hanibal.ibs.dao.IbsWebApiDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="ibsWebApiController" class="hanibal.ibs.controller.IbsWebApiController">
+		<property name="webApiDao" ref="ibsWebApiDAO"></property>
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+		<property name="sednIp" value="${Server.SEDN}"></property>
+		<property name="mediaIp" value="${Server.MEDIA}"></property>
+		<property name="dbProperties" value="${Path.DBproperties}"></property>
+	</bean>
+	
+	<!-- CMS API  DAO & CONTROLLER--> 
+	<bean id="ibsCmsDAO" class="hanibal.ibs.dao.IbsCmsDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="ibsCmsController" class="hanibal.ibs.controller.IbsCmsController">
+		<property name="ibsCmsDao" ref="ibsCmsDAO"></property>
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+		<property name="sednIp" value="${Server.SEDN}"></property>
+		<property name="mediaIp" value="${Server.MEDIA}"></property>
+	</bean>
+	
+	<!--STB API DAO & CONTROLLER--> 
+	<bean id="ibsStbApiDAO" class="hanibal.ibs.dao.IbsStbApiDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="ibsStbApiController" class="hanibal.ibs.controller.IbsStbApiController">
+		<property name="stbApiDao" ref="ibsStbApiDAO"></property>
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+	</bean>
+	
+	<!-- CMS API  DAO & CONTROLLER [2018.02.12 KSA]--> 
+	<bean id="ibsUserDAO" class="hanibal.ibs.dao.IbsUserDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="ibsUserController" class="hanibal.ibs.controller.IbsUserController"> 
+		<property name="ibsUserDAO" ref="ibsUserDAO"></property>
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+		<property name="sednIp" value="${Server.SEDN}"></property>
+		<property name="mediaIp" value="${Server.MEDIA}"></property>
+	</bean>
+	
+	<!-- conference DAO & CONTROLLER [2018.03.29 KHS]--> 
+	<bean id="conferenceDAO" class="hanibal.ibs.dao.ConferenceDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="conferenceController" class="hanibal.ibs.controller.ConferenceController">
+		<property name="conferenceDAO" ref="conferenceDAO"></property> 
+	</bean>
+	
+	<!-- ibs App Mobile DAO & CONTROLLER [2018.4.16 HKS]--> 
+	<bean id="ibsAppDAO" class="hanibal.ibs.dao.IbsAppDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="ibsAppController" class="hanibal.ibs.controller.IbsAppController">
+		<property name="ibsAppDAO" ref="ibsAppDAO"></property>
+		<property name="sednIp" value="${Server.SEDN}"></property>
+		<property name="mediaIp" value="${Server.MEDIA}"></property> 
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+	</bean>
+
+	
+	<!-- MESSAGE & LOCALE SERVICE -->
+	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jacksonMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	     <property name="basenames">
+	     	<list>
+	     		<value>classpath:ibsMessage/message</value>
+	     	</list>
+	     </property>
+	     <property name="defaultEncoding" value="UTF-8"/>
+	     <property name="cacheSeconds" value="60"/>        
+	</bean>
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" >
+		<property name="defaultLocale" value="ko" />
+	    <property name="cookieName" value="home-lang"/>   
+	    <property name="cookieMaxAge" value="-1"/>
+	    <property name="cookiePath" value="/"/> 
+	</bean>
+	<mvc:interceptors>
+    	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    		<property name="paramName" value="lang" />
+    	</bean>
+    </mvc:interceptors>
+     
+   <mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/**/**/**/*"/>
+		<mvc:exclude-mapping path="/*"/>
+		<bean class="hanibal.ibs.interceptor.SessionInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors> 
+    
+  <mvc:interceptors>	
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="hanibal.ibs.interceptor.CORSInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+</beans>

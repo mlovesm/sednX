@@ -1,0 +1,1456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ibsMybatis.ibsWebApiQuery">
+	<select id="checkEmail" parameterType="String" resultType="int">
+		select count(member_email) from tb_account_member where member_email=#{member_email} and member_code_yn='Y';
+	</select>
+	
+	<select id="checkPass" parameterType="java.util.Map" resultType="int">
+		select count(member_email) from tb_account_member where member_email=#{member_email} and member_pass=#{member_pass} and member_code_yn='Y';
+	</select>
+	<select id="memberInfo" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.MemberAccountDTO">
+		select 
+			idx,
+			member_id,
+			member_pass,
+			member_name,
+			member_email,
+			member_tempcode,
+			member_code_yn,
+			member_join_path,
+			member_join_dt,
+			member_last_dt,
+			member_authority,
+			member_profile
+		from
+			tb_account_member
+		where member_email=#{member_email} and member_pass=#{member_pass} and member_code_yn='Y';
+	</select>
+	<insert id="memberJoin" parameterType="hanibal.ibs.model.cms.MemberAccountDTO">
+		INSERT INTO 
+			tb_account_member 
+			(member_id,member_pass,member_name,member_email,member_tempcode,member_profile) 
+		VALUES
+			(#{member_id},#{member_pass},#{member_name},#{member_email},#{member_tempcode},#{member_profile});
+	</insert>
+	<select id="confirmEmail" parameterType="String" resultType="int">
+		select count(*) from tb_account_member where member_tempcode=#{key}
+	</select>
+	<select id="getIdxByKey" parameterType="String" resultType="java.util.Map">
+		select idx,member_email,member_profile from tb_account_member where member_tempcode=#{key}
+	</select>
+	
+	<update id="confirmUpdate" parameterType="int">
+		update 
+			tb_account_member 
+		set 
+			member_code_yn='Y',
+			member_profile=#{confirmImage}
+		where idx=#{idx} 
+	</update>
+	
+	<select id="deleteProfileList" parameterType="String" resultType="java.util.HashMap">
+		select member_profile from tb_account_member where member_email=#{email} and member_code_yn='N';
+	</select>
+	<delete id="deleteProfile" parameterType="String">
+		delete from tb_account_member
+		where member_profile=#{profile}
+	</delete>
+	
+	<update id="updateTampPass" parameterType="java.util.Map">
+		update 
+			tb_account_member 
+		set 
+			member_pass=#{key}
+		where member_email=#{member_email} 
+	</update>
+	<update id="editMember" parameterType="hanibal.ibs.model.cms.MemberAccountDTO">
+		update 
+			tb_account_member 
+		set
+			member_name=#{member_name}, 
+			member_pass=#{member_pass}
+		where idx=#{idx} 
+	</update>
+	<update id="updateLastLogin" parameterType="int">
+		update 
+			tb_account_member 
+		set
+			member_last_dt=now()
+		where idx=#{idx} 
+	</update>
+	<!--MEMBER SECTION-->
+	<select id="getMemberTotalRecordCount" parameterType="java.util.Map" resultType="int">
+		select count(idx) from tb_account_member where 1=1
+		<if test='authority!=""'>
+	  and  member_authority=#{authority} 
+	  </if> 
+	  <if test='searchWord!=""'>
+	  and (member_email like concat('%',#{searchWord},'%')
+	  or member_id like concat('%',#{searchWord},'%') 
+	  or member_name like concat('%',#{searchWord},'%')) 
+	  </if>
+	  and member_code_yn='Y'
+	  order by member_join_dt desc;
+	</select>
+	
+	
+	<select id="memberList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.MemberAccountDTO">
+		select
+			idx,
+			member_id,
+			member_pass,
+			member_name,
+			member_email,
+			member_tempcode,
+			member_code_yn,
+			member_join_path,
+			member_join_dt,
+			date_format(member_last_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as member_last_dt,
+			member_authority,
+			member_profile
+		from tb_account_member where 1=1
+		<if test='authority!=""'>
+	  and  member_authority=#{authority} 
+	  </if> 
+	  <if test='searchWord!=""'>
+	  and (member_email like concat('%',#{searchWord},'%')
+	  or member_id like concat('%',#{searchWord},'%') 
+	  or member_name like concat('%',#{searchWord},'%')) 
+	  </if>
+	  and member_code_yn='Y'
+	  order by member_join_dt desc limit #{start},#{end};
+	</select>
+	
+	<update id="updateMemberAuthority" parameterType="java.util.Map">
+		update 
+			tb_account_member 
+		set
+			member_authority=#{changeVal}
+		where idx in 
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+         #{type}
+      </foreach>
+		</update>
+		
+		<update id="deleteMemberAuthority" parameterType="java.util.Map">
+			update 
+				tb_account_member 
+			set
+				member_code_yn='X'
+			where idx in 
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+         		#{type}
+      		</foreach>
+		</update>
+		
+		<update id="deleteSchedule" parameterType="java.util.Map">
+			update 
+				tb_stb_schedule 
+			set
+				del_flag='Y'
+			where idx in 
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+         		#{type}
+      		</foreach>
+		</update>
+		
+		<!-- CONTENTS VOD -->
+		<select id="getVodTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(idx) from tb_vod_repository a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (vod_title like concat('%',#{searchWord},'%')
+		  or vod_content like concat('%',#{searchWord},'%')
+		  or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  or vod_keyword like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+			<if test='eachFlag!=""'>
+		  		and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+	  		</if>
+		</select>
+		
+		<select id="getLiveTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(a.idx) from tb_live_repository a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (live_title like concat('%',#{searchWord},'%')
+		  or (select category_name from tb_live_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  or live_path like concat('%',#{searchWord},'%')) 
+		  </if>
+		   and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  		and category_idx in
+	  		<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         		#{type}
+      		</foreach>
+	  		</if>
+		</select> 
+		
+		<select id="getFileTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(a.idx) from tb_file_repository a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (file_title like concat('%',#{searchWord},'%')
+		  or file_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_file_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<select id="getPhotoTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(a.idx) from tb_photo_repository a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (photo_title like concat('%',#{searchWord},'%')
+		  or photo_content like concat('%',#{searchWord},'%') 
+		  or photo_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_photo_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+
+		<select id="getBoardTotalRecordCount"  parameterType="java.util.Map" resultType="int">
+			select count(a.idx) from tb_board_repository a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (board_title like concat('%',#{searchWord},'%')
+		  or board_content like concat('%',#{searchWord},'%') 
+		  or board_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_board_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		<select id="getStbTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(a.idx) from tb_stb a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (name like concat('%',#{searchWord},'%')
+		  or mac like concat('%',#{searchWord},'%') 
+		  or ip_addr like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_stb_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<select id="getScheduleTotalRecordCount" parameterType="java.util.Map" resultType="int">
+			select count(distinct(a.idx)) from vw_stb_group_schedule a where 1=1 
+		  <if test='searchWord!=""'>
+		  and (name like concat('%',#{searchWord},'%')
+		  or start like concat('%',#{searchWord},'%') 
+		  or desc_text like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_stb_category where idx=a.group_id) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and group_id in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<select id="vodList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.VodDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_vod_category where idx=a.category_idx) as category_idx,
+				(a.vod_path) as vod_path,
+				(a.vod_title) as vod_title,
+				(a.vod_content) as vod_content,
+				(a.vod_keyword) as vod_keyword,
+				(a.vod_play_time) as vod_play_time,
+				(a.main_thumbnail) as main_thumbnail,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				(a.trans_option) as trans_option,
+				(a.edit_dt) as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(b.trans_status) as trans_status,
+				(b.trans_rate) as trans_rate,
+				date_format(b.trans_start_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_start_dt,
+				date_format(b.trans_end_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_end_dt,
+				(b.resolution) as resolution,
+				(b.audio_codec) as audio_codec,
+				(b.video_codec) as video_codec,
+				(b.bitrate) as bitrate,
+				(b.file_size) as file_size
+			from tb_vod_repository a 
+      		left join tb_vod_box b on a.idx=b.repoIdx where 1=1 
+      		 <if test='searchWord!=""'>
+		  		and (vod_title like concat('%',#{searchWord},'%')
+		  		or vod_content like concat('%',#{searchWord},'%')
+		  		or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  		or vod_keyword like concat('%',#{searchWord},'%')) 
+		  	</if>
+		  	and del_flag='N'
+			<if test='eachFlag!=""'>
+		  		and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+	  		</if>
+	  	order by edit_dt desc limit #{start},#{end};
+		</select>
+		
+		<select id="liveList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.LiveDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_live_category where idx=a.category_idx) as category_idx,
+				(a.live_path) as live_path,
+				(a.live_title) as live_title,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count
+			from tb_live_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (live_title like concat('%',#{searchWord},'%')
+		  or  (select category_name from tb_live_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  or live_path like concat('%',#{searchWord},'%')) 
+		  </if>
+		<if test='eachFlag!=""'>
+	  		and category_idx in
+	  		<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         	#{type}
+      		</foreach>
+	  	</if>
+	  	and del_flag='N'
+	  	order by a.edit_dt desc limit #{start},#{end};
+		</select>
+		
+		<select id="fileList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.FileDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_file_category where idx=a.category_idx) as category_idx,
+				(a.file_path) as file_path,
+				(a.file_title) as file_title,
+				(a.file_keyword) as file_keyword,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(a.down_count) as down_count,
+				(a.resolution) as resolution,
+				(a.file_size) as file_size
+			from tb_file_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (file_title like concat('%',#{searchWord},'%')
+		  or file_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_file_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+	  	and del_flag='N'
+	  	order by a.edit_dt desc limit #{start},#{end};
+		</select>
+		
+		<select id="photoList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.PhotoDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_photo_category where idx=a.category_idx) as category_idx,
+				(a.photo_path) as photo_path,
+				(a.photo_title) as photo_title,
+				(a.photo_content) as photo_content,
+				(a.photo_keyword) as photo_keyword,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(a.resolution) as resolution,
+				(a.file_size) as file_size
+			from tb_photo_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (photo_title like concat('%',#{searchWord},'%')
+		  or photo_content like concat('%',#{searchWord},'%')
+		  or photo_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_photo_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+	  	and del_flag='N'
+	  	order by a.edit_dt desc limit #{start},#{end};
+		</select>
+		<select id="BoardList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.BoardDTO">
+			select
+				(a.idx) as idx,
+			    (select category_name from tb_board_category where idx=a.category_idx) as category_idx,
+			    (select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as vod_repo,
+			    (a.photo_repo) as photo_repo,
+			    (a.file_repo) as file_repo,
+			    (a.live_repo) as live_repo,
+			    (a.board_title) as board_title,
+			    (a.board_content) as board_content,
+			    (a.board_keyword) as board_keyword,
+			    (date_format(a.reg_dt,'%Y .%m. %d')) as reg_dt,
+			    (a.reg_id) as reg_id,
+			    (a.reg_ip) as reg_ip,
+			    (a.del_flag) as del_flag,
+			    date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+			    (a.favorite_count) as favorite_count,
+			    (a.view_count) as view_count
+			from tb_board_repository a  where 1=1 
+			<if test='searchWord!=""'>
+		  and (board_title like concat('%',#{searchWord},'%')
+		  or board_content like concat('%',#{searchWord},'%') 
+		  or board_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_board_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+      		order by a.edit_dt desc limit #{start},#{end};
+		</select>
+		
+		<select id="StbList"  parameterType="java.util.Map" resultType="hanibal.ibs.model.stb.StbDTO">
+			select
+				(a.idx) as idx,
+				(a.no) as no,
+				(a.name) as name,
+				(a.mac) as mac,
+				(a.ip_addr) as ip_addr,
+				(a.group_id) as group_id,
+				(a.status) as status,
+				(a.last_on_time) as last_on_time,
+				(a.last_ping_time) as last_ping_time,
+				(a.reg_dt) as reg_dt,
+				(a.note) as note,
+				(select category_name from tb_stb_category where idx=a.category_idx) as category_idx,
+				(a.del_flag) as del_flag
+			from tb_stb a  where 1=1 
+			<if test='searchWord!=""'>
+		  and (name like concat('%',#{searchWord},'%')
+		  or mac like concat('%',#{searchWord},'%') 
+		  or ip_addr like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_stb_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+      		order by a.reg_dt desc limit #{start},#{end};
+		</select>
+		
+		<select id="ScheduleList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.ScheduleDTO">
+			select 
+				distinct(a.idx) as idx,
+				(a.name) as name,
+				(a.start) as start,
+				(a.end) as end,
+				(a.target_type) as target_type,
+				(a.source_type) as source_type,
+				(a.live_ch_idx) as live_ch_idx,
+				(a.live_stream_url) as live_stream_url,
+				(a.caption) as caption,
+				(a.caption_size) as caption_size,
+				(a.caption_speed) as caption_speed,
+				(a.caption_text_color) as caption_text_color, 
+				(a.caption_bg_color) as caption_bg_color,
+				(a.image_path) as image_path,
+				(a.color) as color,
+				(a.desc_text) as desc_text,
+				(count(a.idx)) as category_idx,
+				(a.del_flag) as del_flag
+			from vw_stb_group_schedule a 
+			where 1=1 
+				<if test='searchWord!=""'>
+		 			and (name like concat('%',#{searchWord},'%')
+		  			or start like concat('%',#{searchWord},'%') 
+		  			or desc_text like concat('%',#{searchWord},'%') 
+		  			or (select category_name from tb_stb_category where idx=a.group_id) like concat('%',#{searchWord},'%')) 
+		  		</if>
+		  			and del_flag='N'
+		  		<if test='eachFlag!=""'>
+	  				and group_id in
+	  				<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         				#{type}
+      				</foreach>
+      			</if>
+      			group by a.idx
+      			order by a.start desc limit #{start},#{end};
+		</select>
+		<select id="EventList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.ScheduleDTO">
+			select 
+				(a.idx) as idx,
+				(a.name) as name,
+				(a.start) as start,
+				(a.end) as end,
+				(a.target_type) as target_type,
+				(a.source_type) as source_type,
+				(a.live_ch_idx) as live_ch_idx,
+				(a.live_stream_url) as live_stream_url,
+				(a.caption) as caption,
+				(a.caption_size) as caption_size,
+				(a.caption_speed) as caption_speed,
+				(a.caption_text_color) as caption_text_color, 
+				(a.caption_bg_color) as caption_bg_color,
+				(a.image_path) as image_path,
+				(a.color) as color,
+				(a.desc_text) as desc_text,
+				(a.category_idx) as category_idx,
+				(a.del_flag) as del_flag
+			from tb_stb_schedule a 
+			where 1=1 
+			and del_flag='N'
+		  		<if test='eachFlag!=""'>
+	  				and category_idx in
+	  				<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         				#{type}
+      				</foreach>
+      			</if>
+      			group by a.idx
+      			order by a.start desc;
+		</select>
+		<select id="getTagetList" parameterType="java.util.Map" resultType="java.util.Map">
+			select a.idx,a.channel_idx,a.group_idx,b.category_name,ifnull(c.category_name,'인터넷 방송') as target_name from tb_live_channel_target a
+					left join tb_live_category b on a.channel_idx=b.idx
+    				left join tb_stb_category c on a.group_idx=c.idx
+ 			where 1=1
+				<if test='eachFlag!=""'>
+  					and a.channel_idx in
+  					<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        				#{type}
+     				</foreach>
+     			</if>
+     			order by a.idx asc;
+		</select>
+		<!-- MENU TREE -->
+		<select id="getMenuTree" parameterType="java.util.Map" resultType="hanibal.ibs.model.webapi.TreeMenu">
+			SELECT 
+				(idx) as id,
+				(pid) as parent,
+				(category_name) as text,
+				(category_name) as name,
+				<if test='repoTable!="vw_stb_group_schedule"'>
+				(select count(idx) from ${repoTable} where  category_idx=a.idx and del_flag='N') as num
+				</if>
+				<if test='repoTable=="vw_stb_group_schedule"'>
+				(select count(idx) from ${repoTable} where  group_id=a.idx and del_flag='N') as num
+				</if>
+			FROM ${table} a order by pid,position;
+		</select>
+		
+		<select id="getAdvenceTree" parameterType="java.util.Map" resultType="hanibal.ibs.model.webapi.AdvenceTree">
+			SELECT 
+				(idx) as id,
+				(pid) as parent,
+				(category_name) as text,
+				(category_name) as name,
+				(property) as property,
+				<if test='repoTable!="vw_stb_group_schedule"'>
+				(select count(idx) from ${repoTable} where  category_idx=a.idx and del_flag='N') as num
+				</if>
+				<if test='repoTable=="vw_stb_group_schedule"'>
+				(select count(idx) from ${repoTable} where  group_id=a.idx and del_flag='N') as num
+				</if>
+			FROM ${table} a order by pid,position;
+		</select>
+		<insert id="insertMenuBoard" parameterType="java.util.Map">
+			insert 
+			into ${table} (pid, position, category_name,property)
+			select #{parent}, ifnull(max(position)+1, 0), #{name},#{property}
+			from ${table}
+			where pid = #{parent}
+		</insert>
+		<update id="moveCategory" parameterType="java.util.Map">
+			update 
+				${table}
+			set 
+				pid=#{parent},
+				position=#{position}
+			where idx=#{idx} 
+		</update>
+		<update id="newPositionUpdate" parameterType="java.util.Map">
+			update ${table}
+			set position = position +1
+			where pid = #{parent} and position >= #{position}
+		</update>
+		<update id="oldPositionUpdate" parameterType="java.util.Map">
+			update ${table}
+			set position = position -1
+			where pid = #{parent} and position >= #{position}
+		</update>
+		
+		<insert id="insertGroup" parameterType="java.util.Map">
+			insert 
+			into ${table} (pid, position, category_name)
+			select #{parent}, ifnull(max(position)+1, 0), #{name}
+			from ${table}
+			where pid = #{parent}
+		</insert>
+		<select id="topIdxVod" resultType="String" parameterType="String">
+			select max(idx) from ${value} order by idx desc;
+		</select>
+		
+		<update id="updateGroup" parameterType="java.util.Map">
+			update 
+				${table}
+			set
+				category_name=#{name}
+			where idx=#{idx}
+		</update>
+		<delete id="deleteGroup" parameterType="java.util.Map">
+			delete from ${table}
+			where idx in
+			<foreach collection="groupIdArr" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</delete>
+		<update id="updatePosition" parameterType="java.util.Map">
+			update ${table}
+			set position = position -1
+			where pid = #{parent} and position >= #{position}
+		</update>
+		<update id="updateCategoryIdx" parameterType="java.util.Map">
+			update 
+				${repoTable}
+			set
+				category_idx=1,
+				edit_dt=now()
+			where category_idx in
+			<foreach collection="groupIdArr" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</update>
+		<update id="updateElemCategory" parameterType="java.util.Map">
+			update ${repoTable}
+			set category_idx = #{updateIdx},edit_dt=now()
+			where idx in
+			<foreach collection="selectedIdx" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</update>
+		<select id="getLiveContents" parameterType="int" resultType="java.util.Map">
+			select live_title,live_path from tb_live_repository where idx=#{idx};
+		</select>
+		
+		<select id="getFileContents" parameterType="int" resultType="java.util.Map">
+			select file_title,file_path,file_keyword,resolution,file_size from tb_file_repository where idx=#{idx};
+		</select>
+		
+		<select id="getPhotoContents" parameterType="int" resultType="java.util.Map">
+			select photo_title,photo_content,photo_path,photo_keyword,resolution,file_size from tb_photo_repository where idx=#{idx};
+		</select>
+		
+		<select id="ScheduleBasic" parameterType="int" resultType="java.util.Map">
+			select 
+				idx,name,start,end,source_type,live_ch_idx,live_stream_url,caption,caption_size,caption_speed,caption_text_color,caption_bg_color,image_path,color,desc_text,forceLive
+			from
+				tb_stb_schedule where idx=#{idx}
+		</select>
+		
+		<select id="getVodContents" parameterType="int" resultType="java.util.Map">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.vod_path) as vod_path,
+				(a.vod_title) as vod_title,
+				(a.vod_content) as vod_content,
+				(a.vod_keyword) as vod_keyword,
+				(a.vod_play_time) as vod_play_time,
+				(a.main_thumbnail) as main_thumbnail,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				(a.trans_option) as trans_option,
+				(a.edit_dt) as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(b.trans_status) as trans_status,
+				(b.trans_rate) as trans_rate,
+				date_format(b.trans_start_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_start_dt,
+				date_format(b.trans_end_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_end_dt,
+				(b.resolution) as resolution,
+				(b.audio_codec) as audio_codec,
+				(b.video_codec) as video_codec,
+				(b.bitrate) as bitrate,
+				(b.file_size) as file_size
+			from tb_vod_repository a 
+      		left join tb_vod_box b on a.idx=b.repoIdx
+			where a.idx=#{idx};
+		</select>
+		
+		<select id="getBoardContents" parameterType="int" resultType="java.util.Map">
+			select
+				(a.idx) as idx,
+			    (select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+			    (a.vod_repo) as vod_repo,
+			    (a.photo_repo) as photo_repo,
+			    (a.file_repo) as file_repo,
+			    (a.live_repo) as live_repo,
+			    (a.board_title) as board_title,
+			    (a.board_content) as board_content,
+			    (a.board_keyword) as board_keyword,
+			    (a.reg_dt) as reg_dt,
+			    (a.reg_id) as reg_id,
+			    (a.reg_ip) as reg_ip,
+			    (a.del_flag) as del_flag,
+			    date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+			    (a.favorite_count) as favorite_count,
+			    (a.view_count) as view_count
+			from tb_board_repository a 
+			where a.idx=#{idx};
+		</select>
+		<select id="getSettopBox" parameterType="int" resultType="java.util.Map">
+			select
+				(a.idx) as idx,
+				(a.no) as no,
+				(a.name) as name,
+				(a.mac) as mac,
+				(a.ip_addr) as ip_addr,
+				(a.group_id) as group_id,
+				(a.status) as status,
+				(a.last_on_time) as last_on_time,
+				(a.last_ping_time) as last_ping_time,
+				(a.reg_dt) as reg_dt,
+				(a.note) as note,
+				(a.category_idx) as category_idx,
+				(a.del_flag) as del_flag
+			from tb_stb a  
+			where a.idx=#{idx};
+		</select>
+		<update id="updateLiveContent" parameterType="java.util.Map">
+			update
+				tb_live_repository
+			set
+				live_title=#{live_title},
+				live_path=#{live_path},
+				reg_id=#{reg_id},
+				reg_ip=#{reg_ip},
+				edit_dt=now()
+			where idx=#{idx};
+		</update> 
+		
+		<update id="updateFileContent" parameterType="java.util.Map">
+			update
+				tb_file_repository
+			set
+				file_title=#{file_title},
+				file_path=#{file_path},
+				file_keyword=#{file_keyword},
+				resolution=#{resolution},
+				file_size=#{file_size},
+				reg_id=#{reg_id},
+				reg_ip=#{reg_ip},
+				edit_dt=now()
+			where idx=#{idx};
+		</update> 
+		
+		<update id="updatePhotoContent" parameterType="java.util.Map">
+			update
+				tb_photo_repository
+			set
+				photo_title=#{photo_title},
+				photo_path=#{photo_path},
+				photo_content=#{photo_content},
+				photo_keyword=#{photo_keyword},
+				resolution=#{resolution},
+				file_size=#{file_size},
+				reg_id=#{reg_id},
+				reg_ip=#{reg_ip},
+				edit_dt=now()
+			where idx=#{idx};
+		</update> 
+		
+		<update id="updateVodContent" parameterType="java.util.Map">
+			update
+				tb_vod_repository
+			set
+				vod_title=#{vod_title},
+				vod_path=#{vod_path},
+				vod_content=#{vod_content},
+				vod_keyword=#{vod_keyword},
+				vod_play_time=#{vod_play_time},
+				main_thumbnail=#{main_thumbnail},
+				reg_id=#{reg_id},
+				reg_ip=#{reg_ip},
+				edit_dt=now()
+			where idx=#{idx};
+		</update>
+		<update id="updateBoardContent" parameterType="java.util.Map">
+			update 
+				tb_board_repository
+			set
+				vod_repo=#{vod_repo},
+			    photo_repo=#{photo_repo},
+			    file_repo=#{file_repo},
+			    live_repo=#{live_repo},
+			    board_title=#{board_title},
+			    board_content=#{board_content},
+			    board_keyword=#{board_keyword},
+			    reg_id=#{reg_id},
+			    reg_ip=#{reg_ip},
+				edit_dt=now()
+			where idx=#{idx}
+		</update>
+		<update id="updateSettopBox" parameterType="java.util.Map">
+			update 
+				tb_stb
+			set
+				name=#{name},
+				ip_addr=#{ip_addr},
+				mac=#{mac},
+				note=#{note},
+				category_idx=#{category_idx},
+				edit_dt=now()
+			where idx=#{idx}
+		</update>
+		
+		<update id="updateSchedule" parameterType="java.util.Map">
+			update
+				tb_stb_schedule
+			set
+				<if test='captionYn=="Y"'>
+				caption=#{caption},
+				caption_size=#{caption_size},
+				caption_speed=#{caption_speed},
+				caption_text_color=#{caption_text_color},
+				caption_bg_color=#{caption_bg_color},
+				</if>
+				<if test='captionYn=="N"'>
+				caption=null,
+				caption_size=null,
+				caption_speed=null,
+				caption_text_color=null,
+				caption_bg_color=null,
+				</if>
+				<if test='source_type=="LIVE"'>
+				live_ch_idx=#{live_ch_idx},
+				live_stream_url=#{live_stream_url},
+				</if>
+				name=#{name},
+				start=#{start},
+				end=#{end},
+				target_type=#{target_type},
+				source_type=#{source_type},
+				image_path=#{image_path},
+				color=#{color},
+				desc_text=#{desc_text},
+				forceLive=#{forceLive}
+			where idx=#{idx}
+		</update>
+		
+		<insert id="insertLiveContent" parameterType="java.util.Map">
+			insert into tb_live_repository (category_idx,live_title,live_path,reg_id,reg_ip) values(#{category_idx},#{live_title},#{live_path},#{reg_id},#{reg_ip});
+		</insert>
+		<insert id="insertFileContent" parameterType="java.util.Map">
+			insert into 
+				tb_file_repository (category_idx,file_title,file_path,file_keyword,resolution,file_size,reg_id,reg_ip) 
+			values (#{category_idx},#{file_title},#{file_path},#{file_keyword},#{resolution},#{file_size},#{reg_id},#{reg_ip});
+		</insert>
+		
+		<insert id="insertPhotoContent" parameterType="java.util.Map">
+			insert into 
+				tb_photo_repository (category_idx,photo_title,photo_content,photo_path,photo_keyword,resolution,file_size,reg_id,reg_ip) 
+			values (#{category_idx},#{photo_title},#{photo_content},#{photo_path},#{photo_keyword},#{resolution},#{file_size},#{reg_id},#{reg_ip});
+		</insert>
+		<insert id="insertVodContent" parameterType="java.util.Map">
+			insert into
+				tb_vod_repository
+					(vod_path,vod_title,vod_content,vod_keyword,vod_play_time,reg_id,reg_ip,category_idx,main_thumbnail)
+			values 
+					(#{vod_path},#{vod_title},#{vod_content},#{vod_keyword},#{vod_play_time},#{reg_id},#{reg_ip},#{category_idx},#{main_thumbnail})
+		</insert>
+		<insert id="insertBoardContent" parameterType="java.util.Map">
+			insert into
+				tb_board_repository
+					(category_idx,vod_repo,photo_repo,file_repo,live_repo,board_title,board_content,board_keyword,reg_id,reg_ip)
+			values
+					(#{category_idx},#{vod_repo},#{photo_repo},#{file_repo},#{live_repo},#{board_title},#{board_content},#{board_keyword},#{reg_id},#{reg_ip});
+		</insert>
+		
+		<insert id="insertSettopBox" parameterType="java.util.Map">
+			insert into 
+				tb_stb
+					(name,ip_addr,mac,note,category_idx)	
+			values
+				(#{name},#{ip_addr},#{mac},#{note},#{category_idx});
+		</insert>
+		
+		<insert id="insertSchedule" parameterType="java.util.Map">
+			insert into
+				tb_stb_schedule
+				(
+				<if test='captionYn=="Y"'>
+				caption,
+				caption_size,
+				caption_speed,
+				caption_text_color,
+				caption_bg_color,
+				</if>
+				<if test='source_type=="LIVE"'>
+				live_ch_idx,
+				live_stream_url,
+				</if>
+				name,
+				start,
+				end,
+				target_type,
+				source_type,
+				image_path,
+				color,
+				desc_text,
+				category_idx,
+				forceLive
+				)
+				values
+				(
+				<if test='captionYn=="Y"'>
+				#{caption},
+				#{caption_size},
+				#{caption_speed},
+				#{caption_text_color},
+				#{caption_bg_color},
+				</if>
+				<if test='source_type=="LIVE"'>
+				#{live_ch_idx},
+				#{live_stream_url},
+				</if>
+				#{name},
+				#{start},
+				#{end},
+				#{target_type},
+				#{source_type},
+				#{image_path},
+				#{color},
+				#{desc_text},
+				#{category_idx},
+				#{forceLive}
+				)
+		</insert>
+		<insert id="insertScheduleGroup" parameterType="java.util.Map">
+			insert into
+				tb_stb_schedule_group
+				(schedule_id,group_id) values (#{scheduleId},#{groupId});
+		</insert>
+		<insert id="insertScheduleVod" parameterType="java.util.Map">
+			insert into
+				tb_stb_schedule_vod
+				(schedule_id,vod_id,play_order) values(#{scheduleId},#{vodId},#{playOrder})
+		</insert>
+		
+		<select id="getVodTopIdx" parameterType="String" resultType="int">
+			select idx from tb_vod_repository where vod_path=#{file} order by idx desc;
+		</select>
+		<update id="updateVodBox" parameterType="java.util.Map">
+			update tb_vod_box
+			set repoIdx=#{topIdx},file_size=#{file_size}
+			where repoIdx=#{vod_path}
+		</update>
+		
+		<update id="deleteContents" parameterType="java.util.Map">
+			update ${repoTable}
+			set del_flag='Y',edit_dt=now()
+			where idx in
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</update>
+		
+		<select id="vodBoxExist" parameterType="String" resultType="int">
+			select count(idx) from tb_vod_box where repoIdx=#{file};
+		</select>
+		<insert id="vodBoxInsertTemp" parameterType="String">
+			insert into tb_vod_box (repoIdx) values (#{file});
+		</insert>
+		<update id="updateEncodingRate" parameterType="java.util.Map">
+			update tb_vod_box
+			set trans_rate=#{rate},trans_status='FINISH',trans_end_dt=now(),repoIdx=#{newFile},trans_rate='100'
+			where repoIdx=#{file}
+		</update>
+		<select id="getEncodingRate" parameterType="String" resultType="int">
+			select trans_rate from tb_vod_box where repoIdx=#{file}
+		</select>
+		<update id="editUpdateVodBox" parameterType="java.util.Map">
+			update tb_vod_box
+			set file_size=#{file_size}
+			where repoIdx=#{idx}
+		</update>
+		
+		<select id="getLiveSm" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.LiveDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.live_path) as live_path,
+				(a.live_title) as live_title,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count
+			from tb_live_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (live_title like concat('%',#{searchWord},'%')
+		  or  (select category_name from tb_live_content where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  or live_path like concat('%',#{searchWord},'%')) 
+		  </if>
+		  <if test='searchWord==""'>
+		  and idx=0
+		  </if>
+		  and del_flag='N'
+		  order by edit_dt desc;
+		</select>
+		
+		<select id="getFileSm" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.FileDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.file_path) as file_path,
+				(a.file_title) as file_title,
+				(a.file_keyword) as file_keyword,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(a.down_count) as down_count,
+				(a.resolution) as resolution,
+				(a.file_size) as file_size
+			from tb_file_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (file_title like concat('%',#{searchWord},'%')
+		  or file_keyword like concat('%',#{searchWord},'%') 
+		  or file_path like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_file_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  <if test='searchWord==""'>
+		  and idx=0
+		  </if>
+		  	and del_flag='N'
+		  	order by edit_dt desc;
+		</select>
+		
+		<select id="getPhotoSm" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.PhotoDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.photo_path) as photo_path,
+				(a.photo_title) as photo_title,
+				(a.photo_content) as photo_content,
+				(a.photo_keyword) as photo_keyword,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				date_format(a.edit_dt,'%Y년 %m월 %d일') as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(a.resolution) as resolution,
+				(a.file_size) as file_size
+			from tb_photo_repository a  where 1=1 
+		  <if test='searchWord!=""'>
+		  and (photo_title like concat('%',#{searchWord},'%')
+		  or photo_content like concat('%',#{searchWord},'%')
+		  or photo_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_photo_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+	  	  <if test='searchWord==""'>
+		  and idx=0
+		  </if>
+		  and del_flag='N'
+		  order by edit_dt desc;
+		</select>
+		
+		<select id="getVodSm" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.VodDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.vod_path) as vod_path,
+				(a.vod_title) as vod_title,
+				(a.vod_content) as vod_content,
+				(a.vod_keyword) as vod_keyword,
+				(a.vod_play_time) as vod_play_time,
+				(a.main_thumbnail) as main_thumbnail,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				(a.trans_option) as trans_option,
+				(a.edit_dt) as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(b.trans_status) as trans_status,
+				(b.trans_rate) as trans_rate,
+				date_format(b.trans_start_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_start_dt,
+				date_format(b.trans_end_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_end_dt,
+				(b.resolution) as resolution,
+				(b.audio_codec) as audio_codec,
+				(b.video_codec) as video_codec,
+				(b.bitrate) as bitrate,
+				(b.file_size) as file_size
+			from tb_vod_repository a 
+      		left join tb_vod_box b on a.idx=b.repoIdx where 1=1 
+      		<if test='searchWord!=""'>
+		  		and (vod_title like concat('%',#{searchWord},'%')
+		  		or vod_content like concat('%',#{searchWord},'%')
+		  		or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
+		  		or vod_keyword like concat('%',#{searchWord},'%')) 
+		  	</if>
+		  	and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and a.idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		  	order by edit_dt desc;
+		</select>
+		
+		<select id="getVodIdxList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.VodDTO">
+			select
+				(a.idx) as idx,
+				(select category_name from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.vod_path) as vod_path,
+				(a.vod_title) as vod_title,
+				(a.vod_content) as vod_content,
+				(a.vod_keyword) as vod_keyword,
+				(a.vod_play_time) as vod_play_time,
+				(a.main_thumbnail) as main_thumbnail,
+				date_format(a.reg_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				(a.trans_option) as trans_option
+				from tb_vod_repository a
+				where 1=1
+				<if test='eachFlag!=""'>
+	  			and idx in
+	  			<foreach collection="vodIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<select id="getCatouselList" resultType="hanibal.ibs.model.webapi.Carousel">
+			select idx,img_name,img_url from tb_carousel_img where del_flag='N' order by reg_dt desc;
+		</select>
+		
+		<select id="getMainContents" resultType="hanibal.ibs.model.webapi.MainContents">
+			select (a.idx) as idx,(select category_name from tb_board_category where idx=a.category_idx) as category_idx from tb_main_contents a order by reg_dt desc ;
+		</select>
+		<insert id="insertMainImage" parameterType="java.util.Map">
+			insert into tb_carousel_img (img_name,img_title,img_url) value (#{img_name},#{img_title},#{img_url});
+		</insert>
+		
+		<update id="deleteMainImage" parameterType="java.util.Map">
+			update tb_carousel_img
+			set del_flag='Y',reg_dt=now()
+			where idx in
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</update>
+		<insert id="insertMainContents" parameterType="String">
+			insert into tb_main_contents (category_idx) value (#{category_idx});
+		</insert>
+		<delete id="deleteMainContents" parameterType="int">
+			delete from tb_main_contents where idx=#{idx} 
+		</delete>
+		
+		<select id="getStbConnection" resultType="java.util.Map">
+			select (select count(idx) from tb_stb where del_flag='N' and  <![CDATA[timediff(now(), last_ping_time) <= '00:01:10']]>) as connected
+					,(count(idx) - (select count(idx) from tb_stb where del_flag='N' and  <![CDATA[timediff(now(), last_ping_time) <= '00:01:10']]>)) as disconnected
+                    ,(select count(idx) from tb_stb where del_flag='N') as totalcount
+			from tb_stb
+			where del_flag='N';
+		</select>
+		
+		<select id="getScheduleGroup" resultType="int" parameterType="int">
+			select group_id from tb_stb_schedule_group where schedule_id=#{idx}
+		</select>
+		<select id="getScheduleVod" resultType="int" parameterType="int">
+			select vod_id from tb_stb_schedule_vod where schedule_id=#{idx} order by play_order asc
+		</select>
+		<update id="updateScheduleDate" parameterType="java.util.Map">
+			update tb_stb_schedule set start=#{start},end=#{end} where idx=#{idx};
+		</update>
+		<delete id="deleteScheduleGroup" parameterType="int">
+			delete from tb_stb_schedule_group where schedule_id=#{idx};
+		</delete>
+		
+		<delete id="deleteScheduleVod" parameterType="int">
+			delete from tb_stb_schedule_vod where schedule_id=#{idx}
+		</delete>
+		
+		<select id="getLayoutList" parameterType="int" resultType="hanibal.ibs.model.webapi.LayoutDTO">
+			select
+				idx,               
+				wl_title,      
+				wl_link_type,  
+				wl_link_idx, 
+				wl_type,       
+				wl_height,     
+				wl_unit,       
+				wl_categorys,  
+				wl_attribute,  
+				wl_sort,       
+				reg_dt,       
+				edit_dt,       
+				reg_ip,       
+				del_flag,
+				wl_category
+			from tb_web_layout where wl_category=#{idx} order by idx asc;
+		</select>
+		
+		<select id="getLayoutDetail" resultType="java.util.Map" parameterType="int">
+			select
+				idx,               
+				wl_title,      
+				wl_link_type,  
+				wl_link_idx, 
+				wl_type,       
+				wl_height,     
+				wl_unit,       
+				wl_categorys,  
+				wl_attribute,  
+				wl_sort,       
+				reg_dt,       
+				edit_dt,       
+				reg_ip,       
+				del_flag,
+				wl_category
+			from tb_web_layout where idx=#{idx};
+		</select>
+		
+		<resultMap id="categoryResult" type="java.util.HashMap">
+			<result javaType="java.lang.String" column="category_idx" property="category_idx"/>
+			<result javaType="java.lang.String" column="category_name" property="category_name"/>
+		</resultMap>
+		<select id="getCategoryNames" resultMap="categoryResult" parameterType="java.util.Map">
+			select ifnull(category_name,'인터넷방송') as category_name,ifnull(idx,'0') as idx from ${table} 
+			where 1=1
+			<if test='eachFlag!=""'>
+	  			and idx in
+	  			<foreach collection="idxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<delete id="deleteTarget" parameterType="int">
+			delete from tb_live_channel_target where channel_idx=#{categoryIdx}
+		</delete>
+		<insert id="insertTarget" parameterType="java.util.HashMap">
+			 	<if test='listFlag !=""'>
+				 	insert into tb_live_channel_target(
+	            		channel_idx,
+	            		group_idx
+	       	 		)values
+	       	 		<foreach collection="groupArr" item="item" separator=",">
+	       	 			(
+	            		#{categoryIdx},
+	            		#{item}
+	        			)
+	       	 		</foreach>
+       	 		</if>
+		</insert>
+		
+		<select id="targetCount" resultType="int">
+			select count(idx) from tb_stb_category;
+		</select>
+		
+		<resultMap id="imgResult" type="java.util.HashMap">
+			<result javaType="java.lang.String" column="img_idx" property="img_idx"/>
+			<result javaType="java.lang.String" column="img_url" property="img_url"/>
+		</resultMap>
+		<select id="getImgNames" resultMap="imgResult" parameterType="java.util.Map">
+			select idx as img_idx,main_thumbnail as img_url from tb_vod_repository 
+			where 1=1
+			<if test='eachFlag!=""'>
+	  			and idx in
+	  			<foreach collection="imgArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<resultMap id="photoResult" type="java.util.HashMap">
+			<result javaType="java.lang.String" column="img_idx" property="img_idx"/>
+			<result javaType="java.lang.String" column="img_url" property="img_url"/>
+		</resultMap>
+		<select id="getPhotoList" resultMap="photoResult" parameterType="java.util.Map">
+			select idx as img_idx,photo_path as img_url from tb_photo_repository 
+			where 1=1
+			<if test='eachFlag!=""'>
+	  			and idx in
+	  			<foreach collection="idxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		<resultMap id="fileResult" type="java.util.HashMap">
+			<result javaType="java.lang.String" column="file_idx" property="file_idx"/>
+			<result javaType="java.lang.String" column="file_url" property="file_url"/>
+		</resultMap>
+		<select id="getFileList" resultMap="fileResult" parameterType="java.util.Map">
+			select idx as file_idx,file_path as file_url from tb_file_repository 
+			where 1=1
+			<if test='eachFlag!=""'>
+	  			and idx in
+	  			<foreach collection="fileArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+		</select>
+		
+		
+		
+		<select id="vodOldList" resultType="String">
+			SELECT vod_path FROM ibsdata.tb_vod_repository where del_flag='N';
+		</select>
+		
+		<insert id="insertThumnail" parameterType="java.util.Map">
+			insert into tb_thumbnail_repository(vod_file,vod_thumbnail)
+			values (#{vod_file},#{vod_thumbnail})
+		</insert>
+		<select id="vodMediaInfo" resultType="java.util.Map" parameterType="int">
+			select
+				(a.idx) as idx,
+				(select idx from tb_content_category where idx=a.category_idx) as category_idx,
+				(a.vod_path) as vod_path,
+				(a.vod_title) as vod_title,
+				(a.vod_content) as vod_content,
+				(a.vod_keyword) as vod_keyword,
+				(a.vod_play_time) as vod_play_time,
+				(a.main_thumbnail) as main_thumbnail,
+				date_format(a.reg_dt,'%Y .%m. %d') as reg_dt,
+				(a.reg_id) as reg_id,
+				(a.reg_ip) as reg_ip,
+				(a.del_flag) as del_flag,
+				(a.trans_option) as trans_option,
+				(a.edit_dt) as edit_dt,
+				(a.favorite_count) as favorite_count,
+				(a.view_count) as view_count,
+				(b.trans_status) as trans_status,
+				(b.trans_rate) as trans_rate,
+				date_format(b.trans_start_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_start_dt,
+				date_format(b.trans_end_dt,'%Y년 %m월 %d일 %H시 %i분 %s초') as trans_end_dt,
+				(b.resolution) as resolution,
+				(b.audio_codec) as audio_codec,
+				(b.video_codec) as video_codec,
+				(b.bitrate) as bitrate,
+				(b.file_size) as file_size
+			from tb_vod_repository a 
+      		left join tb_vod_box b on a.idx=b.repoIdx where 1=1 and a.idx=#{idx};
+		</select> 
+		
+		<select id="thumbnailList" resultType="String" parameterType="String">
+			select vod_thumbnail from ibsdata.tb_thumbnail_repository where vod_file=#{vodFile};
+		</select>
+		
+		<delete id="deleteThumb" parameterType="String">
+			delete from tb_thumbnail_repository where vod_file=#{delVod}
+		</delete>
+		
+		<select id="photoMediaInfo" resultType="java.util.Map" parameterType="int">
+			select idx,category_idx,photo_path,photo_path,photo_title,photo_content,photo_keyword,
+				date_format(reg_dt,'%Y .%m. %d') as reg_dt,reg_id,reg_ip,favorite_count,view_count,resolution,file_size 
+		    from tb_photo_repository where idx=#{idx};
+		</select>
+		
+		<select id="fileMediaInfo" resultType="java.util.Map" parameterType="int">
+			select idx,category_idx,file_path,file_title,file_keyword,
+				date_format(reg_dt,'%Y .%m. %d') as reg_dt,reg_id,reg_ip,favorite_count,view_count,down_count,resolution,file_size 
+			from tb_file_repository where idx=#{idx};
+		</select>
+		
+		<select id="streamMediaInfo" resultType="java.util.Map" parameterType="int">
+			select idx,category_idx,live_path,live_title,
+				date_format(reg_dt,'%Y .%m. %d') as reg_dt,reg_id,reg_ip,favorite_count,view_count 
+			from tb_live_repository where idx=#{idx};
+		</select>
+		
+		<select id="boardMediaInfo" resultType="java.util.Map" parameterType="int">
+			select idx,category_idx,vod_repo,photo_repo,file_repo,board_title,board_content,board_keyword,
+				date_format(reg_dt,'%Y .%m. %d') as reg_dt,reg_id,reg_ip,edit_dt,favorite_count,view_count  
+			from tb_board_repository 
+			where idx=#{idx};
+		</select>
+		
+		<select id="getAllSTBList" resultType="String">
+			SELECT mac FROM ibsdata.tb_stb where del_flag='N' order by idx desc;
+		</select>
+		
+		<resultMap id="vodMenuResult" type="java.util.HashMap">
+			<result javaType="java.lang.String" column="menu_idx" property="menu_idx"/>
+			<result javaType="java.lang.String" column="menu_name" property="menu_name"/>
+		</resultMap>
+		<select id="getVodMainMenu" resultMap="vodMenuResult" parameterType="int">
+			select (idx) as menu_idx,(category_name) as menu_name from tb_board_category where pid=#{idx} order by position asc;
+		</select>
+		
+	<!-- tb_sedn_log -->
+	<insert id="tb_sedn_logInsert" parameterType="java.util.HashMap">
+		INSERT INTO 
+			tb_sedn_log 
+			(device, reg_dt, reg_id, reg_ip) 
+		VALUES
+			(#{device}, now(),#{reg_id},#{reg_ip});
+	</insert>
+			
+</mapper>
+
+
+
+
+
+
+
+
+
+

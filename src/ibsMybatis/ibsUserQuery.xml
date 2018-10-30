@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ibsMybatis.ibsUserApiQuery">
+	<select id="userLayoutList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.BoardDTO">
+		select
+				(a.idx) as idx,
+			    (select category_name from tb_board_category where idx=a.category_idx) as category_idx,
+			    (select main_thumbnail from tb_vod_repository where idx=a.vod_repo) as vod_repo,
+			    (a.photo_repo) as photo_repo,
+			    (a.file_repo) as file_repo,
+			    (a.live_repo) as live_repo,
+			    (a.board_title) as board_title,
+			    (a.board_content) as board_content,
+			    (a.board_keyword) as board_keyword,
+			    date_format(a.reg_dt,'%Y.%m.%d') as reg_dt,
+			    (a.reg_id) as reg_id,
+			    (a.reg_ip) as reg_ip,
+			    (a.del_flag) as del_flag,
+			    date_format(a.edit_dt,'%Y년%m월%d일') as edit_dt,
+			    (a.favorite_count) as favorite_count,
+			    (a.view_count) as view_count
+			from tb_board_repository a  where 1=1 
+			<if test='wl_attribute=="B"'>
+			and <![CDATA[LENGTH(concat(photo_repo,file_repo))>0]]>
+			</if>
+			<if test='searchWord!=""'>
+		  and (board_title like concat('%',#{searchWord},'%')
+		  or board_content like concat('%',#{searchWord},'%') 
+		  or board_keyword like concat('%',#{searchWord},'%') 
+		  or (select category_name from tb_board_category where idx=a.category_idx) like concat('%',#{searchWord},'%')) 
+		  </if>
+		  and del_flag='N'
+		  	<if test='eachFlag!=""'>
+	  			and category_idx in
+	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+         			#{type}
+      			</foreach>
+      		</if>
+      		order by 
+      		<if test='wl_sort=="R"'>
+      		a.reg_dt desc limit #{start},#{end};
+      		</if>
+      		<if test='wl_sort=="F"'>
+      		a.view_count desc limit #{start},#{end};
+      		</if>
+	</select>
+	
+	<delete id="layoutDeleteAll" parameterType="int">
+		delete from tb_web_layout where wl_category=#{category};
+	</delete>
+	
+	<insert id="layoutInsert" parameterType="java.util.Map">
+		insert into tb_web_layout ( wl_title, wl_link_idx, wl_type, wl_categorys, wl_attribute, wl_sort, reg_ip,wl_category) 
+		values (#{wl_title},#{wl_link_idx},#{wl_type},#{wl_categorys},#{wl_attribute},#{wl_sort},#{reg_ip},#{wl_category});
+	</insert>
+	
+	
+	<select id="getWebSchedule" resultType="java.util.Map">
+		select (a.idx) as id,(a.category_name) as name from tb_live_category a  join tb_live_channel_target b on a.idx=b.channel_idx where b.group_idx=0;
+	</select>
+	
+	<select id="getWebScheduleList" parameterType="String" resultType="java.util.Map">
+		  select (idx)as id,date_format(start,'%Y-%m-%d %H:%i') as start_date,date_format(end,'%Y-%m-%d %H:%i') as end_date FROM ibsdata.tb_stb_schedule where del_flag='N' and category_idx=#{idx};
+	</select>
+	
+	<select id="getTaskList" parameterType="java.util.Map" resultType="java.util.Map">
+		 select (idx)as id,concat(date_format(start,'%H:%i '),name) as name,(forceLive) as color,(forceLive) as tag,(forceLive) as tagcolor,(idx) as idx from tb_stb_schedule where del_flag='N' and category_idx in 
+		 <foreach collection="categoryIdxs" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      	</foreach>
+	</select>
+	
+	<select id="getLiveView" parameterType="int"  resultType="java.util.Map">
+		select 
+			idx,
+			concat('false') as now,
+		    start,
+		    end,
+            source_type,
+            live_stream_url,
+            concat('') as vod_stream_url,
+		    (select category_name from tb_live_category where idx=category_idx) as channel,
+		    (name) as title,
+		    concat(date_format(start,'%Y년 %m월 %d일 %H시 %i분'),' ~',date_format(end,'%H시 %i분')) as time,
+		    (desc_text) as text,
+		    (image_path) as img 
+		from 
+			tb_stb_schedule 
+		where idx=#{schedule};
+	</select>
+	
+	<select id="scheduleVodList" parameterType="java.util.Map" resultType="String">
+		select vod_path from tb_stb_schedule_vod a left join tb_vod_repository b on b.idx=a.vod_id  where schedule_id=#{idx} order by play_order asc;
+	</select>
+</mapper> 
+
