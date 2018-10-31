@@ -4,6 +4,50 @@
 <mapper namespace="ibsMybatis.statisQuery">
 	<!-- Statistics by MGS -->
 	
+	
+    <insert id="tb_visitor_insert" parameterType="hanibal.ibs.model.statis.VisitCountVO">
+        INSERT
+        INTO tb_visitor
+        (
+            visit_ip,
+            visit_time,
+            <if test="visit_refer != null and visit_refer !=''">
+            visit_refer,
+            </if>
+            visit_agent
+        )
+        VALUES
+        (
+            #{visit_ip},
+            now(),
+            <if test="visit_refer != null and visit_refer !=''">
+            #{visit_refer},
+            </if>
+            #{visit_agent}
+        )
+    </insert>
+    
+    <!-- 메인 VOD 재생 -->
+    <insert id="insertVODHistory" parameterType="java.util.HashMap">
+        INSERT
+        INTO tb_web_vod_history
+        (
+            vod_idx,
+            <if test="reg_id != null or reg_id !=''">
+            reg_id,
+            </if>
+            play_time
+        )
+        VALUES
+        (
+            #{vod_idx},
+            <if test="reg_id != null or reg_id !=''">
+            #{reg_id},
+            </if>
+            #{play_time}
+        )
+    </insert>
+    
 	<!-- VOD list -->
 	<select id="statisticsVODList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
 		SELECT
@@ -57,27 +101,6 @@
 		LEFT OUTER JOIN tb_content_category b ON a.category_idx=b.idx
 		WHERE del_flag='N' AND a.idx=#{idx}
 	</select>
-	
-    <insert id="tb_visitor_insert" parameterType="hanibal.ibs.model.statis.VisitCountVO">
-        INSERT
-        INTO tb_visitor
-        (
-            visit_ip,
-            visit_time,
-            <if test="visit_refer != null and visit_refer !=''">
-            visit_refer,
-            </if>
-            visit_agent
-        )
-        VALUES
-        (
-            #{visit_ip},
-            now(),
-            <if test="visit_refer != null and visit_refer !=''">
-            #{visit_refer},
-            </if>
-            #{visit_agent}
-        )
-    </insert>
+
     
 </mapper>

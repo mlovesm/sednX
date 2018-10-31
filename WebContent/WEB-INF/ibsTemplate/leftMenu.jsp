@@ -488,7 +488,7 @@
                      <div class="btn btn-sm pull-left m-b-5 blackBtn" id="photoFromPc">PC에서 썸네일 가져오기</div><br>
                      <div class="btn btn-sm pull-left blackBtn" onclick="common.selectRepoSource('media');">저장소에서 썸네일 가져오기</div>
                  </div>
-	            <input type="text" id="vod_title" class="form-control m-b-10 validate[required,maxSize[20]]" placeholder="제목">
+	            <input type="text" id="vod_title" class="form-control m-b-10 validate[required,maxSize[40]]" placeholder="제목">
 	            <textarea id="vod_content" class="form-control m-b-10 validate[required]" placeholder="내용"></textarea>
 	            <input type="hidden" class="form-control" id="vodIdx" />
 				<input type="hidden" class="form-control" id="keyword" value="동영상"/>
@@ -562,7 +562,7 @@
 	          				<input type="text" id="photo_path" class="validate[required,funcCall[uploadFile.checkPhotoExist]]" style="opacity: 0;width:1px;height:1px;"> 
 	  					</div> 
 	            </div>
-	            <input type="text" id="photo_title" class="form-control m-b-10 validate[required,maxSize[20]]" placeholder="제목">
+	            <input type="text" id="photo_title" class="form-control m-b-10 validate[required,maxSize[40]]" placeholder="제목">
 	            <textarea id="photo_content" class="form-control m-b-10 validate[required]" placeholder="내용"></textarea>
 	            <input type="hidden" class="form-control" id="photoIdx" />
 				<input type="hidden" class="form-control" id="photoKeyword" value="동영상"/>
@@ -679,7 +679,7 @@
             <div class="modal-content">                            
                 <div class="modal-body" style="text-align: center;">
                     <p class="p-10">LIVE 정보를 입력하세요.</p>
-                    <input type="text" id="streamTitle" class="form-control m-b-10 validate[required,maxSize[10],custom[onlyLetterSp]]" placeholder="채널명" />
+                    <input type="text" id="streamTitle" class="form-control m-b-10 validate[required,maxSize[40],custom[onlyLetterSp]]" placeholder="채널명" />
                     <input type="text" id="streamAddress" class="form-control validate[required,maxSize[100],custom[url]]" placeholder="주소" />
                     <input type="hidden" class="form-control" id="streamIdx" />
                 </div>
@@ -1672,7 +1672,7 @@ $(function(){
 				var myPlayer = videojs(playerName);
 				myPlayer.dispose();
 				delete videojs.getPlayers()[playerName];
-				console.log('delCashPlayer', '닫음');
+				console.log('path:web/media delCashPlayer', '닫음');
 			}
 		};
 		var vodDefault=function(){

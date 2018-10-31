@@ -581,37 +581,11 @@ public class IbsCmsDAO {
 		bos.close();
 		bis.close();
 		
-	}
+	}	
 	
-	//추가 by MGS
 	public void tb_sedn_logInsert(Map<String, Object> commandMap) {
 		sqlTemplate.insert("tb_sedn_logInsert",commandMap);	
 	}
-	
-	public List<HashMap<String, Object>> statisticsVODList(String searchWord, String childIdx) {
-		Map<String,Object> map= new HashMap<String,Object>();
-		String eachFlag="";
-		if(childIdx.length()!=0) {
-			int childIdxArr[]=HanibalWebDev.StringToIntArray(childIdx);
-			eachFlag="Y";
-			map.put("childIdxArr", childIdxArr);
-		}
-		map.put("searchWord", searchWord);
-		map.put("eachFlag",eachFlag);
-		
-		List<HashMap<String, Object>> lists=sqlTemplate.selectList("statisticsVODList", map);
-		return lists;
-	}
-	
-	public HashMap<String, Object> statisticsVODDetail(String idx) {
-		Map<String,Object> paramMap= new HashMap<String,Object>();
-		paramMap.put("idx", idx);
-		
-		HashMap<String, Object> map=sqlTemplate.selectOne("statisticsVODDetail", paramMap);
-		return map;
-	}	
-	
-	
 	
 	
 }

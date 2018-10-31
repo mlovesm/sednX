@@ -162,6 +162,16 @@
 		<property name="mediaIp" value="${Server.MEDIA}"></property> 
 		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
 	</bean>
+	
+	<!-- Statistics DAO & CONTROLLER [2018.10.31 MGS]--> 
+	<bean id="statisticsDAO" class="hanibal.ibs.dao.StatisticsDAO" p:sqlFactory-ref="sqlFactory" p:sqlTemplate-ref="sqlSessionTemplate"/>
+	<bean id="statisticsController" class="hanibal.ibs.controller.StatisticsController">
+		<property name="statisticsDAO" ref="statisticsDAO"></property>
+		<property name="webApiDao" ref="ibsWebApiDAO"></property>
+		<property name="sednIp" value="${Server.SEDN}"></property>
+		<property name="mediaIp" value="${Server.MEDIA}"></property> 
+		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
+	</bean>
 
 	
 	<!-- MESSAGE & LOCALE SERVICE -->

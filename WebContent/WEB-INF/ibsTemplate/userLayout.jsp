@@ -103,6 +103,7 @@
 				<input type="hidden" class="form-control" id="boardPlay_url"/>
 				<input type="hidden" class="form-control" id="boardPlay_thum"/>
 				<input type="hidden" class="form-control" id="categoryIdx" value="1"/>
+				<input type="hidden" class="form-control" id="vod_idx" value=""/>
 		</div><!-- //팝업창 -->
 		<!-- -#############영상보기 모달창   -->
 </body>
@@ -179,7 +180,22 @@ var common={
 		var player = videojs('vodPlayer', options,
 			function onPlayerReady() {
 				this.play();
+				console.log('onPlay');
+				//VOD 재생 조회
+				$.ajax({
+					url : "${pageContext.request.contextPath}/api/vod/insertHistory",
+					type : 'post',
+					data : {
+						"vod_idx": $('#vod_idx').val(),
+						"play_time": player.currentTime()
+					},
+					success : function(responseData){
+						console.log(responseData.response);
+					},
+					error : common.ajaxException
+				});
 				this.on('ended', function() {
+					console.log('ended', player.currentTime(), player.duration());
 				});
 			});
 	},
@@ -187,6 +203,7 @@ var common={
 		//var playerCash = playerName;
 		if (videojs.getPlayers()[playerName]) {
 			var myPlayer = videojs(playerName);
+			console.log('path:/ delCashPlayer', '창 닫음', myPlayer.currentTime(), myPlayer.duration());
 			myPlayer.dispose();
 			delete videojs.getPlayers()[playerName];
 		}
@@ -250,7 +267,10 @@ var common={
 				$('#downloadUl').empty();
 				$('#photoList').empty();
 
-				console.log(data.vodRelative.vodFile);
+				// MGS
+				console.log('path:/ 모달 열기', data.vodRelative.vodFile, data.vodRelative.idx);
+				$("#vod_idx").val(data.vodRelative.idx);
+				
 				$('#downloadUl').append('<li>· <a href="${pageContext.request.contextPath}/sedn/download/vod/'+data.vodRelative.vodFile.split('.')[1]+'/'+data.vodRelative.vodFile.split('.')[0]+'">'+data.vodRelative.vodFile+'</a></li>');
 				if(data.info.photo_repo.length!=0){
 					var imgArr=data.info.photo_repo.split(',');

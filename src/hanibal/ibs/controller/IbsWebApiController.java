@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import hanibal.ibs.dao.IbsWebApiDAO;
+import hanibal.ibs.library.DataMap;
 import hanibal.ibs.library.HanibalWebDev;
 import hanibal.ibs.model.cms.FileDTO;
 import hanibal.ibs.model.cms.LiveDTO;
@@ -875,42 +878,6 @@ public class IbsWebApiController {
 		}
 	}
 	
-	//추가 MGS
-	@RequestMapping("/api/statisticsTree/{order}/{idx}")
-	public String statisticsTree(@PathVariable String order,@PathVariable String idx,Model model,HttpServletRequest req) throws Exception {
-		String selected_node_id =idx;
-		
-		String treeMenu="";
-		List<AdvenceTree> lists=webApiDao.getAdvenceTree(order);
-		if(order.equals("live")) {
-			selected_node_id=lists.get(1).getId();
-		}
-		log.info("-------"+order+"--------->"+selected_node_id);
-		lists.get(0).setParent("#");
-		for(int i=0;i<lists.size();i++) {
-			treeMenu+="{\"id\":\""+lists.get(i).getId()+"\",\"parent\":\""+lists.get(i).getParent()+"\",\"text\":\""+lists.get(i).getText();
-			if(lists.get(i).getProperty().equals("1")) {
-				treeMenu+=" ["+lists.get(i).getNum()+"]";
-			}
-			treeMenu+="\",";
-			treeMenu+= "\"name\":\""+lists.get(i).getName()+"\",\"num\":\""+lists.get(i).getNum()+"\",\"property\":\""+lists.get(i).getProperty()+"\",";
-			if(i==0) {
-				treeMenu+="\"icon\":\""+req.getContextPath()+"/ibsImg/root.png\"";
-			}else if(lists.get(i).getProperty().equals("0")) {
-				treeMenu+="\"icon\":\""+req.getContextPath()+"/ibsImg/menu.png\"";
-			}else{
-				treeMenu+="\"icon\":\""+req.getContextPath()+"/ibsImg/list.png\"";
-			}		
-			treeMenu+= ",\"state\":{\"opened\":true";
-			if(lists.get(i).getId().equals(selected_node_id)) {
-					treeMenu+=",\"selected\":true";	
-			}
-			treeMenu+="}},";
-		}
-		model.addAttribute("treeMenu", treeMenu);
-		model.addAttribute("sort", order);
-		return "/ibsInclude/statisticsTree.inc";
-	}
 	
  }
 
