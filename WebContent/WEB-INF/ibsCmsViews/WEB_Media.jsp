@@ -62,9 +62,11 @@ pageEncoding="UTF-8"%>
                       </div>
                       <div class="photo-gallery clearfix">
                           <div class="photo">
+                          		<!-- contentView Start -->
                               <div class="form_div col-md-12" id="contentView">
-                                  
+                              
                               </div>
+                              <!-- contentView End -->
                           </div>
                       </div>
 
@@ -102,8 +104,8 @@ pageEncoding="UTF-8"%>
 <input type="hidden" class="form-control" id="categoryName"/>
 <input type="hidden" class="form-control" id="treeIdx" >
 <input type="hidden" class="form-control" id="treeProperty" value="1">
-<input id="repoOrder" type="text" class="form-control"/>
-<input id="requestRepo" type="text" class="form-control" value="media">
+<input id="repoOrder" type="hidden" class="form-control"/>
+<input id="requestRepo" type="hidden" class="form-control" value="media">
 
 <script>
 $('#categoryIdx').val('${hn:getDefaultContentsIdx()}');

@@ -2297,12 +2297,12 @@ a.list-group-item.active > .badge,
    left: -188px;
 }
 
-.form_div { overflow-y: auto; height: 770px; padding: 10px;}
+.form_div { overflow-y: auto; height: 750px; padding: 10px;}
 .img_box { width: calc(25% - 10px); height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); float: left; margin: 5px;}
 
 .vod_img_box { height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
-.vod_text_box { height: 50px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
-.vod_text_box h4 { line-height: 25px;}
+.vod_text_box { height: 35px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
+/* .vod_text_box h5 { line-height: 25px;} */
 
 .bx-wrapper {margin: 10px 20px; position: relative;}
 .bx-prev {position: absolute; top: 50%; left: -20px; font-size: 0; background: url(../ibsImg/arr_prev.png) no-repeat; width: 14px; height: 57px; margin-top: -28px;}
@@ -2312,7 +2312,7 @@ a.list-group-item.active > .badge,
 .thumnail a.close {position: absolute; right: 7px; opacity: 1;}
 .thumnail a.add {position: absolute; top: 50%; left: 50%; margin: -10px 0 0 -10px;}
 
-.photoForm .form_div { overflow-y: auto; height: 770px; padding: 10px;}
+.photoForm .form_div { overflow-y: auto; height: 750px; padding: 10px;}
 .photoForm .img_box { width: calc(25% - 10px); height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); float: left; margin: 5px;}s
 
 .mainImgPopup { font-family: 'Noto Sans KR', sans-serif;}
@@ -2364,3 +2364,5 @@ a.list-group-item.active > .badge,
 .dropdown-menu.open {max-height: 654px; overflow: auto;}
 .img_box {position: relative}
 .img_box p.text-center {width:100%; top:65%; position: absolute; margin-top: 0 !important;}
+
+.file_text_box { height: 35px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}

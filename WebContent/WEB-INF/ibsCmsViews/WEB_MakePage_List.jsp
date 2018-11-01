@@ -10,7 +10,7 @@
          <div class="form_div col-md-12">
               <c:choose>
 				<c:when test="${empty lists }">
-					<div style="height: 100px;">데이타가 없습니다.</div>
+					<div style="height: 100px;">데이터가 없습니다.</div>
 				</c:when>
 				<c:otherwise>
 					<c:forEach items="${lists}" var="list" varStatus="loop">
@@ -102,7 +102,7 @@
 				if($('#photoRepo').val().length==0&&$('#fileRepo').val().length==0){
 					$('#downloadUl').append('<li>파일 없음</li>');
 				}
-				$('#saveFileList').append('&nbsp;&nbsp;&nbsp;&nbsp;<div class="btn btn-sm" onclick="common.selectRepoSource(\'file\');">파일추가</div>');
+				$('#saveFileList').append('<div class="btn btn-sm" onclick="common.selectRepoSource(\'file\');">파일추가</div>');
 				$('#boardSlideShow').append('<li ><a class="add" onclick="common.selectRepoSource(\'photo\');"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
 				$("#boardPlay_url").val(data.vodRelative.vod_path);
 				$("#boardPlay_thum").val('${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
@@ -203,12 +203,13 @@
 		}
 	});
 	$('#boardAdd').click(function(){
+		$('#boardViewModal').closest('.modal').find('.form-validation-6').validationEngine('hideAll');
 		$('#boardDel').css('display','none');
 		$('#boardMediaView').css('display','none');
 		$('#boardMediaEdit').css('display','block');
 		common.boardDefault();
 		$('#saveFileList').empty();
-		$('#saveFileList').append('&nbsp;&nbsp;&nbsp;&nbsp;<div class="btn btn-sm" onclick="common.selectRepoSource(\'file\');">파일추가</div>');
+		$('#saveFileList').append('<div class="btn btn-sm" onclick="common.selectRepoSource(\'file\');">파일추가</div>');
 		$('#boardSlideShow').empty();
 		$('#boardSlideShow').append('<li ><a class="add" onclick="common.selectRepoSource(\'photo\');"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
 		$('#boardLetsEditPlay').css('display','none');

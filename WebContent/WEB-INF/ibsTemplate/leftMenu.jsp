@@ -12,7 +12,7 @@
 .bell {font-size: 15px; font-weight: normal;}
 .modal .thumnail a.close {position: absolute; right: 2px; top: 2px; opacity: 1; background: rgba(0,0,0,0.5); width: 16px; height: 16px; border-radius: 8px !important; }
 .modal .thumnail a.close img {margin-top: -1px;}
-.form_div.sm {height: 350px;}
+.form_div.sm {height: 450px;}
 .form_div.sm .img_box {width: calc(50% - 10px); height: 105px;}
 </style>
 <style>
@@ -900,7 +900,7 @@
  <!-- ###############스케쥴 편집 모달 끝 ######################## -->
  <!-- ################## content list modal start####################--> 
  <div class="modal fade in" id="repositoryList" tabindex="-1" role="dialog" aria-hidden="false"> 
-    <div class="modal-dialog" style="width:500px; margin-top: 10%;">
+    <div class="modal-dialog" style="width:600px; margin-top: 10%;">
         <div class="modal-content"> 
             <div class="modal-header" style="overflow: hidden;">
                 <h5 class="pull-left">저장소에서 가져오기</h5>
@@ -918,7 +918,7 @@
             </div>                           
             <div class="modal-body" style="text-align: center;">
                <div class="col-md-12">
-                   <div class="col-md-4" style="width:26%;">
+                   <div class="col-md-4" style="width:28%;">
                    <!-- TREE START-->
 					<div  id="video" style="position:relative; left:-25px;"></div>
 					<!-- TREE END-->
@@ -1685,7 +1685,6 @@ $(function(){
 			$('#letsEditPlay').css('display','block');
 			$('#vodForm')[0].reset();
 			$('#vodSlideShow').empty();
-			
 		};
 		var photoDefault=function(){
 			$('#photoViewArea').empty();

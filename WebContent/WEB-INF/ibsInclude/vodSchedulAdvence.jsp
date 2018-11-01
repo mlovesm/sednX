@@ -4,6 +4,7 @@
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="hn" uri="/WEB-INF/tlds/hanibalWebDev.tld" %>
+<!-- vodSchedulAdvence -->
 <style>
     .b {top:10px; left:10px; position: absolute;}
     .form_show {
@@ -78,8 +79,9 @@ $(function(){
 			all_parents.splice(0,1);
 		}
 		$('#searchIdx').val(sel.children_d);
-			common.repolist(sel.children_d);
-		});
+		//console.log(sel.children_d, sel.id, all_children);
+		common.repolist(all_children);
+	});
 });
 
 

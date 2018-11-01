@@ -264,7 +264,7 @@ public class IbsCmsController {
 							Integer.parseInt(nowPage),
 							req.getContextPath()+"/cms/list/vod?");
 			model.addAttribute("pagingStr", pagingStr);*/
-			viewPage="/ibsCmsViews/WEB_Contents_vodPage.inc";
+			viewPage="/ibsCmsViews/WEB_MakePage_vod.inc";
 		}else if(order.equals("photo")) {
 			//pageSize=18;
 			//blockPage=18;
@@ -936,6 +936,46 @@ public class IbsCmsController {
 		file=file+"."+type;
 		String path=repositoryPath+"/"+sort.toUpperCase()+HanibalWebDev.getDataPath(file)+file;
 		ibsCmsDao.fileDownLoad(path,res,req);
+	}
+	
+	// by MGS 2018.11.01
+	/* PAGE VOD 영상 가져오기 */
+	@RequestMapping("/cms/makePageList/{order}")
+	public String makePageVODList(
+			@RequestParam(required=false) String authority,
+			//공통 파라미터 
+			@PathVariable String order,
+			ModelMap mav,
+			@RequestParam(required=false) String nowPage,
+			@RequestParam(required=false) String searchWord,
+			@RequestParam(required=false) String childIdx,
+			HttpServletResponse res,
+			HttpServletRequest req,
+			Model model
+			)throws Exception {
+		
+		String viewPage = "";
+		if(searchWord== null) searchWord="";
+		int totalRecordCount, start,end;
+		if(nowPage == null||Integer.parseInt(nowPage)<1) nowPage="1";
+
+		totalRecordCount = ibsCmsDao.getVodTotalRecordCount(searchWord,childIdx);
+
+		start=0;
+		end = totalRecordCount;
+		List<VodDTO> lists=ibsCmsDao.vodList(searchWord,childIdx,start,end);
+		for(int i=0;i<lists.size();i++) {
+			lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());
+		}
+		for(int i=0;i<lists.size();i++) {
+			lists.get(i).setVod_path("http://"+mediaIp+"/"+order.toUpperCase()+HanibalWebDev.getDataPath(lists.get(i).getVod_path())+lists.get(i).getVod_path()+"/index.m3u8");
+		}
+		model.addAttribute("lists", lists);
+		model.addAttribute("searchWord",searchWord);
+
+		viewPage="/ibsCmsViews/WEB_MakePage_vod.inc";
+		
+		return viewPage;
 	}
 	
 	

@@ -7,20 +7,15 @@
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
 <c:choose>
 	<c:when test="${empty lists }">
-		<div style="height: 100px;"><h2>데이터가 없습니다.</h2></div>
+		<div style="height: 100px;"><h1>데이터가 없습니다.</h1></div>
 	</c:when>
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
-			<div style="float:left; width:calc(25% - 10px);">
-				<div class="vod_img_box" id="layer_${list.idx}" style="background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center; background-size: cover;">
-					<input class="pull-left m-l-5 vodCheck" type="checkbox" value="${list.idx}"/>
-					<input class="pull-left m-l-5 vodRadio" type="radio"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />
-					<div class="imgPopup" id="${list.idx}"  style="left:30px;width:90%;height:100%;position:relative;"></div>
-				</div>
-				<div class="vod_text_box">
-					<div><h5>${list.vod_title}</h5></div>
-				</div>
-			</div>	
+			<div class="img_box" id="layer_${list.idx}" style="background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center; background-size: cover;">
+				<input class="pull-left m-l-5 vodCheck" type="checkbox" value="${list.idx}"/>
+				<input class="pull-left m-l-5 vodRadio" type="radio"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />
+				<div class="imgPopup" id="${list.idx}"  style="left:30px;width:90%;height:100%;position:relative;"></div>
+			</div>
 		</c:forEach>
 	</c:otherwise>
 </c:choose>

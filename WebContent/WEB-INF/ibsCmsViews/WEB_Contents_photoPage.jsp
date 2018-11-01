@@ -7,7 +7,7 @@
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
 <c:choose>
 	<c:when test="${empty lists }">
-		<div style="height: 100px;"><h1>데이터가 없습니다.</h1></div>
+		<div style="height: 100px;"><h2>데이터가 없습니다.</h2></div>
 	</c:when>
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
