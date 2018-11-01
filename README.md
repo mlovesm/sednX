@@ -28,7 +28,3 @@ request [/cms/list/vod] are [/cms/list/{order}] are {order=vod}
 
 
 path: /  VOD 재생 param
-common.vodPlayer("http://52.78.175.141:8090/VOD/2018/10/23/20181023014440.mp4/index.m3u8"
-	,"/REPOSITORY/THUMBNAIL/2018/10/23/20181023014440_0.jpg" ,"boardViewArea");
-
-
