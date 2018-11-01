@@ -1972,6 +1972,7 @@ $(function(){
               		+'</li>');
 		   		slide.init();
 		   		$('#repositoryList').modal('hide');
+		   		
 		}else if($('#requestRepo').val()=="media"){
 			//저장소 미디어일 경우 사진 추가 라이브 일경우 
 			if($('#tempPhotoList').val()!=""){
@@ -2044,6 +2045,7 @@ $(function(){
 				$('#fileRepo').val(totalFileArr);
 				$('#repositoryList').modal('hide');
 			}
+			
 		}else if($('#requestRepo').val()=="vod"){
 			if($('#tempVodList').val()!=""){
 				$('#vodRepo').val($('#tempVodList').val());

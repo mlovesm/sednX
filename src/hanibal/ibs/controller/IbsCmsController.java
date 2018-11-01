@@ -52,8 +52,6 @@ import hanibal.ibs.model.stb.StbDTO;
 import hanibal.ibs.model.webapi.LayoutDTO;
 import hanibal.ibs.model.webapi.TreeMenu;
 
-@SuppressWarnings("unchecked")
-
 @Controller
 public class IbsCmsController {
 	Logger log = Logger.getLogger(this.getClass());
@@ -264,7 +262,7 @@ public class IbsCmsController {
 							Integer.parseInt(nowPage),
 							req.getContextPath()+"/cms/list/vod?");
 			model.addAttribute("pagingStr", pagingStr);*/
-			viewPage="/ibsCmsViews/WEB_MakePage_vod.inc";
+			viewPage="/ibsCmsViews/WEB_Contents_vodPage.inc";
 		}else if(order.equals("photo")) {
 			//pageSize=18;
 			//blockPage=18;
