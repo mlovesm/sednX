@@ -350,6 +350,7 @@ public class IbsCmsController {
 							req.getContextPath()+"/cms/list/live?");
 			model.addAttribute("pagingStr", pagingStr);*/
 			viewPage="/ibsCmsViews/WEB_Contents_streamPage.inc";
+			
 		}else if(order.equals("board")) {
 			/*pageSize=10;
 			blockPage=10;*/

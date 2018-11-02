@@ -2382,8 +2382,8 @@ $(function(){
 		//용량
 		$('#thumnailSource').css('display','none')
 		var file=this.files;
-		if (file[0].size > 3000*1024 * 1024) {
-			jQuery('#vod_path').validationEngine('showPrompt', '3GB 이하 파일만 업로드 하세요.', 'pass')
+		if (file[0].size > 6000*1024 * 1024) {
+			jQuery('#vod_path').validationEngine('showPrompt', '6GB 이하 파일만 업로드 하세요.', 'pass')
 			return;
 		}
 		$("#file_size").val(file[0].size);

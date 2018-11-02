@@ -2299,9 +2299,11 @@ a.list-group-item.active > .badge,
 
 .form_div { overflow-y: auto; height: 750px; padding: 10px;}
 .img_box { width: calc(25% - 10px); height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); float: left; margin: 5px;}
+.vodCheck, .vodRadio { position: absolute; top: 0; left: 0; }
 
 .vod_img_box { height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
-.vod_text_box { height: 35px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
+.vod_text_box { position: absolute; width: 100%; bottom: 0;}
+.vod_text_box > h6 { margin: 0; background-color: black; padding: 8px; opacity: 0.6;/*  text-shadow: -1px 1px 5px #d3d3d3, 1px -1px 13px #d3d3d3; */ }
 /* .vod_text_box h5 { line-height: 25px;} */
 
 .bx-wrapper {margin: 10px 20px; position: relative;}

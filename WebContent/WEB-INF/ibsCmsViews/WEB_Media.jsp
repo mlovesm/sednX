@@ -200,9 +200,10 @@ $('#selectSort').change(function(){
 	$('#editBtns').css('display','none');
 	
 });
-$('#goEdit').click(function(){
+$('#goEdit').click(function(){	//편집
 	if($('#selectSort').val()=="vod"){
 		$('.vodCheck').css('display','block');
+		
 	}else if($('#selectSort').val()=="stream"){
 		$('.selectCheck').css('display','block');
 	}else if($('#selectSort').val()=="photo"){
@@ -316,7 +317,7 @@ $('#checkMove').click(function(){
 		menuJs.makeSelJstree();
 	}
 });
-$('#checkDel').click(function(){
+$('#checkDel').click(function(){	//삭제
 	var checkValArr=$("#selectedIdxs").val();
 	if(checkValArr.length==0){
 		exception.checkboxException();

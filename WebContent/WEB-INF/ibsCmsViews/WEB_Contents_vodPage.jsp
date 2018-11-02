@@ -11,18 +11,17 @@
 	</c:when>
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
-		<div class="img_box imgPopup" id="${list.idx}" style="background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
+		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
 				 background-size: cover; display: inline-block;">
-				 
-			<div  id="layer_${list.idx}">
+			<div class="imgPopup" id="${list.idx}" style="height: 100%;"></div>
+			<div>
 				<input class="pull-left m-l-5 vodCheck" type="checkbox" value="${list.idx}"/>
-				<input class="pull-left m-l-5 vodRadio" type="radio"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />
-				
-				
+				<input class="pull-left m-l-5 vodRadio" type="radio"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />	
 			</div>
-			<div style="display: grid; align-content: end; height:100%;">
-				<h6 style="margin: 0; background-color: black; padding: 8px; opacity: 0.5;">${list.vod_title}</h6>
+			<div class="vod_text_box">
+				<h6>${list.vod_title}</h6>
 			</div>
+			
 		</div>
 		</c:forEach>
 	</c:otherwise>
@@ -35,7 +34,9 @@
 if($('#requestRepo').val()=='media'){
 	$('.vodCheck').css('display','none');
 	$('.vodRadio').css('display','none');
+	
 	$('.imgPopup').click(function(){
+		console.log('imgPopup');
 		$('#vodMediaView').css('display','block');
 		$('#vodMediaEdit').css('display','none');
 		common.delCashPlayer('vodPlayer');
@@ -127,7 +128,8 @@ if($('#requestRepo').val()=='media'){
 	});
 	
 	var arr=[];
-	$(".vodCheck").click(function(){
+	$(".vodCheck").click(function(e){
+		e.stopPropagation();
 		if($(this).is(":checked")==true){
 			arr.push($(this).val());
 		}else{
@@ -135,6 +137,7 @@ if($('#requestRepo').val()=='media'){
 		}
 		$("#selectedIdxs").val(arr);
 	});
+	
 }else if($('#requestRepo').val()=='vod'){
 	$('.vodCheck').css('display','none');
 	$('.vodRadio').css('display','block');

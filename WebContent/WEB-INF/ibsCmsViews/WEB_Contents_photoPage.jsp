@@ -13,7 +13,10 @@
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}" style="background: url('${pageContext.request.contextPath}${list.photo_path}') no-repeat center; background-size: cover;">
 				<input class="pull-left m-l-5 photoCheck" type="checkbox" value="${list.idx}"/>
-				<div class="imgPopup" id="${list.idx}"  style="left:30px;width:90%;height:100%;position:relative;"></div>
+				<div class="imgPopup" id="${list.idx}" style="height:100%;"></div>
+				<div class="vod_text_box">
+					<h6>${list.photo_title}</h6>
+				</div>
 			</div>
 		</c:forEach>
 	</c:otherwise>

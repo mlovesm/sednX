@@ -363,7 +363,7 @@ public class IbsAppDAO {
 	public HashMap<String, Object> getSettingInfo() {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("start_page", "vod");
-		map.put("conf_server_ip", "182.162.172.133");
+		map.put("conf_server_ip", "52.78.175.141");
 		map.put("conf_server_port", "8443");
 		
 		return map;

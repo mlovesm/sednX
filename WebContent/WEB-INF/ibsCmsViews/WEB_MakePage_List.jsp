@@ -16,12 +16,15 @@
 					<c:forEach items="${lists}" var="list" varStatus="loop">
 			             <div class="img_box" id="layer_${list.idx}" style="background: url(${list.vod_repo}) no-repeat center; background-size: cover;">
 			                 <input class="pull-left m-l-5 boardCheck" type="checkbox" value="${list.idx}"/>
-							<div class="imgPopup" id="${list.idx}"  style="left:30px;width:90%;height:100%;position:relative;"></div>
+							<div class="imgPopup" id="${list.idx}"  style="height: 100%;"></div>
 			                 <!-- <label class="checkbox-inline m-10 pull-left checkMode" style="display:none;">
 			                     <span class="checkableBox">
 			                         <input type="checkbox" id="inlineCheckbox1"> 
 			                     </span>
 			                 </label> -->
+							<div class="vod_text_box">
+								<h6>${list.board_title}</h6>
+							</div>
 			             </div>
              		</c:forEach>
 				</c:otherwise>
@@ -48,6 +51,7 @@
  <script>
 	$('.boardCheck').css('display','none');
 	$('.imgPopup').click(function(){
+		$('#downloadList').css('display','none');
 		$('#boardDel').css('display','block');
 		$('#boardMediaView').css('display','block');
 		$('#boardMediaEdit').css('display','none');
@@ -215,6 +219,11 @@
 		$('#boardLetsEditPlay').css('display','none');
 		$('#boardOrder').val('insert');
 		$('#boardViewModal').modal();
+	});
+	
+	$('#downloadList img').on('click', function(e){
+		$('#downloadList').css('display','none');
+		e.preventDefault();
 	});
 	
  </script>
