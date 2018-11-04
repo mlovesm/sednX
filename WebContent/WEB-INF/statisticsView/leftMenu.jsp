@@ -17,7 +17,7 @@
 			</ul>
 		</li>
 		<li class="menu02 on">
-			<a href="sub_01.html">Statistics</a>
+			<a href="${pageContext.request.contextPath}/sedn/statistics/vod">Statistics</a>
 			<ul class="depth2">
 				<li class="on"><a href="${pageContext.request.contextPath}/sedn/statistics/vod">VOD 통계</a></li>
 				<li><a href="${pageContext.request.contextPath}/sedn/statistics/live">LIVE 시청 통계</a></li>
@@ -241,60 +241,5 @@ var exception = (function() {
 	};
 }());
 
-
-var modalLayer = (function() {
-	var livePlayer = function(idx, group, name, url) {
-		if (videojs.getPlayers()['my-player_' + idx]) {
-			delete videojs.getPlayers()['my-player_' + idx];
-		}
-		$("#playerBody").html('');
-		$("#playerTitle").html(group + "/" + name)
-		var html = '<video id="my-player_'
-				+ idx
-				+ '" class="video-js"  controls preload="auto"  poster="${pageContext.request.contextPath}/img/live.jpg"  data-setup="{}" style="width: 100% !important; height: 100% !important;">';
-		html += '<source  src="'+url+'"  type="application/x-mpegURL"></source>';
-		html += '</video>';
-		$("#playerId").val('my-player_' + idx);
-		$("#playerBody").html(html);
-		$("#playerModel").modal();
-		var options = {};
-		var player = videojs('my-player_' + idx, options,
-				function onPlayerReady() {
-					this.play();
-					this.on('ended', function() {
-						videojs.log(' so soon?!');
-					});
-				});
-	};
-	var playerClean = function() {
-		console.log('닫음');
-		var playerCash = $("#playerId").val();
-		var myPlayer = videojs(playerCash);
-		if (videojs.getPlayers()[eval("'" + playerCash + "'")]) {
-			myPlayer.dispose();
-			delete videojs.getPlayers()[eval("'" + playerCash + "'")];
-		}
-	};
-	var vodPlayer=function(url,thumbnail,target){
-		common.delCashPlayer('vodPlayer');
-		var html = '<video id="vodPlayer" class="video-js"  controls preload="auto"  poster="'+thumbnail+'"  data-setup="{}" style="width: 100% !important; height: 100% !important;">';
-		html += '<source  src="'+url+'"  type="application/x-mpegURL"></source>';
-		html += '</video>';
-		$("#"+target).empty();
-		$("#"+target).html(html);
-		var options = {};
-		var player = videojs('vodPlayer', options,
-			function onPlayerReady() {
-				this.play();
-				this.on('ended', function() {
-				});
-			});
-	};
-	return {
-		livePlayer : livePlayer,
-		playerClean : playerClean,
-		vodPlayer:vodPlayer
-	};
-}());
 
 </script>

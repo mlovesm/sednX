@@ -86,7 +86,7 @@
 				$("#boardIdx").val(data.info.idx);
 				//$("#photoList").val(data.thumb);
 				$("#categoryIdx").val(data.info.category_idx);
-				$('#vodRepo').val(data.info.vod_repo);
+				$('#vodRepo').val(data.info.vod_repo);	// 해당 vod idx
 				$('#photoRepo').val(data.info.photo_repo);
 				$('#fileRepo').val(data.info.file_repo);
 				$('#downloadUl').empty();

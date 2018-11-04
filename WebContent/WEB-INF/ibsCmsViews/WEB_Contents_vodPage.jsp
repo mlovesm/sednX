@@ -103,6 +103,7 @@ if($('#requestRepo').val()=='media'){
 	
 	$('#letsPlay').click(function(){
 		//common.vodDefault();
+		console.log('letsPlay');
 		$('#vodViewArea').empty();
 		$('#vodPreview').empty();
 		$('#vodViewArea').html('<img src="${pageContext.request.contextPath}/img/live.jpg" alt="샘플" id="vodViewMainThumb">');
@@ -138,7 +139,7 @@ if($('#requestRepo').val()=='media'){
 		$("#selectedIdxs").val(arr);
 	});
 	
-}else if($('#requestRepo').val()=='vod'){
+}else if($('#requestRepo').val()=='vod'){	//PAGE 영상추가 프리뷰
 	$('.vodCheck').css('display','none');
 	$('.vodRadio').css('display','block');
 	$('.vodRadio').click(function(){

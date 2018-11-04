@@ -26,6 +26,18 @@ GET request for [/api/vodSchedule/vod] are [/api/vodSchedule/{order}] are {order
 GET request for [/api/seqKeyList]
 request [/cms/list/vod] are [/cms/list/{order}] are {order=vod}
 
+VOD 재생 함수
+메인
+페이지= userLayout, 함수: 모달= common.vodViewModal, 재생= common.vodPlayer
 
+CONTENT
+페이지= WEB_Contents_vodPage, 함수: 모달= $('#vodViewModal').modal(), target= vodViewArea
+페이지= leftMenu, 함수: 재생= modalLayer.vodPlayer
+
+PAGE
+페이지= WEB_Contents_vodPage, 함수: 모달= $('#boardViewModal').modal(), target= boardViewArea
+페이지= leftMenu, 함수: 재생= modalLayer.vodPlayer
+
+	
 path: /  VOD 재생 param
 

@@ -114,7 +114,7 @@ public class StatisticsController {
 		JSONObject jsonContents = new JSONObject();
 				
 		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", categoryIdx);
-		res.setCharacterEncoding("utf8");
+		res.setContentType("application/json; charset=UTF-8");
 		jsonContents.put("contents", statisticsVODList);
 		
 		jsonObject.put("result", true);
@@ -134,7 +134,7 @@ public class StatisticsController {
 		String childIdx = String.valueOf(dataMap.get("childIdx"));
 		System.out.println("dataMap= "+dataMap);
 		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", childIdx);
-		res.setCharacterEncoding("utf8");
+		res.setContentType("application/json; charset=UTF-8");
 		jsonContents.put("contents", statisticsVODList);
 		
 		jsonObject.put("result", true);

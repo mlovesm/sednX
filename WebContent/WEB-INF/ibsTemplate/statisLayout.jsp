@@ -54,8 +54,9 @@
 	<script src="${pageContext.request.contextPath}/ibsCmsJs/videojs-playlists.js"></script>   
 	
 	<!-- Grid -->
-	<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/tui-grid/css/tui-grid.min.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/tui-grid/css/checkbox.css" />
+	<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
       
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
@@ -70,7 +71,7 @@
 <div id="wrap">
 	<div class="top_container">
 		<div class="inner">
-			<h1><a href="#">SEDN</a></h1>
+			<h1><a href="/">SEDN</a></h1>
 			<div class="right">
 				<div class="login">
 					<p>관리자님 환영합니다.</p>

@@ -72,7 +72,8 @@ public class IbsStbApiController {
 		) throws JsonGenerationException, JsonMappingException, IOException {
 		HashMap<String, Object> hashMap;
 		Map<String, Object> msg=new HashMap<String, Object>();
-		res.setCharacterEncoding("utf8");
+		res.setCharacterEncoding("UTF-8");
+		res.setContentType("application/json; charset=UTF-8");
 		if(groupId==null) groupId=String.valueOf(TMPGROUP);
 		if(chIdx==null) chIdx=String.valueOf(TMPGROUP);
 		//펌웨어 업데이트 정보 

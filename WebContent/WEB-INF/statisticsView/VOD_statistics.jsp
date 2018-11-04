@@ -57,69 +57,9 @@ pageEncoding="UTF-8"%>
 					<button class="disapp">전체선택</button>
 					<button class="disapp">삭제</button>
 				</div>
-				<div id="grid"></div>			
 				
-				<div class="table_container text-center">
-					<table summary="통계 분석/이 표는 으로 구성">
-						<colgroup>
-							<col width="80px;" />
-							<col width="auto;" />
-							<col width="150px;" />
-							<col width="150px;" />
-							<col width="150px;" />
-							<col width="100px;" />
-							<col width="100px;" />
-						</colgroup>
-						<thead>
-							<tr>
-								<th>
-									<label class="hide" for="check01">체크박스</label>
-									<input type="checkbox" name="checkbox" id="check01" />
-								</th>
-								<th>제목</th>
-								<th>카테고리</th>
-								<th>영상시간</th>
-								<th>등록일</th>
-								<th>총 조회수</th>
-								<th>SNS 공유수</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<label class="hide" for="check01">체크박스</label>
-									<input type="checkbox" name="checkbox" id="check01" />
-								</td>
-								<td>영상제목...</td>
-								<td>카테고리...</td>
-								<td>00:00:00</td>
-								<td>2018.10.15</td>
-								<td>3,123</td>
-								<td>198</td>
-							</tr>						
-						</tbody>
-					</table>
-					
-					<!-- pagination -->
-	                <div class="pagination_container text-center">
-	                    <ul class="pagination">
-	                        <li><a href="#"><img src="${pageContext.request.contextPath}/statistics/img/arr_left02.png" alt="맨처음" /></a></li>
-	                        <li><a href="#"><img src="${pageContext.request.contextPath}/statistics/img/arr_left.png" alt="이전" /></a></li>
-	                        <li><a href="#">1</a></li>
-	                        <li><a href="#">2</a></li>
-	                        <li><a href="#">3</a></li>
-	                        <li><a href="#">4</a></li>
-	                        <li><a href="#">5</a></li>
-	                        <li><a href="#">6</a></li>
-	                        <li><a href="#">7</a></li>
-	                        <li><a href="#">8</a></li>
-	                        <li><a href="#">9</a></li>
-	                        <li><a href="#">10</a></li>
-	                        <li><a href="#"><img src="${pageContext.request.contextPath}/statistics/img/arr_right.png" alt="다음" /></a></li>
-	                        <li><a href="#"><img src="${pageContext.request.contextPath}/statistics/img/arr_right02.png" alt="마지막" /></a></li>
-	                    </ul>
-	                </div><!-- //pagination -->
-				</div>
+				<div id="grid"></div>			
+
 			</div>
 		</div>
 	</div> <!-- //contents_container -->
@@ -205,8 +145,8 @@ var grid = new tui.Grid({
         {
             title: '제목',
             name: 'vod_title',
-            align: 'center'
-            /* sortable: true, */
+            align: 'center',
+            ellipsis: true
         },
         {
             title: '카테고리',
@@ -221,12 +161,14 @@ var grid = new tui.Grid({
         {
             title: '등록일',
             name: 'reg_dt',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },
         {
             title: '총 조회수',
             name: 'vod_title_link',
-            align: 'center'
+            align: 'center',
+            sortable: true
         }
     ],
 

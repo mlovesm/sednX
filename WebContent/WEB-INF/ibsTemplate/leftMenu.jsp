@@ -1461,6 +1461,7 @@ $(function(){
 			}
 		};
 		var vodPlayer=function(url,thumbnail,target){
+			console.log(target);
 			common.delCashPlayer('vodPlayer');
 			var html = '<video id="vodPlayer" class="video-js"  controls preload="auto"  poster="'+thumbnail+'"  data-setup="{}" style="width: 100% !important; height: 100% !important;">';
 			html += '<source  src="'+url+'"  type="application/x-mpegURL"></source>';
@@ -1471,6 +1472,33 @@ $(function(){
 			var player = videojs('vodPlayer', options,
 				function onPlayerReady() {
 					this.play();
+					console.log('path: /sen/web play');
+					//VOD 재생 조회
+					var vod_idx = '';
+					var isHis = false;
+					if(target === 'vodViewArea') {
+						vod_idx= $("#vodIdx").val();
+						isHis = true;
+					}else if(target === 'boardViewArea') {
+						vod_idx= $('#vodRepo').val();
+						isHis = true;
+					}else{
+						
+					}
+					if(isHis) {
+	 					$.ajax({
+							url : "${pageContext.request.contextPath}/api/vod/insertHistory",
+							type : 'post',
+							data : {
+								"vod_idx": vod_idx,
+								"play_time": player.currentTime()
+							},
+							success : function(responseData){
+								console.log(responseData.response);
+							},
+							error : common.ajaxException
+						});
+					}
 					this.on('play', function() {
 						
 					});
