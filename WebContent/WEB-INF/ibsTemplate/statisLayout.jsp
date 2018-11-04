@@ -61,8 +61,8 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.6.2/jquery.mockjax.min.js"></script>
-	<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.4.0/tui-code-snippet.js"></script>
-	<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.2.0/tui-pagination.js"></script>
+	<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.4.0/tui-code-snippet.min.js"></script>
+	<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.2.0/tui-pagination.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/tui-grid/js/tui-grid.js"></script>
 
 		
