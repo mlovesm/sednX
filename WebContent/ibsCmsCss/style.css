@@ -2303,7 +2303,7 @@ a.list-group-item.active > .badge,
 
 .vod_img_box { height: 180px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
 .vod_text_box { position: absolute; width: 100%; bottom: 0;}
-.vod_text_box > h6 { margin: 0; background-color: black; padding: 8px; opacity: 0.6;/*  text-shadow: -1px 1px 5px #d3d3d3, 1px -1px 13px #d3d3d3; */ }
+.vod_text_box > h6 { margin: 0; background-color: black; padding: 8px; opacity: 0.75;/*  text-shadow: -1px 1px 5px #d3d3d3, 1px -1px 13px #d3d3d3; */ }
 /* .vod_text_box h5 { line-height: 25px;} */
 
 .bx-wrapper {margin: 10px 20px; position: relative;}
@@ -2368,3 +2368,6 @@ a.list-group-item.active > .badge,
 .img_box p.text-center {width:100%; top:65%; position: absolute; margin-top: 0 !important;}
 
 .file_text_box { height: 35px; border: 1px solid rgba(255, 255, 255, 0.7); margin: 5px;}
+
+/* add */
+#contentView { width: 100%; }

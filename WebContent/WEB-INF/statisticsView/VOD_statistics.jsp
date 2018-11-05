@@ -135,7 +135,7 @@ var grid = new tui.Grid({
     scrollX: false,
     scrollY: false,
     pagination: true,
-   /*  minBodyHeight: 300, */
+    bodyHeight: 500,
     rowHeaders: [
     	{
     		type: 'checkbox',
@@ -156,11 +156,13 @@ var grid = new tui.Grid({
         {
             title: '영상시간',
             name: 'vod_play_time',
+            width: 100,
             align: 'center'
         },
         {
             title: '등록일',
             name: 'reg_dt',
+            width: 100,
             align: 'center',
             sortable: true
         },
@@ -174,7 +176,7 @@ var grid = new tui.Grid({
 
 });
 
-tui.Grid.applyTheme('striped', {
+tui.Grid.applyTheme('default', {
     grid: {
         background: '#fff',
         border: '#ddd',
@@ -186,9 +188,9 @@ tui.Grid.applyTheme('striped', {
 });
 
 grid.use('Net', {
-    //perPage: 3,
+    perPage: 2,
     readDataMethod: 'GET',
-    initialRequest: true,
+    //initialRequest: true,
     api: {
         'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData/"+$('#categoryIdx').val(),
         'createData': './api/create',

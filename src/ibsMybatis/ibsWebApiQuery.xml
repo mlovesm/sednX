@@ -278,7 +278,7 @@
 				(a.idx) as idx,
 				(select category_name from tb_vod_category where idx=a.category_idx) as category_idx,
 				(a.vod_path) as vod_path,
-				CASE WHEN CHAR_LENGTH(a.vod_title) > 20 THEN CONCAT(LEFT(a.vod_title, 15), '...') ELSE a.vod_title END AS vod_title,
+				CASE WHEN CHAR_LENGTH(a.vod_title) > 19 THEN CONCAT(LEFT(a.vod_title, 16), '...') ELSE a.vod_title END AS vod_title,
 				(a.vod_content) as vod_content,
 				(a.vod_keyword) as vod_keyword,
 				(a.vod_play_time) as vod_play_time,

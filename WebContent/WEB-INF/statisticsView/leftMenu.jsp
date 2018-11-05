@@ -30,7 +30,7 @@
 	</ul>
 </div>
 
- <!-- ############### CONTENT VOD 모달 시작 ######################### -->
+ <!-- ############### Statistics 모달 시작 ######################### -->
  <div class="modal fade in" id="vodViewModal" tabindex="-1" role="dialog" aria-hidden="false"> 
  <div class="allClick" onClick="common.vodDefault();" data-dismiss="modal"></div>
 	<div class="modal-dialog"  id="vodMediaView">
@@ -47,7 +47,7 @@
                       </ul>
                   </div>
               </div>
-              <div class="contents">
+              <div class="media-contents">
                   <p class="title" id="vodViewTitle"></p>
                   <div class="data">
                       <p>등록일 :<span id="vodViewDate"> 2018.04.10</span></p>
@@ -65,12 +65,14 @@
               </div>
               <div class="modal-footer">
                   <button class="btn btn-sm cancel"  data-dismiss="modal">닫기</button>
-                  <button class="btn btn-sm pull-right" id="vodViewEdit">편집</button>
               </div>
           </div>
 	  </div>
 </div><!-- CONTENT VOD Modal -->
-
+<!-- 플레이어 히든  -->
+<input type="hidden" class="form-control" id="play_url"/>
+<input type="hidden" class="form-control" id="play_thum"/>
+				
 <!--######## WARN Modal ######-->
 <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="alert alert-danger alert-icon alert-dismissable fade in">
@@ -116,30 +118,6 @@ var exception = (function() {
 		$("#warnText").text("LOGIN ERROR:로그인에 오류가 있습니니다.");
 		$("#msgModal").modal();
 	};
-	var imageFileSizeException = function() {
-		$("#warnText").text("2MB 이하 이미지만 업로드 가능합니다. ");
-		$("#msgModal").modal();
-	};
-	var etcFileSizeException = function() {
-		$("#warnText").text("30MB 이하 파일만 업로드 가능합니다. ");
-		$("#msgModal").modal();
-	};
-	var imageFileExtException = function() {
-		$("#warnText").text("jpg,jpeg,gif,png 파일만 업로드 가능합니다.");
-		$("#msgModal").modal();
-	};
-	var etcFileExtException = function() {
-		$("#warnText").text("zip,rar,hwp,doc,ppt,xlx,ai,pdf,pds,mp3 파일만 업로드 가능합니다.");
-		$("#msgModal").modal();
-	};
-	var imageFileUpdateException = function() {
-		$("#warnText").text("이미지 업데이트에 실패했습니다.");
-		$("#msgModal").modal();
-	};
-	var fileUpdateException = function() {
-		$("#warnText").text("이미지 업로드에 실패했습니다.");
-		$("#msgModal").modal();
-	};
 	var searchException = function() {
 		$("#warnText").text("검색어를 입력해 주세요.");
 		$("#msgModal").modal();
@@ -148,98 +126,77 @@ var exception = (function() {
 		$("#warnText").text("체크박스를 한개 이상 체크 해 주세요.");
 		$("#msgModal").modal();
 	};
-	var liveException = function(){
-		$("#warnText").text("방송중인 스케쥴은 수정할수 없습니다.");
-		$("#msgModal").modal();
-	};
-	var delConfirm = function(callback) {
-		$("#confirm-done").on("click", function() {
-			callback(true);
-			$("#confirmModal").modal('hide');
-		});
-		$("#confirm-cancel").on("click", function() {
-			callback(false);
-			$("#confirmModal").modal('hide');
-		});
-	};
-	var scheduleDelConfirm = function(callback) {
-		$("#confirm-done").on("click", function() {
-			callback(true);
-			$("#confirmModal").modal('hide');
-			$('#addNew-event').modal('hide');
-		});
-		$("#confirm-cancel").on("click", function() {
-			callback(false);
-			$("#confirmModal").modal('hide');
-			$('#addNew-event').modal('hide');
-		});
-	};
-	var addGroupException = function() {
-		$("#warnText").text("그룹 추가에 실패하였습니다.");
-		$("#msgModal").modal();
-	};
-	var rootException = function() {
-		$("#warnText").text("루트 그룹은 변경이 불가합니다.");
-		$("#msgModal").modal();
-	};
-	var renameException = function() {
-		$("#warnText").text("그룹이름 변경에 실패했습니다.");
-		$("#msgModal").modal();
-	};
-	var moveException = function() {
-		$("#warnText").text("그룹 이동에 실패했습니다.");
-		$("#msgModal").modal();
-	};
-	var delGroupException = function() {
-		$("#warnText").text("그룹 삭제에 실패했습니다.");
-		$("#msgModal").modal();
-	};
 	var keywordException = function() {
 		$("#warnText").text("키워드를 입력해주세요.");
 		$("#msgModal").modal();
 	};
-	var menuMakeException = function() {
-		$("#warnText").text("생성된 메뉴의 하위메뉴를 만들 수 없습니다.");
-		$("#msgModal").modal();
-	};
-	var contentsAddException = function() {
-		$("#warnText").text("하위 메뉴가 있는 메뉴에는 컨텐츠를 추가 할 수 없습니다.");
-		$("#msgModal").modal();
-	};
-	var beforeSelectException=function(){
-		$("#warnText").text("트리 메뉴를 하나 선택하세요.");
-		$("#msgModal").modal();
-	};
-	var subMainException=function(){
-		$("#warnText").text("서브 메인 메뉴를 먼저 만드세요.");
-		$("#msgModal").modal();
-	}
 	return {
 		ajaxException : ajaxException,
 		loginException : loginException,
-		imageFileSizeException : imageFileSizeException,
-		etcFileSizeException : etcFileSizeException,
-		imageFileExtException : imageFileExtException,
-		etcFileExtException : etcFileExtException,
-		imageFileUpdateException : imageFileUpdateException,
 		searchException : searchException,
 		checkboxException : checkboxException,
-		delConfirm : delConfirm,
-		scheduleDelConfirm :scheduleDelConfirm,
-		addGroupException : addGroupException,
-		rootException : rootException,
-		renameException : renameException,
-		moveException : moveException,
-		delGroupException : delGroupException,
 		keywordException : keywordException,
-		fileUpdateException :fileUpdateException,
-		liveException : liveException,
-		menuMakeException :menuMakeException,
-		contentsAddException : contentsAddException,
-		beforeSelectException: beforeSelectException,
-		subMainException : subMainException
 	};
-}());
+}());	//exception
+
+var common=(function(){
+	var formatZeroDate=function(n, digits){
+		 var zero = '';
+		    n = n.toString();
+		    if (digits > n.length) {
+		        for (var i = 0; digits - n.length > i; i++) {
+		            zero += '0';
+		        }
+		    }
+		    return zero + n;
+	};
+	var isNotEmpty=function(value){
+		return value!="";
+	};
+	var setDate=function(intData){
+		var StringDate=new Date(intData);
+        var hh = formatZeroDate(StringDate.getHours(),2);
+        var mm = formatZeroDate(StringDate.getMinutes(),2);
+        return $.datepicker.formatDate('yy-mm-dd '+hh+':'+mm,StringDate);
+	};
+	var delCashPlayer=function(playerName){
+		//var playerCash = playerName;
+		if (videojs.getPlayers()[playerName]) {
+			var myPlayer = videojs(playerName);
+			myPlayer.dispose();
+			delete videojs.getPlayers()[playerName];
+			console.log('path:web/media delCashPlayer', '닫음');
+		}
+	};
+	var vodDefault=function(){
+		common.delCashPlayer('vodPlayer');
+		$('#vodViewArea').empty();
+		$('#vodPreview').empty();
+		$('#vodViewArea').html('<img src="${pageContext.request.contextPath}/img/live.jpg" alt="샘플" id="vodViewMainThumb">');
+		$('#vodPreview').html('<img src="${pageContext.request.contextPath}/img/live.jpg" alt="샘플" id="vodDefaultImg">');
+		$('#letsPlay').css('display','block');
+	};
+	var number_to_human_size = function(x) {
+		var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
+		var e = Math.floor(Math.log(x) / Math.log(1024));
+		var se = (x / Math.pow(1024, e)).toFixed(2) + " " + s[e];
+		return se.replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
+	};	
+	return{
+		formatZeroDate:formatZeroDate,
+		isNotEmpty:isNotEmpty,
+		setDate:setDate,
+		delCashPlayer : delCashPlayer,
+		vodDefault : vodDefault,
+		number_to_human_size : number_to_human_size
+
+	};
+}());	//common
+
+$('#etcInfo').click(function(){
+	$('#etcInfoView').toggle();
+	//$('#etcInfoView').css('display','block');
+});
 
 
 </script>

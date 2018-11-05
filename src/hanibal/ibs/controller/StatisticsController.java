@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import hanibal.ibs.dao.IbsWebApiDAO;
 import hanibal.ibs.dao.StatisticsDAO;
 import hanibal.ibs.library.DataMap;
+import hanibal.ibs.library.HanibalWebDev;
 import hanibal.ibs.model.webapi.AdvenceTree;
 
 @SuppressWarnings("unchecked")
@@ -96,6 +97,8 @@ public class StatisticsController {
 		if(section.equals("vodDetail")) {
 			String idx = dataMap.get("idx").toString();
 			HashMap<String,Object> map= statisticsDAO.statisticsVODDetail(idx);
+			map.put("main_thumbnail", "/REPOSITORY/THUMBNAIL"+ HanibalWebDev.getDataPath(map.get("main_thumbnail").toString())+ map.get("main_thumbnail"));
+			map.put("vod_path", "http://"+mediaIp+"/"+"vod".toUpperCase()+HanibalWebDev.getDataPath(map.get("vod_path").toString())+ map.get("vod_path")+"/index.m3u8");		
 			
 			model.addAttribute("map", map);
 			returnPage="/statisticsView/VOD_statisticsDetail.statis";

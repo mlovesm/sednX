@@ -21,6 +21,7 @@
 	<link rel="shortcut icon" href="${pageContext.request.contextPath }/favicon.ico">
 	<!-- end: Favicon -->
 	
+	
 	<!-- CSS -->
 	<link href="${pageContext.request.contextPath}/ibsCmsCss/bootstrap.min.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/ibsCmsCss/font-awesome.min.css" rel="stylesheet">
@@ -89,10 +90,69 @@
 			<tiles:insertAttribute name="body"/>
 		</div> <!-- //inner -->
 	</div> <!-- //page -->
+	
+	<footer>
+		<div class="footer_container">
+			<p>COPYRIGHT INUC ⓒ 2018</p>
+		</div>
+	</footer>
 </div>
 
         
      
 </body>
+<script type="text/javascript">
+var modalLayer = (function() {
+	var playerClean = function() {
+		var playerCash = $("#playerId").val();
+		var myPlayer = videojs(playerCash);
+		if (videojs.getPlayers()[eval("'" + playerCash + "'")]) {
+			myPlayer.dispose();
+			delete videojs.getPlayers()[eval("'" + playerCash + "'")];
+			console.log('playerClean');
+		}
+	};
+	var vodPlayer=function(url,thumbnail,target){
+		console.log(target);
+		common.delCashPlayer('vodPlayer');
+		var html = '<video id="vodPlayer" class="video-js"  controls preload="auto"  poster="'+thumbnail+'"  data-setup="{}" style="width: 100% !important; height: 100% !important;">';
+		html += '<source  src="'+url+'"  type="application/x-mpegURL"></source>';
+		html += '</video>';
+		$("#"+target).empty();
+		$("#"+target).html(html);
+		var options = {};
+		var player = videojs('vodPlayer', options,
+			function onPlayerReady() {
+				this.play();
+				console.log('path: /statistics play');
+				//VOD 재생 조회
+				var vod_idx = '';
+				var isHis = false;
+				if(target === 'vodViewArea') {
+					vod_idx= $("#vodIdx").val();
+					isHis = true;
+				}else if(target === 'boardViewArea') {
+					vod_idx= $('#vodRepo').val();
+					isHis = true;
+				}else{
+					
+				}
+				if(isHis) {
+
+				}
+				this.on('play', function() {
+					
+				});
+				this.on('ended', function() {
+					console.log('The End');
+				});
+			});
+	};
+	return {
+		playerClean : playerClean,
+		vodPlayer:vodPlayer
+	};
+}());
+</script>
 </html>
 
