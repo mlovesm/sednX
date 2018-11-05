@@ -131,6 +131,7 @@ public class StatisticsController {
 		Map<String, Object> dataMap = DataMap.getDataMap(request);
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonContents = new JSONObject();
+		JSONObject jsonPagination = new JSONObject();
 		
 		ModelAndView mv = new ModelAndView("jsonView");
 		
@@ -138,7 +139,10 @@ public class StatisticsController {
 		System.out.println("dataMap= "+dataMap);
 		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", childIdx);
 		res.setContentType("application/json; charset=UTF-8");
+		jsonPagination.put("page", 2);
+		jsonPagination.put("totalCount", statisticsVODList.size());
 		jsonContents.put("contents", statisticsVODList);
+		jsonContents.put("pagination", jsonPagination);
 		
 		jsonObject.put("result", true);
 		jsonObject.put("data", jsonContents);

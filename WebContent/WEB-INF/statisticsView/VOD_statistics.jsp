@@ -181,11 +181,10 @@ var grid = new tui.Grid({
 
 });
 
-tui.Grid.applyTheme('default', {
-    grid: {
-        background: '#fff',
-        border: '#ddd',
-        text: '#444'
+tui.Grid.applyTheme('striped', {
+    outline: {
+        //border: '#d3d3d3',
+        //showVerticalBorder: true
     },
     cell: {
     	background: '#fff',
