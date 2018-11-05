@@ -154,6 +154,7 @@ public class StatisticsController {
 		
 		String treeMenu="";
 		List<AdvenceTree> lists=webApiDao.getAdvenceTree(order);
+		System.out.println("tree list="+lists);
 		if(order.equals("live")) {
 			selected_node_id=lists.get(1).getId();
 		}

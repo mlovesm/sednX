@@ -143,7 +143,9 @@ pageEncoding="UTF-8"%>
                        <li><a href="#"><img src="../img/arr_right02.png" alt="마지막" /></a></li>
                    </ul>
                </div><!-- //pagination -->
-		</div>			
+		</div>		
+			
+<input type="text" name="categoryIdx" id="categoryIdx" value="${map.categoryIdx}"/>
 
 		<script>
 			

@@ -5,7 +5,11 @@ pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="hn" uri="/WEB-INF/tlds/hanibalWebDev.tld"%>
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
-
+<style>
+.jstree-default .jstree-clicked {
+  background: #4b96e6;
+}
+</style>
 <div class="contents">
 	<div class="sub_header">
 		<ol class="location">
@@ -54,7 +58,6 @@ pageEncoding="UTF-8"%>
 			</div>
 			<div class="right" style="position: relative; left: 25%; width: 75%;">
 				<div class="text-left mb10">
-					<button class="disapp">전체선택</button>
 					<button class="disapp">삭제</button>
 				</div>
 				
@@ -151,6 +154,7 @@ var grid = new tui.Grid({
         {
             title: '카테고리',
             name: 'category_name',
+            width: 200,
             align: 'center'
         },
         {
@@ -169,7 +173,8 @@ var grid = new tui.Grid({
         {
             title: '총 조회수',
             name: 'vod_title_link',
-            align: 'center',
+            width: 150,
+            align: 'right',
             sortable: true
         }
     ],

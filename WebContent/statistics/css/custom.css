@@ -91,3 +91,6 @@
 .triangle {height: 0px; width: 0px;border-left: 0px solid transparent;border-right: 8px solid transparent;border-bottom: 8px solid #545454;position: absolute;top: -8px;margin-left: -10px;}
 
 .caret {border: none; width: 8px; height: 8px; margin-top: -4px !important; background: url(../ibsImg/img_close_sm.png) no-repeat;}
+
+/* VOD_statistics */
+
