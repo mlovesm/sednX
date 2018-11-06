@@ -5,24 +5,29 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="hn" uri="/WEB-INF/tlds/hanibalWebDev.tld"%>
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
+
 <c:choose>
 	<c:when test="${empty lists }">
 		<div style="height: 100px;"><h2>데이터가 없습니다.</h2></div>
 	</c:when>
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
+		
 		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
 				 background-size: cover; display: inline-block;">
-			<div class="imgPopup" id="${list.idx}" style="height: 100%;"></div>
+		<%-- <label for="check_${list.idx}" style="display: unset; cursor: pointer;"> --%>
+			<div class="imgPopup" id="${list.idx}" data-title="${list.vod_path}" style="height: 100%;"></div>
+		<!-- </label> -->
 			<div>
 				<input class="pull-left m-l-5 vodCheck" type="checkbox" value="${list.idx}"/>
-				<input class="pull-left m-l-5 vodRadio" type="radio"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />	
+				<%-- <input class="pull-left m-l-5 vodRadio" type="radio" name="redioVal" value="${list.idx}" title="${list.vod_path}" /> --%>	
 			</div>
 			<div class="vod_text_box">
 				<h6>${list.vod_title}</h6>
 			</div>
 			
 		</div>
+		
 		</c:forEach>
 	</c:otherwise>
 </c:choose>
@@ -31,9 +36,9 @@
 <input type="hidden" class="form-control" id="changeCateIdx" />
 <input type="hidden" class="form-control" id="changeCateProperty" />
 <script>
-if($('#requestRepo').val()=='media'){
+if($('#requestRepo').val()=='media'){	//CONTENT
 	$('.vodCheck').css('display','none');
-	$('.vodRadio').css('display','none');
+	//$('.vodRadio').css('display','none');
 	
 	$('.imgPopup').click(function(){
 		console.log('imgPopup');
@@ -130,7 +135,8 @@ if($('#requestRepo').val()=='media'){
 	
 	var arr=[];
 	$(".vodCheck").click(function(e){
-		e.stopPropagation();
+		console.log('media');
+		//e.stopPropagation();
 		if($(this).is(":checked")==true){
 			arr.push($(this).val());
 		}else{
@@ -139,21 +145,25 @@ if($('#requestRepo').val()=='media'){
 		$("#selectedIdxs").val(arr);
 	});
 	
-}else if($('#requestRepo').val()=='vod'){	//PAGE 영상추가 프리뷰
+}else if($('#requestRepo').val()=='vod'){	//PAGE 영상추가
 	$('.vodCheck').css('display','none');
-	$('.vodRadio').css('display','block');
-	$('.vodRadio').click(function(){
-		console.log($(this).attr("title"));
-		$('#tempVodList').val($(this).val());
+	//$('.vodRadio').css('display','block');
+	
+	$('.imgPopup').click(function(){
+		$(this).parent().siblings().css("border", "none");
+		$(this).parent().css("border", "1px solid red");
+		console.log($(this).data("title"));
+		$('#tempVodList').val($(this).attr('id'));
 		common.delCashPlayer('vodPlayer');
 		$('#boardPreview').empty();
-		modalLayer.vodPlayer($(this).attr("title"),"${pageContext.request.contextPath}/img/live.jpg","boardPreview");
+		modalLayer.vodPlayer($(this).data("title"),"${pageContext.request.contextPath}/img/live.jpg","boardPreview");
 	});
 }else{
 	$('.vodCheck').css('display','block');
-	$('.vodRadio').css('display','none');
+	//$('.vodRadio').css('display','none');
 	var arr=[];
-	$('.vodCheck').click(function(){
+	$('.vodCheck').click(function(){	//LIVE > vod
+		console.log('기타');
 		if ($(this).is(":checked") == true) {
 			arr.push($(this).val());
 		} else {

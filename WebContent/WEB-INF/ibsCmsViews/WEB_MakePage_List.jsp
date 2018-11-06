@@ -189,7 +189,7 @@
 			});
 		}
 	});
-	$('#selectAllChk').click(function(){
+	$('#selectAllChk').click(function(){	//PAGE 편집 전체선택
 		var chkbox=$(".boardCheck");
 		if($("#allcheck").val().length==0){
 			$("#allcheck").val("checked");

@@ -1556,7 +1556,7 @@ $(function(){
 						if($('#selectSort').val()=="vod"){
 							$('.vodCheck').css('display','none');
 						}else if($('#selectSort').val()=="stream"){
-							$('.selectCheck').css('display','none');
+							$('.streamCheck').css('display','none');
 						}else if($('#selectSort').val()=="photo"){
 							$('.photoCheck').css('display','none');
 						}else if($('#selectSort').val()=="file"){

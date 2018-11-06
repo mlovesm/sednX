@@ -12,10 +12,10 @@
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}"  style="position: relative; background: url('${pageContext.request.contextPath}/img/live.jpg') no-repeat center; background-size: cover;">
-				<input class="pull-left m-l-5 streamCheck" type="radio"  name="redioVal" value="${list.idx}" title="${list.live_path}" />
-				<input class="pull-left m-l-5 selectCheck" type="checkBox"  name="redioVal" value="${list.idx}" title="${list.live_path}" style="display:none;"/>
+				<%-- <input class="pull-left m-l-5 streamCheck" type="radio"  name="redioVal" value="${list.idx}" title="${list.live_path}" /> --%>
+				<input class="pull-left m-l-5 streamCheck" type="checkBox"  name="redioVal" value="${list.idx}" title="${list.live_path}" style="display:none;"/>
 				 <p class="text-center" style="margin-top: 110px; font-size:12px;" id="streamText" title="${list.live_title}">${list.live_title}<br/>
-				 <div class="imgPopup" id="${list.idx}"  style="left:18px;top:0;width:90%;height:100%;position:absolute;"></div>
+				 <div class="imgPopup" id="${list.idx}" data-title="${list.live_path}" style="left:18px;top:0;width:90%;height:100%;position:absolute;"></div>
 			</div>
 		</c:forEach>
 	</c:otherwise>
@@ -26,7 +26,7 @@
 <input type="hidden" class="form-control" id="changeCateProperty" />
 <script>
 if($('#requestRepo').val()=='media'){
-	$('.streamCheck').css('display','none');
+	//$('.streamCheck').css('display','none');
 	$('.imgPopup').click(function(){
 		common.delCashPlayer('vodPlayer');
 		common.fileDefault();
@@ -52,7 +52,7 @@ if($('#requestRepo').val()=='media'){
 			error : exception.ajaxException
 		});
 	});
-	$(".selectCheck").click(function(){
+	$(".streamCheck").click(function(){
 		if($(this).is(":checked")==true){
 			arr.push($(this).val());
 		}else{
@@ -61,9 +61,12 @@ if($('#requestRepo').val()=='media'){
 		$("#selectedIdxs").val(arr);
 	});
 }else{
-	$('.streamCheck').click(function(){
-		$('#live_ch_idx').val($(this).val());
-		$('#live_stream_url').val($(this).attr('title'));
+	$('.imgPopup').click(function(){
+		$(this).parent().siblings().css("border", "none");
+		$(this).parent().css("border", "1px solid red");
+		
+		$('#live_ch_idx').val($(this).attr('id'));
+		$('#live_stream_url').val($(this).data('title'));
 		$('#tmpStreamName').val($('#streamText').attr('title'));
 		$('#source_type').val('LIVE');
 	});

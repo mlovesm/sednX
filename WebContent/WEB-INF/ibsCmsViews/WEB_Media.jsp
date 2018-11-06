@@ -205,22 +205,29 @@ $('#goEdit').click(function(){	//편집
 		$('.vodCheck').css('display','block');
 		
 	}else if($('#selectSort').val()=="stream"){
-		$('.selectCheck').css('display','block');
+		$('.streamCheck').css('display','block');
+		
 	}else if($('#selectSort').val()=="photo"){
 		$('.photoCheck').css('display','block');
+		$('.photoCheck').parent().css({'height':'100%','display':'block'});
+		$('.imgPopup').css('height', 0);
+		
 	}else if($('#selectSort').val()=="file"){
 		$('.fileCheck').css('display','block');
 	}
 	$('#addBtns').css('display','none');
 	$('#editBtns').css('display','block');
 });
-$('#backAddBtns').click(function(){
+$('#backAddBtns').click(function(){	//완료
 	if($('#selectSort').val()=="vod"){
 		$('.vodCheck').css('display','none');
 	}else if($('#selectSort').val()=="stream"){
-		$('.selectCheck').css('display','none');
+		$('.streamCheck').css('display','none');
 	}else if($('#selectSort').val()=="photo"){
 		$('.photoCheck').css('display','none');
+		$('.photoCheck').parent().css('display', 'none');
+		$('.imgPopup').css('height', '100%');
+		
 	}else if($('#selectSort').val()=="file"){
 		$('.fileCheck').css('display','none');
 	}
@@ -330,7 +337,7 @@ $('#checkDel').click(function(){	//삭제
 				if($('#selectSort').val()=="vod"){
 					$('.vodCheck').css('display','none');
 				}else if($('#selectSort').val()=="stream"){
-					$('.selectCheck').css('display','none');
+					$('.streamCheck').css('display','none');
 				}else if($('#selectSort').val()=="photo"){
 					$('.photoCheck').css('display','none');
 				}else if($('#selectSort').val()=="file"){
@@ -343,7 +350,7 @@ $('#checkDel').click(function(){	//삭제
 	}
 });
 var arr=[];
-$('#selectAllChk').click(function(){
+$('#selectAllChk').click(function(){	//CONTENT 편집 전체선택
 	var chkbox=$("."+$('#sort').val()+"Check");
 	if($("#allcheck").val().length==0){
 		$("#allcheck").val("checked");

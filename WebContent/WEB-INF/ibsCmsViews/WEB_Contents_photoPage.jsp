@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="hn" uri="/WEB-INF/tlds/hanibalWebDev.tld"%>
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
+<!-- WEB_Contents_photoPage -->
 <c:choose>
 	<c:when test="${empty lists }">
 		<div style="height: 100px;"><h2>데이터가 없습니다.</h2></div>
@@ -12,7 +13,9 @@
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}" style="background: url('${pageContext.request.contextPath}${list.photo_path}') no-repeat center; background-size: cover;">
-				<input class="pull-left m-l-5 photoCheck" type="checkbox" value="${list.idx}"/>
+				<label for="check_${list.idx}" style="display: contents; cursor: pointer;">
+					<input class="pull-left m-l-5 photoCheck" id="check_${list.idx}" type="checkbox" value="${list.idx}"/>
+				</label>
 				<div class="imgPopup" id="${list.idx}" style="height:100%;"></div>
 				<div class="vod_text_box">
 					<h6>${list.photo_title}</h6>
