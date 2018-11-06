@@ -128,11 +128,15 @@ var menuTree=(function(){
 		},
 		async:false,
 		success:function(data){
-			//console.log(data.response.data);
+			console.log(data.response.data);
+			
 			var net = grid.getAddOn('Net');
 			//net.download('excel');
 			//net.reloadData();
 			grid.setData(data.response.data.contents);
+ 			//pagination.setTotalItems(data.response.data.pagination.total);
+            //pagination._currentPage = data.response.data.pagination.page;
+            //pagination.reset();
 			//net.readData(1, {"childIdx": childIdx}, false);
 		},
 		error:exception.ajaxException

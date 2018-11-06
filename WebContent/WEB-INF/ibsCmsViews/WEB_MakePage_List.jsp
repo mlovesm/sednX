@@ -7,7 +7,7 @@
 <script src="${pageContext.request.contextPath}/ibsCmsJs/functionInc.js"></script>
  <div class="photo-gallery clearfix">
      <div class="photo photoForm">
-         <div class="form_div col-md-12">
+         <div class="form_div col-md-12" style="width: 100%;">
               <c:choose>
 				<c:when test="${empty lists }">
 					<div style="height: 100px;">데이터가 없습니다.</div>

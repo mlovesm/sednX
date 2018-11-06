@@ -62,7 +62,7 @@ pageEncoding="UTF-8"%>
 				</div>
 				
 				<div id="grid"></div>			
-
+<div id="pagination1" class="tui-pagination"></div>
 			</div>
 		</div>
 	</div> <!-- //contents_container -->
@@ -133,6 +133,7 @@ menuJs.makeJsTree($('#categoryIdx').val());
     }
 }); */
 
+
 var grid = new tui.Grid({
     el: $('#grid'),
     scrollX: false,
@@ -140,45 +141,15 @@ var grid = new tui.Grid({
     pagination: true,
     bodyHeight: 500,
     rowHeaders: [
-    	{
-    		type: 'checkbox',
-    	}
+    	{ type: 'checkbox' }
     ],
     columns: [
-        {
-            title: '제목',
-            name: 'vod_title',
-            align: 'center',
-            ellipsis: true
-        },
-        {
-            title: '카테고리',
-            name: 'category_name',
-            width: 200,
-            align: 'center'
-        },
-        {
-            title: '영상시간',
-            name: 'vod_play_time',
-            width: 100,
-            align: 'center'
-        },
-        {
-            title: '등록일',
-            name: 'reg_dt',
-            width: 100,
-            align: 'center',
-            sortable: true
-        },
-        {
-            title: '총 조회수',
-            name: 'vod_title_link',
-            width: 150,
-            align: 'right',
-            sortable: true
-        }
+        { title: '제목', name: 'vod_title', align: 'center', ellipsis: true },
+        { title: '카테고리', name: 'category_name', width: 200, align: 'center' },
+        { title: '영상시간', name: 'vod_play_time', width: 100, align: 'center' },
+        { title: '등록일', name: 'reg_dt', width: 100, align: 'center', sortable: true },
+        { title: '총 조회수', name: 'vod_title_link', width: 150, align: 'right', sortable: true }
     ],
-
 });
 
 tui.Grid.applyTheme('striped', {
@@ -192,9 +163,9 @@ tui.Grid.applyTheme('striped', {
 });
 
 grid.use('Net', {
-    perPage: 2,
     readDataMethod: 'GET',
-    //initialRequest: true,
+    initialRequest: true,
+    perPage: 2,
     api: {
         'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData/"+$('#categoryIdx').val(),
         'createData': './api/create',
@@ -205,6 +176,24 @@ grid.use('Net', {
         'downloadExcelAll': './api/download/excelAll'
     }
 });
+
+
+var pagination = grid.getPagination(
+	{
+	    totalItems: 500,
+	    //itemsPerPage: 10,
+	    visiblePages: 5
+	}
+);
+
+/* var grid_net = grid.getAddOn('Net');
+
+grid_net.readData({
+	childIdx: $('#categoryIdx').val(),
+    page: 1,
+    perPage: 2
+	//resetData: true
+}); */
 
 
 // Bind event handlers
@@ -222,6 +211,13 @@ grid.on('beforeRequest', function(data) {
     
 }).on('errorResponse', function(data) {
 	console.log('errorResponse', data);
+});
+
+pagination.on('beforeMove', function(eventData) {
+    return confirm('Go to page ' + eventData.page + '?');
+});
+pagination.on('afterMove', function(eventData) {
+    alert('The current page is ' + eventData.page);
 });
 
 grid.on('click', function(ev) {

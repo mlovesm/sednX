@@ -71,16 +71,18 @@ pageEncoding="UTF-8"%>
 		<div class="graph mb50">
 			<canvas id="time" style="height: 300px;"></canvas>
 		</div>
-		<div class="search_form mb30 text-center" style="height: 30px; line-height: 30px;">
+		<div class="search_form mb30 text-center" style="height: 30px;">
 			<div class="div_form">
 				<div class="div_group">
 					기간 검색 :
 					<label for="">기간검색시작</label>
-					<input type="text" class="datepicker" id="" /> ~
+					<input type="text" class="datepicker" id="" value="2018-10-22" />
+					<img class="ui-datepicker-trigger" src="/statistics/img/icon_calendar.png" alt="..." title="..."> ~
 				</div>
 				<div class="div_group mr50">
 					<label for="">기간검색종류</label>
-					<input type="text" class="datepicker" id="" />
+					<input type="text" class="datepicker" id="" value="2018-10-22" />
+					<img class="ui-datepicker-trigger" src="/statistics/img/icon_calendar.png" alt="..." title="...">
 				</div>
 				<div class="div_group">
 					<a class="list-a border" href="#">전일</a><a class="list-a" href="#">7일</a><a class="list-a" href="#">15일</a><a class="list-a" href="#">1개월</a><a class="list-a" href="#">3개월</a>

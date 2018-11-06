@@ -937,44 +937,21 @@ public class IbsCmsController {
 		ibsCmsDao.fileDownLoad(path,res,req);
 	}
 	
-	// by MGS 2018.11.01
-	/* PAGE VOD 영상 가져오기 */
-	@RequestMapping("/cms/makePageList/{order}")
-	public String makePageVODList(
-			@RequestParam(required=false) String authority,
-			//공통 파라미터 
-			@PathVariable String order,
-			ModelMap mav,
-			@RequestParam(required=false) String nowPage,
-			@RequestParam(required=false) String searchWord,
-			@RequestParam(required=false) String childIdx,
-			HttpServletResponse res,
-			HttpServletRequest req,
-			Model model
-			)throws Exception {
+	// by MGS 2018.11.06
+	/* PAGE VOD 영상 정보 가져오기 */
+	@RequestMapping("/cms/page/getVodContents")
+	public void getVodContents(ModelMap mav, HttpServletResponse res, HttpServletRequest req, Model model)throws Exception {
+		Map<String, Object> dataMap = DataMap.getDataMap(req);
+		String childIdx = (String)dataMap.get("idx");
 		
-		String viewPage = "";
-		if(searchWord== null) searchWord="";
-		int totalRecordCount, start,end;
-		if(nowPage == null||Integer.parseInt(nowPage)<1) nowPage="1";
-
-		totalRecordCount = ibsCmsDao.getVodTotalRecordCount(searchWord,childIdx);
-
-		start=0;
-		end = totalRecordCount;
-		List<VodDTO> lists=ibsCmsDao.vodList(searchWord,childIdx,start,end);
-		for(int i=0;i<lists.size();i++) {
-			lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());
-		}
-		for(int i=0;i<lists.size();i++) {
-			lists.get(i).setVod_path("http://"+mediaIp+"/"+order.toUpperCase()+HanibalWebDev.getDataPath(lists.get(i).getVod_path())+lists.get(i).getVod_path()+"/index.m3u8");
-		}
-		model.addAttribute("lists", lists);
-		model.addAttribute("searchWord",searchWord);
-
-		viewPage="/ibsCmsViews/WEB_MakePage_vod.inc";
+		Map<String,Object> map= ibsCmsDao.getVodContents(childIdx);
+		res.setContentType("application/json; charset=UTF-8");
+		Map<String,Object> mainData =new HashMap<String,Object>();
+		mainData.put("msg",true);
+		mainData.put("map",map);
 		
-		return viewPage;
+		res.getWriter().print(mapper.writeValueAsString(mainData));
+
 	}
 	
 	

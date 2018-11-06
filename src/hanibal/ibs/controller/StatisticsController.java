@@ -128,7 +128,7 @@ public class StatisticsController {
 	
 	@RequestMapping(value="/statistics/vod/VODListData", method=RequestMethod.POST)
 	public ModelAndView getVODListDataPOST(HttpServletRequest request, HttpServletResponse res) throws IOException, JSONException {
-		Map<String, Object> dataMap = DataMap.getDataMap(request);
+		Map<String, Object> dataMap = DataMap.getDataMap(request);		
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonContents = new JSONObject();
 		JSONObject jsonPagination = new JSONObject();

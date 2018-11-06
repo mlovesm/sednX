@@ -68,6 +68,13 @@
 
 		
 </head>
+<style>
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+</style>
 <body>
 <div id="wrap">
 	<div class="top_container">

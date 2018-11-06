@@ -414,7 +414,7 @@ label.hide {
 	height: auto;
     position: relative;
     top: 3px;
-} */
+} MGS */
 .contents_container .tab ul {
 	border-left: 1px solid #004993;
 	overflow: hidden;
@@ -724,14 +724,14 @@ label {
 }
 .list-a {
 	display: inline-block;
-	height: 20px;
+	/* height: 20px; MGS */
 	line-height: 20px;
 	width: 50px;
 	text-align: center;
 	border: 2px solid #024da1;
 	border-left: none;
 }
-.list-a:hover{
+.list-a:hover, .list-a.on{
 	background: #024da1;
 	color: #fff;
 }
@@ -948,13 +948,24 @@ button.btn-blue {
 	border-radius: 2px;
 }
 button.btn-search {
-    min-width: 58px;
+    min-width: 52px;
     padding: 0 15px;
-    height: 28px;
+    height: 24px;
     font-weight: 600;
     color: #fff;
-    background: #3664ab;
-    border-radius: 2px;
+    background: #024da1;
+    margin-left: 15px;
+}
+button.btn-search02 {
+    min-width: 45px;
+    padding: 0 15px;
+    height: 37px;
+    font-weight: 600;
+    color: #fff;
+    background: #3664ab url(../img/search.png) center no-repeat;
+    margin-top: -3px;
+    margin-left: -5px;
+    text-indent: -99999px;
 }
 .pagination {
     display: inline-block;

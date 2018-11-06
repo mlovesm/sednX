@@ -13,10 +13,18 @@
 .modal .thumnail a.close {position: absolute; right: 2px; top: 2px; opacity: 1; background: rgba(0,0,0,0.5); width: 16px; height: 16px; border-radius: 8px !important; }
 .modal .thumnail a.close img {margin-top: -1px;}
 .form_div.sm {height: 450px;}
-.form_div.sm .img_box {width: calc(50% - 10px); height: 105px;}
-</style>
-<style>
+.form_div.sm .img_box {width: calc(25% - 10px); height: 105px;}
+
+/**/
 .boxLine {border: 2px solid #FFF701 !important;box-sizing: border-box;} 
+@media (min-width: 991px) {
+	#repositoryList > .modal-dialog {
+		width: 1000px;
+	}
+	#repositoryList .file_list {
+		left: 15%;
+	}
+}
 </style>
 <!-- Sidebar -->
 <aside id="sidebar">
@@ -900,7 +908,7 @@
  <!-- ###############스케쥴 편집 모달 끝 ######################## -->
  <!-- ################## content list modal start####################--> 
  <div class="modal fade in" id="repositoryList" tabindex="-1" role="dialog" aria-hidden="false"> 
-    <div class="modal-dialog" style="width:600px; margin-top: 10%;">
+    <div class="modal-dialog" style="margin-top: 10%;">
         <div class="modal-content"> 
             <div class="modal-header" style="overflow: hidden;">
                 <h5 class="pull-left">저장소에서 가져오기</h5>
@@ -918,17 +926,17 @@
             </div>                           
             <div class="modal-body" style="text-align: center;">
                <div class="col-md-12">
-                   <div class="col-md-4" style="width:28%;">
+                   <div class="col-md-4" style="width:13%;">
                    <!-- TREE START-->
 					<div  id="video" style="position:relative; left:-25px;"></div>
 					<!-- TREE END-->
           		</div>
                    
-                   <div class="col-md-8" style="padding:0; left:35px;">
+                   <div class="col-md-8 file_list" style="padding:0;">
                        <div class="tile">
                            <div class="photo-gallery clearfix">
                                <div class="photo">
-                                   <div class="form_div sm col-md-12" style="margin:0; padding:0;" id="repoListPage">
+                                   <div class="form_div sm col-md-12" style="margin:0; padding:0; width:100%;" id="repoListPage">
                                    <!-- 리스트 뿌려지는곳  -->    
                                    </div>
                                </div>
@@ -2074,10 +2082,26 @@ $(function(){
 				$('#repositoryList').modal('hide');
 			}
 			
-		}else if($('#requestRepo').val()=="vod"){
+		}else if($('#requestRepo').val()=="vod"){	//PAGE 영상 추가 정보 자동 입력 by MGS
 			if($('#tempVodList').val()!=""){
 				$('#vodRepo').val($('#tempVodList').val());
-				$('#repositoryList').modal('hide');
+				console.log('들어옴');
+				$.ajax({
+					url : '/cms/page/getVodContents',
+					cache : false,
+					type : 'post',
+					data :{
+						"idx": $("#vodRepo").val()
+					},
+					success : function(result) {
+						console.log(result.map);
+						if (result.msg) {
+							$("#board_title").val(result.map.vod_title);
+							$("#board_content").val(result.map.vod_content);
+						}
+						$('#repositoryList').modal('hide');
+					},error : exception.ajaxException
+				});
 			}
 		}  		
 	});
