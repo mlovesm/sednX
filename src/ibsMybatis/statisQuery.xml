@@ -101,6 +101,50 @@
 		LEFT OUTER JOIN tb_content_category b ON a.category_idx=b.idx
 		WHERE del_flag='N' AND a.idx=#{idx}
 	</select>
+	
+	<select id="statisticsVOD_date" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT 
+		    a.Date,
+		    ADDDATE(a.Date, -14) AS 2week_Date, 
+		    CASE WHEN b.WEB_Count IS NULL THEN 0 ELSE b.WEB_Count END AS WEB_Count,
+		    CASE WHEN c.APP_Count IS NULL THEN 0 ELSE c.APP_Count END AS APP_Count,
+		    CASE WHEN d.STB_Count IS NULL THEN 0 ELSE d.STB_Count END AS STB_Count
+		FROM (
+		    SELECT CURDATE() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY AS DATE
+		    FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+		    CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+		    CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+		) a
+		LEFT OUTER JOIN (
+		SELECT 
+		    COUNT(idx) AS WEB_Count,
+		    reg_id,
+		    play_date
+		FROM tb_web_vod_history
+		WHERE DATE_FORMAT(play_date, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} AND vod_idx=#{vod_idx}
+		GROUP BY DATE_FORMAT(play_date, '%Y-%m-%d')
+		) b ON a.Date=DATE_FORMAT(b.play_date, '%Y-%m-%d')
+		LEFT OUTER JOIN (
+		SELECT 
+		    COUNT(idx) AS APP_Count,
+		    reg_id,
+		    play_date
+		FROM tb_app_vod_history
+		WHERE DATE_FORMAT(play_date, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} AND vod_idx=#{vod_idx}
+		GROUP BY DATE_FORMAT(play_date, '%Y-%m-%d')
+		) c ON a.Date=DATE_FORMAT(c.play_date, '%Y-%m-%d')
+		LEFT OUTER JOIN (
+		SELECT 
+		    COUNT(idx) AS STB_Count,
+		    play_date
+		FROM tb_stb_vod_history
+		WHERE DATE_FORMAT(play_date, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} AND vod_idx=#{vod_idx}
+		GROUP BY DATE_FORMAT(play_date, '%Y-%m-%d')
+		) d ON a.Date=DATE_FORMAT(d.play_date, '%Y-%m-%d')
+		
+		WHERE a.Date BETWEEN #{startDate} AND #{endDate}
+		ORDER BY a.Date DESC
+	</select>
 
     
 </mapper>

@@ -76,13 +76,11 @@ pageEncoding="UTF-8"%>
 				<div class="div_group">
 					기간 검색 :
 					<label for="">기간검색시작</label>
-					<input type="text" class="datepicker" id="" value="2018-10-22" />
-					<img class="ui-datepicker-trigger" src="/statistics/img/icon_calendar.png" alt="..." title="..."> ~
+					<input type="text" class="datepicker" id="startDate" value="" /> ~
 				</div>
 				<div class="div_group mr50">
 					<label for="">기간검색종류</label>
-					<input type="text" class="datepicker" id="" value="2018-10-22" />
-					<img class="ui-datepicker-trigger" src="/statistics/img/icon_calendar.png" alt="..." title="...">
+					<input type="text" class="datepicker" id="endDate" value="" />
 				</div>
 				<div class="div_group">
 					<a class="list-a border" href="#">전일</a><a class="list-a" href="#">7일</a><a class="list-a" href="#">15일</a><a class="list-a" href="#">1개월</a><a class="list-a" href="#">3개월</a>
@@ -199,8 +197,8 @@ pageEncoding="UTF-8"%>
 			
 
 			window.onload = function() {
-				var ctx2 = document.getElementById('time').getContext('2d');
-				window.myLine = new Chart(ctx2, config2);				
+				//var ctx2 = document.getElementById('time').getContext('2d');
+				//window.myLine = new Chart(ctx2, config2);				
 			};	
 		</script>
 
@@ -210,6 +208,69 @@ pageEncoding="UTF-8"%>
 
 
 <script>
+
+$(document).ready(function() {
+	
+	chartData.getVodData("${map.idx}");
+});
+
+function leadingZeros(n, digits) {
+	  var zero = '';
+	  n = n.toString();
+	  if (n.length < digits) {
+	    for (var i = 0; i < digits - n.length; i++){ zero += '0'; }
+	  }
+	  return zero + n;
+}
+
+function getDateStr(myDate){
+	return date.getFullYear() + '-' + leadingZeros(date.getMonth() + 1, 2) + '-' + leadingZeros(date.getDate(), 2);
+}
+
+/* 오늘 날짜를 문자열로 반환 */
+function today() {
+  var d = new Date()
+  return getDateStr(d)
+}
+
+/* 오늘로부터 2주일전 날짜 반환 */
+function lastWeek() {
+  var d = new Date()
+  var dayOfMonth = d.getDate()
+  d.setDate(dayOfMonth - 14)
+  return getDateStr(d)
+}
+
+(function() {
+    $(".datepicker").datepicker({
+        dayNamesMin:["일","월","화","수","목","금","토"], // 요일에 표시되는 형식 설정
+        dateFormat:"yy-mm-dd", //날짜 형식 설정
+        monthNames:["1월","2월","3월","4월","5월","6월","7월",
+         "8월","9월","10월","11월","12월"], //월표시 형식 설정
+        showOn:"button", //버튼 보이기
+        buttonImage: "/statistics/img/icon_calendar.png", //버튼에 보이는 이미지설정
+        buttonImageOnly: true,
+        showMonthAfterYear: true, //년,달 순서바꾸기
+        showAnim:"fold" //애니메이션효과
+  });
+})();
+
+var chartData={
+	getVodData:function(vod_idx){
+		$.ajax({
+			url : "${pageContext.request.contextPath}/statistics/vod/getChartData",
+			data: {
+				"vod_idx": vod_idx,
+			},
+			success : function(data) {
+				$("#startDate").val(lastWeek());
+				$("#endDate").val(today());
+			},
+			error : exception.ajaxException
+		});
+	}
+};
+
 $('.imgPopup').click(function(){
 	console.log('imgPopup');
 	$('#vodMediaView').css('display','block');
