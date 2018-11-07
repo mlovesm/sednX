@@ -151,6 +151,31 @@ public class StatisticsController {
 		return mv;
 	}
 	
+	@RequestMapping(value="/statistics/vod/getChartData")
+	public ModelAndView getChartData(HttpServletRequest request, HttpServletResponse res) throws IOException, JSONException {
+		Map<String, Object> dataMap = DataMap.getDataMap(request);		
+		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonContents = new JSONObject();
+		JSONObject jsonPagination = new JSONObject();
+		
+		ModelAndView mv = new ModelAndView("jsonView");
+		
+		System.out.println("dataMap= "+dataMap);
+		String vod_idx = String.valueOf(dataMap.get("vod_idx"));
+		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.getStatisticsVOD_date(dataMap);
+		res.setContentType("application/json; charset=UTF-8");
+		jsonPagination.put("page", 2);
+		jsonPagination.put("totalCount", statisticsVODList.size());
+		jsonContents.put("contents", statisticsVODList);
+		jsonContents.put("pagination", jsonPagination);
+		
+		jsonObject.put("result", true);
+		jsonObject.put("data", jsonContents);
+		
+		mv.addObject("response", jsonObject);
+		return mv;
+	}
+	
 	
 	@RequestMapping("/api/statisticsTree/{order}/{idx}")
 	public String statisticsTree(@PathVariable String order,@PathVariable String idx,Model model,HttpServletRequest req) throws Exception {

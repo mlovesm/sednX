@@ -57,12 +57,12 @@ pageEncoding="UTF-8"%>
 				</div>
 			</div>
 			<div class="right" style="position: relative; left: 25%; width: 75%;">
-				<div class="text-left mb10">
+<!-- 				<div class="text-left mb10">
 					<button class="disapp">삭제</button>
-				</div>
+				</div> -->
 				
 				<div id="grid"></div>			
-<div id="pagination1" class="tui-pagination"></div>
+				<!-- <div id="pagination1" class="tui-pagination"></div> -->
 			</div>
 		</div>
 	</div> <!-- //contents_container -->
@@ -144,7 +144,14 @@ var grid = new tui.Grid({
     	{ type: 'checkbox' }
     ],
     columns: [
-        { title: '제목', name: 'vod_title', align: 'center', ellipsis: true },
+        { title: '제목', name: 'vod_title', align: 'center', ellipsis: true, 
+        	formatter: function(value, rowData) {
+        		//console.log(rowData);
+	            var idx = rowData.idx;
+	            var url = "./vodDetail?idx=" + idx;
+	            return '<a href="' + url + '" >' + value + '</a>';
+        	}
+        },
         { title: '카테고리', name: 'category_name', width: 200, align: 'center' },
         { title: '영상시간', name: 'vod_play_time', width: 100, align: 'center' },
         { title: '등록일', name: 'reg_dt', width: 100, align: 'center', sortable: true },
@@ -224,7 +231,7 @@ grid.on('click', function(ev) {
 	var target = ev.nativeEvent.target;
 	var obj = grid.getRow(ev.rowKey);
 	if(obj != null) {
-		location.href= "./vodDetail?idx="+obj.idx;
+		//location.href= "./vodDetail?idx="+obj.idx;
 	}
     console.log(obj, target);
 });

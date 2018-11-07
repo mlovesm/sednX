@@ -86,9 +86,11 @@ public class StatisticsDAO {
 		
 		HashMap<String, Object> map=sqlTemplate.selectOne("statisticsVODDetail", paramMap);
 		return map;
+	}
+	
+	public List<HashMap<String, Object>> getStatisticsVOD_date(Map<String,Object> paramMap) {
+		List<HashMap<String, Object>> lists=sqlTemplate.selectList("statisticsVOD_date", paramMap);
+		return lists;
 	}	
-	
-	
-	
 	
 }
