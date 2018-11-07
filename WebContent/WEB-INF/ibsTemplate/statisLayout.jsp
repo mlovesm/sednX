@@ -65,6 +65,7 @@
 	<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.4.0/tui-code-snippet.min.js"></script>
 	<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.2.0/tui-pagination.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/tui-grid/js/tui-grid.js"></script>
+	<script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>
 
 		
 </head>

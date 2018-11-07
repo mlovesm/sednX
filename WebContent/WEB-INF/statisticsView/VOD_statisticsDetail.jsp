@@ -20,10 +20,10 @@ pageEncoding="UTF-8"%>
 		<div class="leftRight_contents">
 			<h2>${map.vod_title}</h2><br/>
 			<div class="left">
-				<div class="vedio">
-					<div class="img_box" id="layer_${map.idx}" style="height: 100%; position: relative; background: url('${pageContext.request.contextPath}${map.main_thumbnail}') no-repeat center;
-							 background-size: cover;">
-						<div class="imgPopup" id="${map.idx}"></div>
+				<div class="vedio" id="vodViewArea">
+					<div class="img_box" id="${map.idx}" style="height: 100%; position: relative; background: url('${pageContext.request.contextPath}${map.main_thumbnail}') no-repeat center;
+						background-size: cover; border: 1px solid #888888;">
+                  		<a class="play" style="cursor:pointer;" id="letsPlay"><img src="${pageContext.request.contextPath}/ibsImg/img_play.png" alt="재생"></a>
 					</div>
 				</div>
 			</div>		
@@ -149,7 +149,7 @@ pageEncoding="UTF-8"%>
 
 		<script>
 			
-			var config2 = {
+			var config = {
 				type: 'line',
 				data: {
 					labels: ['10.08','10.09', '10.10', '10.11', '10.12', '10.13', '10.14', '10.15', '10.16', '10.17', '10.18', '10.19', '10.20', '10.21'],
@@ -158,18 +158,18 @@ pageEncoding="UTF-8"%>
 						fill: false,
 						backgroundColor: window.chartColors.red,
 						borderColor: window.chartColors.red,
-						data: [40,50,60,120,40,30,10,20,30,70,10,20,30,40],
+						data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					}, {									
 						label: 'APP',
 						backgroundColor: window.chartColors.blue,
 						borderColor: window.chartColors.blue,
-						data: [50,60,80,90,30,40,50,60,70,20,30,50,80,70],
+						data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 						fill: false,
 					}, {									
 						label: 'Web(PC)',
 						backgroundColor: window.chartColors.orange,
 						borderColor: window.chartColors.orange,
-						data: [10,20,30,40,60,70,80,90,50,60,60,40,20,30],
+						data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 						fill: false,
 					}]
 				},
@@ -187,8 +187,7 @@ pageEncoding="UTF-8"%>
 					scales: {
 						yAxes: [{
 							ticks: {
-								min: 0,
-								max: 250
+								beginAtZero: true
 							}
 						}]
 					}
@@ -196,10 +195,6 @@ pageEncoding="UTF-8"%>
 			};
 			
 
-			window.onload = function() {
-				//var ctx2 = document.getElementById('time').getContext('2d');
-				//window.myLine = new Chart(ctx2, config2);				
-			};	
 		</script>
 
 	</div> <!-- //contents_container -->
@@ -208,38 +203,17 @@ pageEncoding="UTF-8"%>
 
 
 <script>
+var ctx = document.getElementById('time').getContext('2d');
+var vod_chart = new Chart(ctx, config);	
+
+var startDate= moment().add(-14, 'days').format('YYYY-MM-DD');
+var endDate= moment().format('YYYY-MM-DD');
+$("#startDate").val(startDate);
+$("#endDate").val(endDate);
 
 $(document).ready(function() {
-	
 	chartData.getVodData("${map.idx}");
 });
-
-function leadingZeros(n, digits) {
-	  var zero = '';
-	  n = n.toString();
-	  if (n.length < digits) {
-	    for (var i = 0; i < digits - n.length; i++){ zero += '0'; }
-	  }
-	  return zero + n;
-}
-
-function getDateStr(myDate){
-	return date.getFullYear() + '-' + leadingZeros(date.getMonth() + 1, 2) + '-' + leadingZeros(date.getDate(), 2);
-}
-
-/* 오늘 날짜를 문자열로 반환 */
-function today() {
-  var d = new Date()
-  return getDateStr(d)
-}
-
-/* 오늘로부터 2주일전 날짜 반환 */
-function lastWeek() {
-  var d = new Date()
-  var dayOfMonth = d.getDate()
-  d.setDate(dayOfMonth - 14)
-  return getDateStr(d)
-}
 
 (function() {
     $(".datepicker").datepicker({
@@ -251,7 +225,10 @@ function lastWeek() {
         buttonImage: "/statistics/img/icon_calendar.png", //버튼에 보이는 이미지설정
         buttonImageOnly: true,
         showMonthAfterYear: true, //년,달 순서바꾸기
-        showAnim:"fold" //애니메이션효과
+        showAnim:"fold", //애니메이션효과
+       	onSelect: function(dateText) {
+       		chartData.getVodData("${map.idx}");
+   		}
   });
 })();
 
@@ -261,24 +238,32 @@ var chartData={
 			url : "${pageContext.request.contextPath}/statistics/vod/getChartData",
 			data: {
 				"vod_idx": vod_idx,
+				"startDate": $("#startDate").val(),
+				"endDate": $("#endDate").val()
 			},
-			success : function(data) {
-				$("#startDate").val(lastWeek());
-				$("#endDate").val(today());
+			success : function(result) {
+				console.log(result.response.data.contents);
+				var contents = result.response.data.contents;
+				
+				config.data.labels= [];
+				contents.forEach(function(item, index) {
+					config.data.labels[index]= item.Date.substr(5);
+					config.data.datasets[0].data[index]= item.STB_Count
+					config.data.datasets[1].data[index]= item.APP_Count
+					config.data.datasets[2].data[index]= item.WEB_Count
+				});
+				vod_chart.update();
 			},
 			error : exception.ajaxException
 		});
 	}
 };
 
-$('.imgPopup').click(function(){
+$('.play').click(function(){
 	console.log('imgPopup');
-	$('#vodMediaView').css('display','block');
 	common.delCashPlayer('vodPlayer');
-	//common.vodDefault();
-	$('#vodViewModal').modal();
 	$.ajax({
-		url : "${pageContext.request.contextPath}/api/media/"+ "vod" + "/"+$(this).attr('id'),
+		url : "${pageContext.request.contextPath}/api/media/"+ "vod" + "/"+$(this).parent().attr('id'),
 		cache : false,
 		async : false,
 		success : function(responseData){
@@ -294,44 +279,17 @@ $('.imgPopup').click(function(){
 			$('#vodViewFilesize').html(common.number_to_human_size(data.info.file_size));
 			$('#vodViewMainThumb').attr('src','${pageContext.request.contextPath}'+data.info.thumnail_path);
  			$('#vodDefaultImg').attr('src','${pageContext.request.contextPath}'+data.info.thumnail_path);
- 			
-/* 			$("#vod_title").val(data.info.vod_title);
-			$("#vod_content").val(data.info.vod_content);
-			$("#vod_path").val(data.info.vodFile);
-			$("#keyword").val(data.info.vod_keyword);
-			$("#vod_play_time").val(data.info.vod_play_time);
-			$("#main_thumbnail").val(data.info.main_thumbnail);
-			$("#file_size").val(data.info.file_size);
-			$("#vodIdx").val(data.info.idx);
-			$("#categoryIdx").val(data.info.category_idx); */
-
 			
 			$("#play_url").val(data.info.vod_path);
 			$("#play_thum").val('${pageContext.request.contextPath}'+data.info.thumnail_path);
-			
-			$('#vodViewArea').empty();
-			$('#vodPreview').empty();
-			$('#vodViewArea').html('<img src="${pageContext.request.contextPath}'+$('#play_thum').val()+'" alt="샘플" id="vodViewMainThumb">');
-			$('#vodPreview').html('<img src="${pageContext.request.contextPath}'+$('#play_thum').val()+'" alt="샘플" id="vodDefaultImg">');
-			$('#letsPlay').css('display','block');
 
-			$('#vodDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#play_thum').val());
+			$('#letsPlay').css('display','none');
+			modalLayer.vodPlayer($('#play_url').val(),$('#play_thum').val(),"vodViewArea");
 		},
 		error : exception.ajaxException
 	});
 });
 
-$('#letsPlay').click(function(){
-	console.log('letsPlay');
-	$('#vodViewArea').empty();
-	$('#vodPreview').empty();
-	$('#vodViewArea').html('<img src="${pageContext.request.contextPath}/img/live.jpg" alt="샘플" id="vodViewMainThumb">');
-	$('#vodPreview').html('<img src="${pageContext.request.contextPath}/img/live.jpg" alt="샘플" id="vodDefaultImg">');
-	$('#letsPlay').css('display','block');
-	$('#letsPlay').css('display','none');
-	$('#vodDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#play_thum').val());
-	modalLayer.vodPlayer($('#play_url').val(),$('#play_thum').val(),"vodViewArea");
-});
 	
 
 </script>

@@ -161,13 +161,10 @@ public class StatisticsController {
 		ModelAndView mv = new ModelAndView("jsonView");
 		
 		System.out.println("dataMap= "+dataMap);
-		String vod_idx = String.valueOf(dataMap.get("vod_idx"));
-		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.getStatisticsVOD_date(dataMap);
+		List<HashMap<String,Object>> statisticsVODHitList=statisticsDAO.getStatisticsVOD_date(dataMap);
 		res.setContentType("application/json; charset=UTF-8");
-		jsonPagination.put("page", 2);
-		jsonPagination.put("totalCount", statisticsVODList.size());
-		jsonContents.put("contents", statisticsVODList);
-		jsonContents.put("pagination", jsonPagination);
+		jsonPagination.put("totalCount", statisticsVODHitList.size());
+		jsonContents.put("contents", statisticsVODHitList);
 		
 		jsonObject.put("result", true);
 		jsonObject.put("data", jsonContents);

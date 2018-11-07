@@ -36,7 +36,7 @@
 	<div class="modal-dialog"  id="vodMediaView">
           <div class="modal-content mainImgPopup">
               <div class="media-form">
-                  <div class="video" style="cursor:pointer;" id="vodViewArea"><img src="${pageContext.request.contextPath}/ibsImg/img_video.png" alt="샘플" id="vodViewMainThumb"></div>
+                  <%-- <div class="video" style="cursor:pointer;" id="vodViewArea"><img src="${pageContext.request.contextPath}/ibsImg/img_video.png" alt="샘플" id="vodViewMainThumb"></div> --%>
                   <a class="play" style="cursor:pointer;" id="letsPlay"><img src="${pageContext.request.contextPath}/ibsImg/img_play.png" alt="재생"></a>
                   <a class="info" id="etcInfo" style="cursor:pointer;"><img src="${pageContext.request.contextPath}/ibsImg/img_info.png" alt="정보"></a>
                   <div class="infoForm" id="etcInfoView" style="display:none;z-index: 9999999999;">
