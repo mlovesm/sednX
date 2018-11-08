@@ -139,7 +139,7 @@ public class StatisticsController {
 		System.out.println("dataMap= "+dataMap);
 		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", childIdx);
 		res.setContentType("application/json; charset=UTF-8");
-		jsonPagination.put("page", 2);
+		jsonPagination.put("page", 1);
 		jsonPagination.put("totalCount", statisticsVODList.size());
 		jsonContents.put("contents", statisticsVODList);
 		jsonContents.put("pagination", jsonPagination);

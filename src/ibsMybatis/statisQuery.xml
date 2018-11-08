@@ -105,7 +105,7 @@
 	<select id="statisticsVOD_date" resultType="java.util.HashMap" parameterType="java.util.HashMap">
 		SELECT 
 		    a.Date,
-		    ADDDATE(a.Date, -14) AS 2week_Date, 
+		    <!-- ADDDATE(a.Date, -14) AS 2week_Date, --> 
 		    CASE WHEN b.WEB_Count IS NULL THEN 0 ELSE b.WEB_Count END AS WEB_Count,
 		    CASE WHEN c.APP_Count IS NULL THEN 0 ELSE c.APP_Count END AS APP_Count,
 		    CASE WHEN d.STB_Count IS NULL THEN 0 ELSE d.STB_Count END AS STB_Count
