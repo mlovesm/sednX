@@ -9,7 +9,7 @@ pageEncoding="UTF-8"%>
 <div class="contents">
 	<div class="sub_header">
 		<ol class="location">
-			<li class="li01"><img src="../img/icon_home.png" alt="홈 아이콘"/></li>
+			<li class="li01"><img src="${pageContext.request.contextPath}/statistics/img/icon_home.png" alt="홈 아이콘"/></li>
 			<li class="li02">Statistics</li>
 			<li class="li03">VOD 통계<span></span></li>
 		</ol>
@@ -76,77 +76,27 @@ pageEncoding="UTF-8"%>
 				<div class="div_group">
 					기간 검색 :
 					<label for="">기간검색시작</label>
-					<input type="text" class="datepicker" id="startDate" value="" /> ~
+					<input type="text" class="datepicker" id="startDate" readonly="readonly" /> ~
 				</div>
 				<div class="div_group mr50">
 					<label for="">기간검색종류</label>
-					<input type="text" class="datepicker" id="endDate" value="" />
+					<input type="text" class="datepicker" id="endDate" readonly="readonly" />
 				</div>
 				<div class="div_group date_select">
 					<a class="list-a border" href="#">전일</a><a class="list-a" href="#">7일</a><a class="list-a on" href="#">14일</a><a class="list-a" href="#">1개월</a><a class="list-a" href="#">3개월</a>
 				</div>
-				<button class="btn-search">검색</button>
+				<!-- <button class="btn-search">검색</button> -->
 			</div>
 		</div>
 		<div class="text-right">
 			<button class="btn btn-excel">엑셀로 저장</button>
 		</div>
 		<div class="site_container">
-			<div id="grid"></div>	
-			<div class="table_container text-center">
-				<table summary="통계 분석/이 표는 날짜, 재생시간, 재생 수, 평균 재생 시간으로 구성">
-					<colgroup>
-						<col width="auto;" />
-					</colgroup>
-					<thead>
-						<tr>
-							<th>날짜</th>
-							<th>총 조회 수</th>
-							<th>OTT</th>
-							<th>APP</th>
-							<th>Web(PC)</th>
-							<th>재생시간</th>
-							<th>평균 재생 시간</th>
-							<th>평균 재생 구간</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>2018.09.06</td>
-							<td>1,069</td>
-							<td>469</td>
-							<td>300</td>
-							<td>300</td>
-							<td>03:37:04</td>
-							<td>00:00:29</td>
-							<td>90%</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<div id="grid"></div>
 
-			<!-- pagination -->
-               <div class="pagination_container text-center">
-                   <ul class="pagination">
-                       <li><a href="#"><img src="../img/arr_left02.png" alt="맨처음" /></a></li>
-                       <li><a href="#"><img src="../img/arr_left.png" alt="이전" /></a></li>
-                       <li><a href="#">1</a></li>
-                       <li><a href="#">2</a></li>
-                       <li><a href="#">3</a></li>
-                       <li><a href="#">4</a></li>
-                       <li><a href="#">5</a></li>
-                       <li><a href="#">6</a></li>
-                       <li><a href="#">7</a></li>
-                       <li><a href="#">8</a></li>
-                       <li><a href="#">9</a></li>
-                       <li><a href="#">10</a></li>
-                       <li><a href="#"><img src="../img/arr_right.png" alt="다음" /></a></li>
-                       <li><a href="#"><img src="../img/arr_right02.png" alt="마지막" /></a></li>
-                   </ul>
-               </div><!-- //pagination -->
 		</div>		
 			
-<input type="text" name="categoryIdx" id="categoryIdx" value="${map.categoryIdx}"/>
+<input type="hidden" name="categoryIdx" id="categoryIdx" value="${map.categoryIdx}"/>
 
 		<script>
 			
@@ -223,16 +173,19 @@ var grid = new tui.Grid({
     virtualScrolling: true,
     bodyHeight: 500,
     columns: [
-        { title: '날짜', name: 'Date', width: 200, align: 'center', sortable: true,
+        { title: '날짜', name: 'Date', width: 150, align: 'center', sortable: true,
         	formatter: function(value, rowData) {
         		//console.log(rowData);
 	            return value;
         	}
         },
-        { title: '총 조회수', name: '', align: 'right', sortable: true },
-        { title: 'OTT', name: 'STB_Count', width: 200, align: 'right', sortable: true },
-        { title: 'APP', name: 'APP_Count', width: 200, align: 'right', sortable: true },
-        { title: 'Web(PC)', name: 'WEB_Count', width: 200, align: 'right', sortable: true }
+        { title: '총 조회수', name: 'total_count', align: 'right', sortable: true },
+        { title: 'OTT', name: 'STB_count', align: 'right', sortable: true },
+        { title: 'APP', name: 'APP_count', align: 'right', sortable: true },
+        { title: 'Web(PC)', name: 'WEB_count', align: 'right', sortable: true },
+        { title: '재생시간', name: '1', width: 150, align: 'right', sortable: true },
+        { title: '평균재생시간', name: '2', width: 150, align: 'right', sortable: true },
+        { title: '평균재생구간', name: '3', width: 150, align: 'right', sortable: true }
     ],
 });
 
@@ -247,8 +200,13 @@ $(document).ready(function() {
 	    buttonImageOnly: true,
 	    showMonthAfterYear: true, //년,달 순서바꾸기
 	    showAnim:"fold", //애니메이션효과
+	    maxDate: 0, // 오늘 이후 날짜 선택 불가
 	    onSelect: function(dateText) {
+		    if($("#startDate").val() > $("#endDate").val()) {
+		    	$("#startDate").val($("#endDate").val());
+		    }
 	    	vodData.getChartData("${map.idx}");
+	    	
 		}
 	});
 	vodData.getChartData("${map.idx}");
@@ -265,20 +223,19 @@ var vodData={
 				"endDate": $("#endDate").val()
 			},
 			success : function(result) {
-				console.log(result.response.data.contents);
+				//console.log(result.response.data.contents);
 				var contents = result.response.data.contents;
 				
 				config.data.labels= [];
 				contents.forEach(function(item, index) {
 					config.data.labels[index]= item.Date.substr(5);
-					config.data.datasets[0].data[index]= item.STB_Count
-					config.data.datasets[1].data[index]= item.APP_Count
-					config.data.datasets[2].data[index]= item.WEB_Count
+					config.data.datasets[0].data[index]= item.STB_count
+					config.data.datasets[1].data[index]= item.APP_count
+					config.data.datasets[2].data[index]= item.WEB_count
 				});
 				vod_chart.update();
-				/* 나이순으로 정렬 */
-				var sortingField = "Date";
-				result.response.data.contents.sort(function(b, a) { // 오름차순
+				var sortingField = "sort";
+				result.response.data.contents.sort(function(b, a) { // 내림차순
 				    return a[sortingField] - b[sortingField];
 				});
 				grid.setData(result.response.data.contents);
@@ -290,7 +247,6 @@ var vodData={
 };
 
 $('.play').click(function(){
-	console.log('imgPopup');
 	common.delCashPlayer('vodPlayer');
 	$.ajax({
 		url : "${pageContext.request.contextPath}/api/media/"+ "vod" + "/"+$(this).parent().attr('id'),
@@ -299,7 +255,7 @@ $('.play').click(function(){
 		success : function(responseData){
 			common.vodDefault();
 			var data=JSON.parse(responseData);
-			$('#vodViewTitle').html(data.info.vod_title);
+/* 			$('#vodViewTitle').html(data.info.vod_title);
 			$('#vodViewDate').html(data.info.reg_dt);
 			$('#vodViewDownload').attr('href','${pageContext.request.contextPath}/sedn/download/vod/'+data.info.vodFile.split('.')[1]+'/'+data.info.vodFile.split('.')[0]);
 			$('#vodViewCount').html(data.info.view_count);
@@ -311,17 +267,16 @@ $('.play').click(function(){
  			$('#vodDefaultImg').attr('src','${pageContext.request.contextPath}'+data.info.thumnail_path);
 			
 			$("#play_url").val(data.info.vod_path);
-			$("#play_thum").val('${pageContext.request.contextPath}'+data.info.thumnail_path);
+			$("#play_thum").val('${pageContext.request.contextPath}'+data.info.thumnail_path); */
 
 			$('#letsPlay').css('display','none');
-			modalLayer.vodPlayer($('#play_url').val(),$('#play_thum').val(),"vodViewArea");
+			modalLayer.vodPlayer(data.info.vod_path,'${pageContext.request.contextPath}'+data.info.thumnail_path,"vodViewArea");
 		},
 		error : exception.ajaxException
 	});
 });
 
 $(".date_select a").bind("click", function(e){
-	console.log($(this).text());
 	var date_text = $(this).text();
 	$(this).addClass('on').siblings().removeClass('on');
 	var addData= 0;

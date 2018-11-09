@@ -86,9 +86,6 @@
 		  a.idx,
 		  a.vod_path,
 		  a.vod_title,
-		  <![CDATA[
-		  '<a href="test.do?idx='+a.idx+'" class="norgrid" title="'+ a.vod_title +'">'+ a.vod_title +'</a>' as vod_title_link,
-		  ]]>
 		  a.vod_play_time,
 		  DATE_FORMAT(a.reg_dt,'%Y-%m-%d') as reg_dt,
 		  a.reg_id,
@@ -105,10 +102,11 @@
 	<select id="statisticsVOD_date" resultType="java.util.HashMap" parameterType="java.util.HashMap">
 		SELECT 
 		    a.Date,
-		    <!-- ADDDATE(a.Date, -14) AS 2week_Date, --> 
-		    CASE WHEN b.WEB_Count IS NULL THEN 0 ELSE b.WEB_Count END AS WEB_Count,
-		    CASE WHEN c.APP_Count IS NULL THEN 0 ELSE c.APP_Count END AS APP_Count,
-		    CASE WHEN d.STB_Count IS NULL THEN 0 ELSE d.STB_Count END AS STB_Count
+		    DATE_FORMAT(a.Date, '%y%m%d') AS sort,
+		    CASE WHEN b.WEB_Count IS NULL THEN 0 ELSE b.WEB_Count END AS WEB_count,
+		    CASE WHEN c.APP_Count IS NULL THEN 0 ELSE c.APP_Count END AS APP_count,
+		    CASE WHEN d.STB_Count IS NULL THEN 0 ELSE d.STB_Count END AS STB_count,
+		    CASE WHEN WEB_Count+APP_Count+STB_Count IS NULL THEN 0 ELSE WEB_Count+APP_Count+STB_Count END AS total_count
 		FROM (
 		    SELECT CURDATE() - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) DAY AS DATE
 		    FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a

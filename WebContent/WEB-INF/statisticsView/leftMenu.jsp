@@ -30,48 +30,6 @@
 	</ul>
 </div>
 
- <!-- ############### Statistics 모달 시작 ######################### -->
- <div class="modal fade in" id="vodViewModal" tabindex="-1" role="dialog" aria-hidden="false"> 
- <div class="allClick" onClick="common.vodDefault();" data-dismiss="modal"></div>
-	<div class="modal-dialog"  id="vodMediaView">
-          <div class="modal-content mainImgPopup">
-              <div class="media-form">
-                  <%-- <div class="video" style="cursor:pointer;" id="vodViewArea"><img src="${pageContext.request.contextPath}/ibsImg/img_video.png" alt="샘플" id="vodViewMainThumb"></div> --%>
-                  <a class="play" style="cursor:pointer;" id="letsPlay"><img src="${pageContext.request.contextPath}/ibsImg/img_play.png" alt="재생"></a>
-                  <a class="info" id="etcInfo" style="cursor:pointer;"><img src="${pageContext.request.contextPath}/ibsImg/img_info.png" alt="정보"></a>
-                  <div class="infoForm" id="etcInfoView" style="display:none;z-index: 9999999999;">
-                      <ul>
-                          <li>해상도 : <span id="vodViewResolution">1808 x 920</span></li>
-                          <li>재생시간 : <span id="vodViewRuntime">01:00:24</span></li>
-                          <li>용량 : <span id="vodViewFilesize">3.7GB</span></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="media-contents">
-                  <p class="title" id="vodViewTitle"></p>
-                  <div class="data">
-                      <p>등록일 :<span id="vodViewDate"> 2018.04.10</span></p>
-                      <a class="down" id="vodViewDownload" href="#"><img src="${pageContext.request.contextPath}/ibsImg/btn_download.png" alt="다운로드"></a>
-                     <!-- <div class="downForm">
-                          <div class="triangle"></div>
-                          <a href="#"><img src="${pageContext.request.contextPath}/ibsImg/img_close_sm.png" alt="닫기"></a>
-                          <ul>
-                              <li>· <a href="#">Sednmanager.ppt (2MB)</a></li>
-                          </ul>
-                      </div> --> 
-                      <p class="hits" id="vodViewCount"></p>
-                  </div>
-                  <p class="text" id="vodViewText"></p>
-              </div>
-              <div class="modal-footer">
-                  <button class="btn btn-sm cancel"  data-dismiss="modal">닫기</button>
-              </div>
-          </div>
-	  </div>
-</div><!-- CONTENT VOD Modal -->
-<!-- 플레이어 히든  -->
-<input type="hidden" class="form-control" id="play_url"/>
-<input type="hidden" class="form-control" id="play_thum"/>
 				
 <!--######## WARN Modal ######-->
 <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-hidden="true">

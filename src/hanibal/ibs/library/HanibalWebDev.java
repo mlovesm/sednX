@@ -172,6 +172,7 @@ public class HanibalWebDev  extends MysqlConnect{
 		return returnHtml;
 	}
 	public static int[] StringToIntArray(String checkValArr) {
+		System.out.println("checkValArr="+checkValArr);
 		String[] array=checkValArr.split(",");
 		int[] convertInt=new int[array.length];
 		if(checkValArr.length()>0) {

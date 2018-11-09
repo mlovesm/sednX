@@ -26,6 +26,22 @@ GET request for [/api/vodSchedule/vod] are [/api/vodSchedule/{order}] are {order
 GET request for [/api/seqKeyList]
 request [/cms/list/vod] are [/cms/list/{order}] are {order=vod}
 
+LIVE
+페이지 구성: leftMenu, WEB_LiveManages
+GET request for [/sedn/web/liveManages] are [/sedn/web/{section}] are {section=liveManages}
+GET request for [/api/seqKeyList]
+GET request for [/api/advenceTree/json/live] are {order=live}
+URI Template variables for request are [/api/advenceTree/json/{order}, /api/advenceTree/{order}/{idx}]
+GET request for [/api/web/scheduleJson]
+
+OTT
+페이지 구성: leftMenu, STB_Controle ( STB_Controle_List )
+GET request for [/sedn/stb/controle] are [/sedn/stb/{section}]
+GET request for [/inc/incPermission] are [/inc/{section}]
+GET request for [/api/jstree/stb-controle] are [/api/jstree/{order}] are {order=stb-controle}
+GET request for [/cms/list/stb-controle] are [/cms/list/{order}] are {order=stb-controle}
+
+
 VOD 재생 함수
 메인
 페이지= userLayout, 함수: 모달= common.vodViewModal, 재생= common.vodPlayer
@@ -37,6 +53,7 @@ CONTENT
 PAGE
 페이지= WEB_Contents_vodPage, 함수: 모달= $('#boardViewModal').modal(), target= boardViewArea
 페이지= leftMenu, 함수: 재생= modalLayer.vodPlayer
+
 
 	
 path: /  VOD 재생 param
