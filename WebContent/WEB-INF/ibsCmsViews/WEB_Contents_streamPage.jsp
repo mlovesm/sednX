@@ -63,7 +63,7 @@ if($('#requestRepo').val()=='media'){
 }else{
 	$('.imgPopup').click(function(){
 		$(this).parent().siblings().css("border", "none");
-		$(this).parent().css("border", "1px solid red");
+		$(this).parent().css("border", "2px solid red");
 		
 		$('#live_ch_idx').val($(this).attr('id'));
 		$('#live_stream_url').val($(this).data('title'));

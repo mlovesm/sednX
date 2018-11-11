@@ -21,7 +21,7 @@ pageEncoding="UTF-8"%>
 			<h2>${map.vod_title}</h2><br/>
 			<div class="left">
 				<div class="vedio" id="vodViewArea">
-					<div class="img_box" id="${map.idx}" style="height: 100%; position: relative; background: url('${pageContext.request.contextPath}${map.main_thumbnail}') no-repeat center;
+					<div class="img_box" id="${map.idx}" style="height: 100%; position: relative; background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${map.main_thumbnail}') no-repeat center;
 						background-size: cover; border: 1px solid #888888;">
                   		<a class="play" style="cursor:pointer;" id="letsPlay"><img src="${pageContext.request.contextPath}/ibsImg/img_play.png" alt="재생"></a>
 					</div>
@@ -270,7 +270,7 @@ $('.play').click(function(){
 			$("#play_thum").val('${pageContext.request.contextPath}'+data.info.thumnail_path); */
 
 			$('#letsPlay').css('display','none');
-			modalLayer.vodPlayer(data.info.vod_path,'${pageContext.request.contextPath}'+data.info.thumnail_path,"vodViewArea");
+			modalLayer.vodPlayer(data.info.vod_path,'http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path,"vodViewArea");
 		},
 		error : exception.ajaxException
 	});

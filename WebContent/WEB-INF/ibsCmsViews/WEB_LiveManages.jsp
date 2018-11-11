@@ -505,7 +505,7 @@ var menuTree={
 						var data=JSON.parse(responseData);
 						var retHtml='';
 						for(var i=0;i<data.imgList.length;i++){
-			                retHtml+='<li style="float:left; background: url(${pageContext.request.contextPath}'+data.imgList[i].img_url
+			                retHtml+='<li style="float:left; background: url(http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.imgList[i].img_url
 									+') no-repeat center; background-size: cover;" id="vodImgLi_'+data.imgList[i].img_idx+'">'
 		                  			+'<a class="close" onClick="arange.removeVodLi('+data.imgList[i].img_idx+')"><img src="${pageContext.request.contextPath}/ibsImg/img_close_sm.png" alt="닫기"/></a>'
 		                  			+'</li>'
@@ -811,6 +811,7 @@ $('body').on('click', '.calendar-actions > li > a', function(e){
 });
 var calClick={
 		viewEvent:function(idx){
+			console.log('LIVE 스케쥴 클릭', idx);
 			arange.delJsPlayer();
 			$('#defaultPlayer').css('display','block');
 			$('#liveJsPlayer').css('display','none');
@@ -864,8 +865,8 @@ var calClick={
     	 			if(data.forceLive){
     	 				$('#forceLive').prop("checked",true);
     	 			}
-    	 			$("#liveDefaultImg").attr('src','${pageContext.request.contextPath}/REPOSITORY/SCHIMG/'+data.image_path);
-    	 			$('#liveViewImg').attr('src','${pageContext.request.contextPath}/REPOSITORY/SCHIMG/'+data.image_path);
+    	 			$("#liveDefaultImg").attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}/REPOSITORY/SCHIMG/'+data.image_path);
+    	 			$('#liveViewImg').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}/REPOSITORY/SCHIMG/'+data.image_path);
     	 			$("#image_path").val(data.image_path);
     	 			$("#desc_text").val(data.desc_text);
     	 			$('#liveDesc').html(data.desc_text);

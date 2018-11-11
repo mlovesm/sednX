@@ -61,7 +61,7 @@ public class IbsCmsController {
 	String repositoryPath;
 	String sednIp;
 	String mediaIp;
-
+	String tomcatPort;
 	
 	public void setLog(Logger log) {
 		this.log = log;
@@ -83,6 +83,9 @@ public class IbsCmsController {
 
 	public void setMediaIp(String mediaIp) {
 		this.mediaIp = mediaIp;
+	}
+	public void setTomcatPort(String tomcatPort) {
+		this.tomcatPort = tomcatPort;
 	}
 	
 	@RequestMapping("/cms/login")
@@ -478,6 +481,9 @@ public class IbsCmsController {
 		}else if(order.equals("stb-ui")) {
 			viewPage="/ibsCmsViews/STB_Ui_List.inc";
 		}
+		model.addAttribute("sednIp", sednIp);
+		model.addAttribute("tomcatPort", tomcatPort);
+
 		return viewPage;
 	}
 	@RequestMapping("/cms/makepage/{order}/{idx}")
@@ -835,6 +841,10 @@ public class IbsCmsController {
 		}
 			
 		if(section.equals("media")) returnPage="/ibsCmsViews/WEB_Media.cms";
+		
+		model.addAttribute("sednIp", sednIp);
+		model.addAttribute("tomcatPort", tomcatPort);
+		
 		return returnPage;
 	}
 	@RequestMapping("/sedn/stb/{section}")

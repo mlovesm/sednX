@@ -120,6 +120,7 @@
 		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
 		<property name="sednIp" value="${Server.SEDN}"></property>
 		<property name="mediaIp" value="${Server.MEDIA}"></property>
+		<property name="tomcatPort" value="${Server.TOMCAT}"></property>
 		<property name="dbProperties" value="${Path.DBproperties}"></property>
 	</bean>
 	
@@ -130,6 +131,7 @@
 		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
 		<property name="sednIp" value="${Server.SEDN}"></property>
 		<property name="mediaIp" value="${Server.MEDIA}"></property>
+		<property name="tomcatPort" value="${Server.TOMCAT}"></property>
 	</bean>
 	
 	<!--STB API DAO & CONTROLLER--> 
@@ -170,6 +172,7 @@
 		<property name="webApiDao" ref="ibsWebApiDAO"></property>
 		<property name="sednIp" value="${Server.SEDN}"></property>
 		<property name="mediaIp" value="${Server.MEDIA}"></property> 
+		<property name="tomcatPort" value="${Server.TOMCAT}"></property>
 		<property name="repositoryPath" value="${Path.REPOSITORY}"></property>
 	</bean>
 

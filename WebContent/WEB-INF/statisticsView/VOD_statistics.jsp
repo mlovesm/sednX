@@ -50,7 +50,7 @@ pageEncoding="UTF-8"%>
 		</div> -->
 		<div style="position: relative;">
 			<div class="left" style="position: absolute; left: 0; width: 22%; height: 100%;">
-				<div class="border" style="height: 90%;">
+				<div class="border">
 		   			<!-- TREE START-->
 					<div id="menuTree" style="margin:10px;"></div>
 					<!-- TREE END-->

@@ -1469,7 +1469,6 @@ $(function(){
 			}
 		};
 		var vodPlayer=function(url,thumbnail,target){
-			console.log(target);
 			common.delCashPlayer('vodPlayer');
 			var html = '<video id="vodPlayer" class="video-js"  controls preload="auto"  poster="'+thumbnail+'"  data-setup="{}" style="width: 100% !important; height: 100% !important;">';
 			html += '<source  src="'+url+'"  type="application/x-mpegURL"></source>';

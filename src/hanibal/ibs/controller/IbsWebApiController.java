@@ -53,6 +53,7 @@ public class IbsWebApiController {
 	String repositoryPath;
 	String sednIp;
 	String mediaIp;
+	String tomcatPort;
 	String dbProperties;
 	
 	public void setLog(Logger log) {
@@ -70,6 +71,9 @@ public class IbsWebApiController {
 	}
 	public void setMediaIp(String mediaIp) {
 		this.mediaIp = mediaIp;
+	}
+	public void setTomcatPort(String tomcatPort) {
+		this.tomcatPort = tomcatPort;
 	}
 	
 	public String getDbProperties() {

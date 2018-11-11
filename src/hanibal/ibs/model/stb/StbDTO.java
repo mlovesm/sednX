@@ -10,6 +10,7 @@ public class StbDTO {
 	private String status;
 	private String last_on_time;
 	private String last_ping_time;
+	private int on_check;
 	private String reg_dt;
 	private String note;
 	private String category_idx;
@@ -67,6 +68,12 @@ public class StbDTO {
 	}
 	public void setLast_ping_time(String last_ping_time) {
 		this.last_ping_time = last_ping_time;
+	}
+	public int getOn_check() {
+		return on_check;
+	}
+	public void setOn_time(int on_check) {
+		this.on_check = on_check;
 	}
 	public String getReg_dt() {
 		return reg_dt;

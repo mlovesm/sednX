@@ -459,6 +459,7 @@
 				(a.status) as status,
 				(a.last_on_time) as last_on_time,
 				(a.last_ping_time) as last_ping_time,
+				TIMESTAMPDIFF(MINUTE, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'), DATE_FORMAT(a.last_ping_time, '%Y-%m-%d %H:%i')) AS on_check,
 				(a.reg_dt) as reg_dt,
 				(a.note) as note,
 				(select category_name from tb_stb_category where idx=a.category_idx) as category_idx,
@@ -477,7 +478,7 @@
          			#{type}
       			</foreach>
       		</if>
-      		order by a.reg_dt desc limit #{start},#{end};
+      		order by on_check DESC, a.reg_dt desc limit #{start},#{end};
 		</select>
 		
 		<select id="ScheduleList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.ScheduleDTO">

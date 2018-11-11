@@ -207,11 +207,11 @@ var arange=(function(){
 					var viewHtml='';
 					var downloadHtml='';
 					for(var i=0;i<data.imgList.length;i++){
-		                retHtml+='<li style="float:left; background: url(${pageContext.request.contextPath}'+data.imgList[i].img_url
+		                retHtml+='<li style="float:left; background: url(http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.imgList[i].img_url
 								+') no-repeat center; background-size: cover;" id="boardImgLi_'+data.imgList[i].img_idx+'">'
 	                  			+'<a class="close" onClick="arange.removeBoardLi('+data.imgList[i].img_idx+')"><img src="${pageContext.request.contextPath}/ibsImg/img_close_sm.png" alt="닫기"/></a>'
 	                  			+'</li>';
-		                viewHtml+='<img src="${pageContext.request.contextPath}'+data.imgList[i].img_url+'" />';
+		                viewHtml+='<img src="http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.imgList[i].img_url+'" />';
 		                downloadHtml+='<li>· <a href="${pageContext.request.contextPath}/sedn/download/photo/'+data.imgList[i].img_url.split('/')[6].split('.')[1]+'/'+data.imgList[i].img_url.split('/')[6].split('.')[0]+'">'+data.imgList[i].img_url.split('/')[6]+'</a></li>'
 					}
 					$('#boardSlideShow').append(retHtml);

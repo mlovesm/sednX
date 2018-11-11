@@ -117,7 +117,7 @@
 		<tr>
 		    <td><input type="checkbox" class="checkElem" id="${list.idx}" value="${list.idx}"></td>
 		    <td>${list.idx}</td>
-		    <td><img src="${pageContext.request.contextPath}/REPOSITORY/PROFILE/${list.member_profile}" width="35"/></td>
+		    <td><img src="http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}/REPOSITORY/PROFILE/${list.member_profile}" width="35"/></td>
 		    <td>${list.member_name}</td>
 		    <td>${list.member_id}</td>
 		    <td>${list.member_email}</td>

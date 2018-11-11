@@ -12,7 +12,7 @@
 	</c:when>
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
-			<div class="img_box" id="layer_${list.idx}" style="background: url('${pageContext.request.contextPath}${list.photo_path}') no-repeat center; background-size: cover;">
+			<div class="img_box" id="layer_${list.idx}" style="background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${list.photo_path}') no-repeat center; background-size: cover;">
 				<label for="check_${list.idx}" style="display: contents; cursor: pointer;">
 					<input class="pull-left m-l-5 photoCheck" id="check_${list.idx}" type="checkbox" value="${list.idx}"/>
 				</label>
@@ -45,14 +45,14 @@ if($('#requestRepo').val()=='media'&&$('#repoOrder').val()==""){
 				var data=JSON.parse(responseData);
 				$('#photoViewTitle').html(data.info.photo_title);
 				$('#photoViewDate').html(data.info.reg_dt);
-				$('#photoViewDownload').attr('href','${pageContext.request.contextPath}/sedn/download/photo/'+data.info.photoFile.split('.')[1]+'/'+data.info.photoFile.split('.')[0]);
+				$('#photoViewDownload').attr('href','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}/sedn/download/photo/'+data.info.photoFile.split('.')[1]+'/'+data.info.photoFile.split('.')[0]);
 				$('#photoViewCount').html(data.info.view_count);
 				$('#photoViewResolution').html(data.info.resolution);
 				$('#photoViewFilesize').html(common.number_to_human_size(data.info.file_size));
 				$('#photoViewText').html(data.info.photo_content);
-				$('#photoViewMainThumb').attr('src','${pageContext.request.contextPath}'+data.info.photo_path);
+				$('#photoViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.photo_path);
 				
-				$('#photoDefaultImg').attr('src','${pageContext.request.contextPath}'+data.info.photo_path);
+				$('#photoDefaultImg').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.photo_path);
 				$("#photo_title").val(data.info.photo_title);
 				$("#photo_content").val(data.info.photo_content);
 				$("#photo_path").val(data.info.photoFile);

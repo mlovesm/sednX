@@ -35,6 +35,7 @@ public class StatisticsController {
 	String repositoryPath;
 	String sednIp;
 	String mediaIp;
+	String tomcatPort;
 	String dbProperties;
 	
 	public void setLog(Logger log) {
@@ -56,7 +57,9 @@ public class StatisticsController {
 	public void setMediaIp(String mediaIp) {
 		this.mediaIp = mediaIp;
 	}
-	
+	public void setTomcatPort(String tomcatPort) {
+		this.tomcatPort = tomcatPort;
+	}
 	public String getDbProperties() {
 		return dbProperties;
 	}
@@ -106,6 +109,9 @@ public class StatisticsController {
 		if(section.equals("live")) returnPage="/statisticsView/LIVE_statistics.statis";
 		if(section.equals("user")) returnPage="/statisticsView/USER_statistics.statis";
 		if(section.equals("vis")) returnPage="/statisticsView/vis_statistics.statis";
+		
+		model.addAttribute("sednIp", sednIp);
+		model.addAttribute("tomcatPort", tomcatPort);
 		
 		return returnPage;
 	}

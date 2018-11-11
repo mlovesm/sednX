@@ -14,7 +14,7 @@
 				</c:when>
 				<c:otherwise>
 					<c:forEach items="${lists}" var="list" varStatus="loop">
-			             <div class="img_box" id="layer_${list.idx}" style="background: url(${list.vod_repo}) no-repeat center; background-size: cover;">
+			             <div class="img_box" id="layer_${list.idx}" style="background: url(http://${sednIp}:${tomcatPort}${list.vod_repo}) no-repeat center; background-size: cover;">
 			                 <input class="pull-left m-l-5 boardCheck" type="checkbox" value="${list.idx}"/>
 							<div class="imgPopup" id="${list.idx}"  style="height: 100%;"></div>
 			                 <!-- <label class="checkbox-inline m-10 pull-left checkMode" style="display:none;">
@@ -75,7 +75,7 @@
 				$('#boardViewResolution').html(data.vodRelative.resolution);
 				$('#boardViewRuntime').html(data.vodRelative.vod_play_time);
 				$('#boardViewFilesize').html(common.number_to_human_size(data.vodRelative.file_size));
-				$('#boardViewMainThumb').attr('src','${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
+				$('#boardViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
 				
 				//$('#boardDefaultImg').attr('src','${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
 				$("#board_title").val(data.info.board_title);
@@ -109,16 +109,16 @@
 				$('#saveFileList').append('<div class="btn btn-sm" onclick="common.selectRepoSource(\'file\');">파일추가</div>');
 				$('#boardSlideShow').append('<li ><a class="add" onclick="common.selectRepoSource(\'photo\');"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
 				$("#boardPlay_url").val(data.vodRelative.vod_path);
-				$("#boardPlay_thum").val('${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
+				$("#boardPlay_thum").val('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.vodRelative.board_thumnail_path);
 				
 				$('#boardViewArea').empty();
 				$('#boardPreview').empty();
-				$('#boardViewArea').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
-				$('#boardPreview').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
+				$('#boardViewArea').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
+				$('#boardPreview').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
 				$('#boardLetsPlay').css('display','block');
 				$('#boardLetsEditPlay').css('display','block');
 				
-				$('#boardDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#boardPlay_thum').val());
+				$('#boardDefaultImg').attr('src', $('#boardPlay_thum').val());
 				slide.init();
 			},
 			error : exception.ajaxException
@@ -128,26 +128,26 @@
 		//common.boardDefault();
 		$('#boardViewArea').empty();
 		$('#boardPreview').empty();
-		$('#boardViewArea').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
-		$('#boardPreview').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
+		$('#boardViewArea').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
+		$('#boardPreview').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
 		$('#boardLetsPlay').css('display','block');
 		$('#boardLetsEditPlay').css('display','block');
 		$('#boardLetsPlay').css('display','none');
-		$('#boardDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#boardPlay_thum').val());
-		modalLayer.vodPlayer($('#boardPlay_url').val(),$('#boardPlay_thum').val(),"boardViewArea");
+		$('#boardDefaultImg').attr('src', $('#boardPlay_thum').val());
+		modalLayer.vodPlayer($('#boardPlay_url').val(), $('#boardPlay_thum').val(),"boardViewArea");
 	});
 	$('#boardLetsEditPlay').click(function(){
 		//common.boardDefault();
 		common.delCashPlayer('vodPlayer');
 		$('#boardViewArea').empty();
 		$('#boardPreview').empty();
-		$('#boardViewArea').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
-		$('#boardPreview').html('<img src="${pageContext.request.contextPath}'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
+		$('#boardViewArea').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardViewMainThumb">');
+		$('#boardPreview').html('<img src="'+$('#boardPlay_thum').val()+'" alt="샘플" id="boardDefaultImg">');
 		$('#boardLetsPlay').css('display','block');
 		$('#boardLetsEditPlay').css('display','block');
 		$('#boardLetsEditPlay').css('display','none');
 		$('#boardViewMainThumb').attr('src',"${pageContext.request.contextPath}"+$('#boardPlay_thum').val());
-		modalLayer.vodPlayer($('#boardPlay_url').val(),$('#boardPlay_thum').val(),"boardPreview");
+		modalLayer.vodPlayer($('#boardPlay_url').val(), $('#boardPlay_thum').val(),"boardPreview");
 	});
  	$('#changeMode').click(function(){
  		arange.changeMode();

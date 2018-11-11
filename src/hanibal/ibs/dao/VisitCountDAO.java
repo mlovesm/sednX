@@ -1,7 +1,5 @@
 package hanibal.ibs.dao;
 
-import java.util.Map;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionTemplate;

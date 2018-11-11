@@ -13,7 +13,7 @@
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 		
-		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
+		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
 				 background-size: cover; display: inline-block;">
 		<%-- <label for="check_${list.idx}" style="display: unset; cursor: pointer;"> --%>
 			<div class="imgPopup" id="${list.idx}" data-title="${list.vod_path}" style="height: 100%;"></div>
@@ -57,16 +57,16 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				var data=JSON.parse(responseData);
 				$('#vodViewTitle').html(data.info.vod_title);
 				$('#vodViewDate').html(data.info.reg_dt);
-				$('#vodViewDownload').attr('href','${pageContext.request.contextPath}/sedn/download/vod/'+data.info.vodFile.split('.')[1]+'/'+data.info.vodFile.split('.')[0]);
+				$('#vodViewDownload').attr('href','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}/sedn/download/vod/'+data.info.vodFile.split('.')[1]+'/'+data.info.vodFile.split('.')[0]);
 				//$('#vodViewDownload').val(data.info.);
 				$('#vodViewCount').html(data.info.view_count);
 				$('#vodViewText').html(data.info.vod_content);
 				$('#vodViewResolution').html(data.info.resolution);
 				$('#vodViewRuntime').html(data.info.vod_play_time);
 				$('#vodViewFilesize').html(common.number_to_human_size(data.info.file_size));
-				$('#vodViewMainThumb').attr('src','${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$('#vodViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
 				
-				$('#vodDefaultImg').attr('src','${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$('#vodDefaultImg').attr('src','http://${sednIp}${pageContext.request.contextPath}'+data.info.thumnail_path);
 				$("#vod_title").val(data.info.vod_title);
 				$("#vod_content").val(data.info.vod_content);
 				$("#vod_path").val(data.info.vodFile);
@@ -78,7 +78,7 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				$("#thumnailList").val(data.thumb);
 				$("#categoryIdx").val(data.info.category_idx);
 				$.each(data.thumbPath,function(index,value){
-					var retHtml='<li class="thum" style="float:left;background: url('+value
+					var retHtml='<li class="thum" style="float:left;background: url(http://${sednIp}:${tomcatPort}'+value
 					+') no-repeat center; background-size: cover;" id="thumbLi_'+data.thumb[index].split('.')[0]+'" onClick="arange.makeMainThumb(\''+data.thumb[index].split('.')[0]+'\',\''+data.thumb[index].split('.')[1]+'\')">'
           			+'<a class="close" onClick="arange.removeThumbLi(\''+data.thumb[index].split('.')[0]+'\',\''+data.thumb[index].split('.')[1]+'\');"><img src="${pageContext.request.contextPath}/ibsImg/img_close_sm.png" alt="닫기"/></a>'
           			+'</li>';
@@ -91,16 +91,16 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				$('#vodSlideShow').append('<li id="addLi"><a class="add" onclick="arange.selectSource();"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
 				slide.init();
 				$("#play_url").val(data.info.vod_path);
-				$("#play_thum").val('${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$("#play_thum").val('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
 				
 				$('#vodViewArea').empty();
 				$('#vodPreview').empty();
-				$('#vodViewArea').html('<img src="${pageContext.request.contextPath}'+$('#play_thum').val()+'" alt="샘플" id="vodViewMainThumb">');
-				$('#vodPreview').html('<img src="${pageContext.request.contextPath}'+$('#play_thum').val()+'" alt="샘플" id="vodDefaultImg">');
+				$('#vodViewArea').html('<img src="'+$('#play_thum').val()+'" alt="샘플" id="vodViewMainThumb">');
+				$('#vodPreview').html('<img src="'+$('#play_thum').val()+'" alt="샘플" id="vodDefaultImg">');
 				$('#letsPlay').css('display','block');
 				$('#letsEditPlay').css('display','block');
 
-				$('#vodDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#play_thum').val());
+				$('#vodDefaultImg').attr('src', $('#play_thum').val());
 			},
 			error : exception.ajaxException
 		});
@@ -116,8 +116,8 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 		$('#letsPlay').css('display','block');
 		$('#letsEditPlay').css('display','block');
 		$('#letsPlay').css('display','none');
-		$('#vodDefaultImg').attr('src',"${pageContext.request.contextPath}"+$('#play_thum').val());
-		modalLayer.vodPlayer($('#play_url').val(),$('#play_thum').val(),"vodViewArea");
+		$('#vodDefaultImg').attr('src', $('#play_thum').val());
+		modalLayer.vodPlayer($('#play_url').val(), $('#play_thum').val(),"vodViewArea");
 	});
 	$('#letsEditPlay').click(function(){
 		//common.vodDefault();
@@ -129,8 +129,8 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 		$('#letsPlay').css('display','block');
 		$('#letsEditPlay').css('display','block');
 		$('#letsEditPlay').css('display','none');
-		$('#vodViewMainThumb').attr('src',"${pageContext.request.contextPath}"+$('#play_thum').val());
-		modalLayer.vodPlayer($('#play_url').val(),$('#play_thum').val(),"vodPreview");
+		$('#vodViewMainThumb').attr('src', $('#play_thum').val());
+		modalLayer.vodPlayer($('#play_url').val(), $('#play_thum').val(),"vodPreview");
 	});
 	
 	var arr=[];
@@ -151,7 +151,7 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 	
 	$('.imgPopup').click(function(){
 		$(this).parent().siblings().css("border", "none");
-		$(this).parent().css("border", "1px solid red");
+		$(this).parent().css("border", "2px solid red");
 		console.log($(this).data("title"));
 		$('#tempVodList').val($(this).attr('id'));
 		common.delCashPlayer('vodPlayer');

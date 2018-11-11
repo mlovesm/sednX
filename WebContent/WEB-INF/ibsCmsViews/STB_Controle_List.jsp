@@ -35,10 +35,10 @@
 	        <td>${list.ip_addr}</td>
 	        <td>${list.mac}</td>
 	        <td>
-	        <c:if test="${list.status eq 1}">
+	        <c:if test="${list.status eq 1 || list.on_check < -3 }">
     			<span class="label label-danger">OFF</span>
 			</c:if>
-			 <c:if test="${list.status eq 2}">
+			 <c:if test="${list.status eq 2 && list.on_check >= -3 }">
     			<span class="label label-success">ON</span>
 			</c:if>
 			<c:if test="${list.status eq 3}">
