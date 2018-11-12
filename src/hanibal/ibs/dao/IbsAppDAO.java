@@ -36,6 +36,7 @@ import com.nimbusds.jwt.SignedJWT;
 import hanibal.ibs.library.HanibalWebDev;
 import hanibal.ibs.model.app.FavoriteListDTO;
 import hanibal.ibs.model.app.VodListAppDTO;
+import hanibal.ibs.model.cms.BoardDTO;
 
 public class IbsAppDAO {
 	Logger log = Logger.getLogger(this.getClass());
@@ -372,5 +373,16 @@ public class IbsAppDAO {
 	//추가 by MGS
 	public void tb_sedn_logInsert(Map<String, Object> commandMap) {
 		sqlTemplate.insert("tb_sedn_logInsert",commandMap);	
+	}
+	
+	public List<VodListAppDTO> getSearchList(Map<String, Object> paramMap, String mediaIp) throws Exception {
+		List<VodListAppDTO> lists=sqlTemplate.selectList("vod_searchList",paramMap);
+		
+		for(int i=0;i<lists.size();i++) {
+			lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());
+			lists.get(i).setVod_path("http://"+mediaIp+"/VOD"+HanibalWebDev.getDataPath(lists.get(i).getVod_path())+lists.get(i).getVod_path()+"/index.m3u8");
+		}
+		
+		return lists;
 	}
 }

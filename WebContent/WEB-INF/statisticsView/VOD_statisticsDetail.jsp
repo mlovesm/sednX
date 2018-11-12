@@ -173,13 +173,13 @@ var grid = new tui.Grid({
     virtualScrolling: true,
     bodyHeight: 500,
     columns: [
-        { title: '날짜', name: 'Date', width: 150, align: 'center', sortable: true,
+        { title: '날짜', name: 'Date', width: 150, align: 'center', sortable: true },
+        { title: '총 조회수', name: 'total_count', align: 'right', sortable: true,
         	formatter: function(value, rowData) {
-        		//console.log(rowData);
-	            return value;
+        		var sum= parseInt(rowData.APP_count + rowData.WEB_count + rowData.STB_count);
+	            return sum;
         	}
         },
-        { title: '총 조회수', name: 'total_count', align: 'right', sortable: true },
         { title: 'OTT', name: 'STB_count', align: 'right', sortable: true },
         { title: 'APP', name: 'APP_count', align: 'right', sortable: true },
         { title: 'Web(PC)', name: 'WEB_count', align: 'right', sortable: true },
@@ -188,6 +188,8 @@ var grid = new tui.Grid({
         { title: '평균재생구간', name: '3', width: 150, align: 'right', sortable: true }
     ],
 });
+
+tui.Grid.applyTheme('striped');
 
 $(document).ready(function() {
 	$(".datepicker").datepicker({

@@ -21,7 +21,7 @@
 			<ul class="depth2">
 				<li class="on"><a href="${pageContext.request.contextPath}/sedn/statistics/vod">VOD 통계</a></li>
 				<li><a href="${pageContext.request.contextPath}/sedn/statistics/live">LIVE 시청 통계</a></li>
-				<li><a href="sub_03.html">사용자 이용 통계</a></li>
+				<li><a href="${pageContext.request.contextPath}/sedn/statistics/user">사용자 이용 통계</a></li>
 				<li><a href="sub_04.html">방문자 통계</a></li>
 				<li><a href="sub_05.html">서버 통계</a></li>
 			</ul>

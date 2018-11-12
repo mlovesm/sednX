@@ -15,29 +15,18 @@ pageEncoding="UTF-8"%>
 		<ol class="location">
 			<li class="li01"><img src="${pageContext.request.contextPath}/statistics/img/icon_home.png" alt="홈 아이콘"/></li>
 			<li class="li02">Statistics</li>
-			<li class="li03">VOD 통계<span></span></li>
+			<li class="li03">사용자 이용 통계<span></span></li>
 		</ol>
-		<h1>VOD 통계</h1>
+		<h1>사용자 이용 통계</h1>
 	</div>
 
 	<div class="contents_container">		
 		<div class="search_form mb30 text-right" style="height: 30px; line-height: 30px;">
 			<div class="div_form">
-				<!-- <div class="div_group">
-					<label for="">검색</label>
-					<select name="" id="">
-						<option value="">VOD</option>
-						<option value=""></option>
-						<option value=""></option>
-					</select>
-				</div> -->
 				<div class="div_group">
 					<label for="">검색</label>
 					<input type="text" id="" />
 				</div>
-				<!-- <div class="div_group">
-					<a class="list-a border" href="#">전일</a><a class="list-a" href="#">7일</a><a class="list-a" href="#">15일</a><a class="list-a" href="#">1개월</a><a class="list-a" href="#">3개월</a>
-				</div> -->
 				<button class="btn-search">검색</button>
 			</div>
 		</div>
@@ -49,54 +38,79 @@ pageEncoding="UTF-8"%>
 			</div>
 		</div> -->
 		<div style="position: relative;">
-			<div class="left" style="position: absolute; left: 0; width: 22%; height: 100%;">
-				<div class="border" style="height: 100%; overflow: auto;">
-		   			<!-- TREE START-->
-					<div id="menuTree" style="margin:10px;"></div>
-					<!-- TREE END-->
-				</div>
-			</div>
-			<div class="right" style="position: relative; left: 25%; width: 75%;">
-<!-- 				<div class="text-left mb10">
-					<button class="disapp">삭제</button>
-				</div> -->
-				
-				<div id="grid"></div>			
-				<!-- <div id="pagination1" class="tui-pagination"></div> -->
-			</div>
+						<div class="table_container text-center">
+							<a href="sub_03_1.html">
+							<table summary="통계 분석/이 표는 으로 구성">
+								<colgroup>
+									<col width="80px;" />
+									<col width="auto;" />
+									<col width="180px;" />
+									<col width="auto;" />
+									<col width="150px;" />
+									<col width="150px;" />
+									<col width="100px;" />
+									<col width="100px;" />
+									<col width="100px;" />
+								</colgroup>
+								<thead>
+									<tr>
+										<th>No</th>
+										<th>ID</th>
+										<th>이름</th>
+										<th>이메일</th>
+										<th>최근 접속 IP</th>
+										<th>최근 접속일</th>
+										<th>접속 단말</th>
+										<th>영상 조회수</th>
+										<th>UCC 영상</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>10</td>
+										<td>inuc</td>
+										<td>홍길동</td>
+										<td>inuc@naver.com</td>
+										<td>123.456.77.89</td>
+										<td>2018.10.15</td>
+										<td>APP</td>
+										<td>100</td>
+										<td>50</td>
+									</tr>		
+								</tbody>
+							</table>
+							</a>
+							<!-- pagination -->
+			                <div class="pagination_container text-center">
+			                    <ul class="pagination">
+			                        <li><a href="#"><img src="../img/arr_left02.png" alt="맨처음" /></a></li>
+			                        <li><a href="#"><img src="../img/arr_left.png" alt="이전" /></a></a></li>
+			                        <li><a href="#">1</a></li>
+			                        <li><a href="#">2</a></li>
+			                        <li><a href="#">3</a></li>
+			                        <li><a href="#">4</a></li>
+			                        <li><a href="#">5</a></li>
+			                        <li><a href="#">6</a></li>
+			                        <li><a href="#">7</a></li>
+			                        <li><a href="#">8</a></li>
+			                        <li><a href="#">9</a></li>
+			                        <li><a href="#">10</a></li>
+			                        <li><a href="#"><img src="../img/arr_right.png" alt="다음" /></a></a></li>
+			                        <li><a href="#"><img src="../img/arr_right02.png" alt="마지막" /></a></a></li>
+			                    </ul>
+			                </div><!-- //pagination -->
+						</div>
+			<!-- <div id="grid"></div> -->			
+
 		</div>
 	</div> <!-- //contents_container -->
 
 </div> <!-- //contents -->
-	
-<input type="hidden" class="form-control" id="vodOrder" value="insert">
-<input type="hidden" class="form-control" id="photoOrder" value="insert">
-<input type="hidden" class="form-control" id="fileOrder" value="insert">
-<input type="hidden" class="form-control" id="streamOrder" value="insert">
-<input type="hidden" class="form-control" id="sort" value="vod">
-<input type="hidden" class="form-control" id="categoryIdx" />
-<input type="hidden" class="form-control" id="categoryName"/>
-<input type="hidden" class="form-control" id="treeIdx" >
-<input type="hidden" class="form-control" id="treeProperty" value="1">
 
 
 <script>
-$('#categoryIdx').val('${hn:getDefaultContentsIdx()}');
-$('#categoryName').val('${hn:getDefaultContentsParentName()}<i class="fa fa-angle-right m-r-10 m-l-10"></i><i class="fa fa-list-alt m-r-10"></i>${hn:getDefaultContentsName()}');
 
 var menuJs={
-		makeJsTree:function(idx){
-			$.ajax({
-				url : "${pageContext.request.contextPath}/api/statisticsTree/"
-						+ $("#sort").val()+"/"+idx,
-				async : false,
-				success : function(data) {
-					$("#menuTree").empty();
-					$("#menuTree").html(data);
-				},
-				error : exception.ajaxException
-			});
-		},
 		getData: function(idx){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/statistics/vod/VODListData/"+idx,
@@ -108,32 +122,7 @@ var menuJs={
 		}
 
 };
-menuJs.makeJsTree($('#categoryIdx').val());
-
-/* $.ajax({
-    url: menuJs.getData($('#categoryIdx').val()),
-    responseTime: 0,
-    response: function(settings) {
-        var page = settings.data.page;
-        var perPage = settings.data.perPage;
-        var start = (page - 1) * perPage;
-        var end = start + perPage;
-        var data = gridData.slice(start, end);
-
-        this.responseText = JSON.stringify({
-            result: true,
-            data: {
-                contents: data,
-                pagination: {
-                    page: page,
-                    totalCount: 20
-                }
-            }
-        });
-    }
-}); */
-
-
+/* 
 var grid = new tui.Grid({
     el: $('#grid'),
     scrollX: false,
@@ -141,11 +130,6 @@ var grid = new tui.Grid({
     virtualScrolling: true,
     //pagination: true,
     bodyHeight: 650,
-/*     
-    rowHeaders: [
-    	{ type: 'checkbox' }
-    ],
-     */
     columns: [
         { title: '제목', name: 'vod_title', align: 'center', ellipsis: true, 
         	formatter: function(value, rowData) {
@@ -185,16 +169,8 @@ grid.use('Net', {
         'downloadExcel': './api/download/excel',
         'downloadExcelAll': './api/download/excelAll'
     }
-});
+}); */
 
-
-var pagination = grid.getPagination(
-	{
-	    totalItems: 500,
-	    //itemsPerPage: 10,
-	    visiblePages: 5
-	}
-);
 
 /* var grid_net = grid.getAddOn('Net');
 

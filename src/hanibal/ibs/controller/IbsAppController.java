@@ -255,6 +255,23 @@ public class IbsAppController {
 					mainData.put("ret", subData);
 				}
 			}
+			else if(order.equals("searchList")) {
+				try {
+					System.out.println("commandMap="+commandMap);
+					List<VodListAppDTO> lists=ibsAppDAO.getSearchList(commandMap, sednIp);
+					subData.put("vodList",lists);
+					mainData.put("code","200");
+					mainData.put("type","0");
+					mainData.put("msg","");
+					mainData.put("ret", subData);
+				} 
+				catch (Exception e) {
+					mainData.put("code","400");
+					mainData.put("type","1");
+					mainData.put("msg", "앱을 로딩하는데 오류가 있습니다.");
+					mainData.put("ret", subData);
+				}
+			}
 		}
 		
 		res.setCharacterEncoding("utf8");

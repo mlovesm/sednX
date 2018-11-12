@@ -66,7 +66,7 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				$('#vodViewFilesize').html(common.number_to_human_size(data.info.file_size));
 				$('#vodViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
 				
-				$('#vodDefaultImg').attr('src','http://${sednIp}${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$('#vodDefaultImg').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
 				$("#vod_title").val(data.info.vod_title);
 				$("#vod_content").val(data.info.vod_content);
 				$("#vod_path").val(data.info.vodFile);

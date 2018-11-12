@@ -395,5 +395,31 @@
 			tb_account_member
 		where
 			member_id = #{member_id}
+	</select>
+	
+	<!-- 검색 리스트 by MGS -->
+	<select id="vod_searchList" resultType="hanibal.ibs.model.stb.VodListDTO" parameterType="java.util.Map">
+		SELECT
+		    b.idx AS vod_idx,
+		    a.vod_path,
+		    b.board_title  AS vod_title,
+		    b.board_content AS vod_content,
+		    IFNULL(b.board_keyword,'') AS vod_keyword,
+		    a.vod_play_time AS vod_play_time,
+		    b.favorite_count AS favorite_count,
+		    b.view_count AS view_count,
+		    a.main_thumbnail,
+		    b.category_idx AS board_cate_idx,
+		    (SELECT category_name FROM tb_board_category WHERE idx=a.category_idx) AS board_cate_name,
+		    DATE_FORMAT(a.reg_dt,'%Y.%m.%d') AS vod_regdate
+		FROM tb_vod_repository a
+		LEFT OUTER JOIN tb_board_repository b ON a.idx=b.vod_repo
+		WHERE 1=1 AND b.del_flag='N'
+		<if test='searchWord!="" and searchWord!=null'>
+			AND (vod_title like CONCAT('%',#{searchWord},'%')
+			OR vod_content like CONCAT('%',#{searchWord},'%')
+			OR (select category_name from tb_vod_category where idx=a.category_idx) like CONCAT('%',#{searchWord},'%') 
+			OR vod_keyword like CONCAT('%',#{searchWord},'%')) 
+		</if>
 	</select>	
 </mapper>
