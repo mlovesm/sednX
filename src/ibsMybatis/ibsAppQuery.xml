@@ -283,6 +283,10 @@
 			a.member_account = #{member_id}
 		and 
 			a.del_flag = "N"
+		<if test='searchWord!="" and searchWord!=null'>
+			AND (b.board_title LIKE CONCAT('%',#{searchWord},'%')
+			OR vod_title LIKE CONCAT('%',#{searchWord},'%'))
+		</if>
 	</select>
 	
     <select id="getLiveChannelTarget" resultType="String">
@@ -398,7 +402,7 @@
 	</select>
 	
 	<!-- 검색 리스트 by MGS -->
-	<select id="vod_searchList" resultType="hanibal.ibs.model.stb.VodListDTO" parameterType="java.util.Map">
+	<select id="vod_searchList" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
 		SELECT
 		    b.idx AS vod_idx,
 		    a.vod_path,
@@ -416,8 +420,8 @@
 		LEFT OUTER JOIN tb_board_repository b ON a.idx=b.vod_repo
 		WHERE 1=1 AND b.del_flag='N'
 		<if test='searchWord!="" and searchWord!=null'>
-			AND (vod_title like CONCAT('%',#{searchWord},'%')
-			OR vod_content like CONCAT('%',#{searchWord},'%')
+			AND (b.board_title like CONCAT('%',#{searchWord},'%')
+			OR b.board_content like CONCAT('%',#{searchWord},'%')
 			OR (select category_name from tb_vod_category where idx=a.category_idx) like CONCAT('%',#{searchWord},'%') 
 			OR vod_keyword like CONCAT('%',#{searchWord},'%')) 
 		</if>

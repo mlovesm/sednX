@@ -601,7 +601,7 @@ $('#liveMenuLi').addClass('active');
  $("#getEnd").datetimepicker({format:'Y-m-d H:i',step:10,theme:'dark'});
  menuJs.makeJsTree();
  arange.naviBar($('#sort').val(), $("#categoryIdx").val(), $("#categoryName").val());
- $('body').on('click', '#addEvent', function(ev){
+ $('body').on('click', '#addEvent', function(ev){	//스케쥴 모달 등록
  	/*if($('#source_type').val()=='VOD'){
  		var optionCount=$('#vodSource > option').length;
  		if(optionCount==0){
@@ -738,23 +738,22 @@ $('#calendar').fullCalendar({
       
      //On Day Select
      select: function(start, end, allDay) {
+		console.log('들어옴', allDay);
     	$('#scheduleEdit').css('display','block');
     	$('#scheduleView').css('display','none');
     	$('#vodArr').val('');
+    	$('#addNew-event').closest('.modal').find('.form-validation').validationEngine('hideAll');
      	$('#addNew-event').modal('show'); 
      	$('#addNew-event form')[0].reset();
      	//슬라이드 초기화 
      	arange.liveSlideDefault();
      	 $('#order').val('insert');
-     	 var selStart = new Date(start);
-         var selEnd=new Date(end);
-         var hs = common.formatZeroDate(selStart.getHours(),2);
-         var ms = common.formatZeroDate(selStart.getMinutes(),2);
-         var he = common.formatZeroDate(selEnd.getHours(),2);
-         var me = common.formatZeroDate(selEnd.getMinutes(),2);
+         var nowDate= moment().format('YYYY-MM-DD HH:mm');
+         var endMinute= nowDate.substr(15);
+         if(endMinute != 0) nowDate= moment().add(10-endMinute, 'minute').format('YYYY-MM-DD HH:mm');
          
-         $('#getStart').val($.datepicker.formatDate('yy-mm-dd '+hs+':'+ms,start));
-         $('#getEnd').val($.datepicker.formatDate('yy-mm-dd '+he+':'+me,end)); 
+         $('#getStart').val(nowDate);
+         $('#getEnd').val(nowDate); 
      },
       
      eventResize: function(event,dayDelta,minuteDelta,revertFunc) {

@@ -28,10 +28,11 @@ request [/cms/list/vod] are [/cms/list/{order}] are {order=vod}
 
 LIVE
 페이지 구성: leftMenu, WEB_LiveManages
+스케쥴 등록 모달 : $('#addNew-event').modal
 GET request for [/sedn/web/liveManages] are [/sedn/web/{section}] are {section=liveManages}
 GET request for [/api/seqKeyList]
-GET request for [/api/advenceTree/json/live] are {order=live}
-URI Template variables for request are [/api/advenceTree/json/{order}, /api/advenceTree/{order}/{idx}]
+GET request for [/api/advenceTree/json/live] are [/api/advenceTree/json/{order} are {order=live}
+URI Template variables for request /api/advenceTree/{order}/{idx}]
 GET request for [/api/web/scheduleJson]
 
 OTT

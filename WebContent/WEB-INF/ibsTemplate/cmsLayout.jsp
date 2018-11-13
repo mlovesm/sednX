@@ -53,15 +53,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ibsCmsJs/datetimepicker/jquery.datetimepicker.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/ibsCmsJs/datetimepicker/jquery.datetimepicker.full.min.js"></script>
 	<!-- Charts -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.js"></script> <!-- Flot Main -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.time.js"></script> <!-- Flot sub -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.animator.min.js"></script> <!-- Flot sub -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.resize.min.js"></script> <!-- Flot sub - for repaint when resizing the screen -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.orderBar.js"></script> <!-- Flot Bar chart -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts/jquery.flot.pie.min.js"></script> <!-- Flot Pie chart -->
-		<script src="${pageContext.request.contextPath}/ibsCmsJs/sparkline.min.js"></script> <!-- Sparkline - Tiny charts 메인상단 미니차트 JS -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/easypiechart.js"></script> <!-- EasyPieChart - Animated Pie Charts -->
-        <script src="${pageContext.request.contextPath}/ibsCmsJs/charts.js"></script> <!-- All the above chart related functions -->
+
 		<!-- Map -->
         <script src="${pageContext.request.contextPath}/ibsCmsJs/maps/jvectormap.min.js"></script> <!-- jVectorMap main library -->
         <script src="${pageContext.request.contextPath}/ibsCmsJs/maps/usa.js"></script> <!-- USA Map for jVectorMap -->
@@ -100,6 +92,9 @@
 		<!-- new user page -->
 		<script src="${pageContext.request.contextPath}/ibsCmsJs/jquery.blockUI.js"></script>
 		<script src="${pageContext.request.contextPath}/ibsCmsJs/TweenMax.min.js"></script>
+		
+		<!-- Custom -->
+		<script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>
 		<script>
 // Detect objectFit support
 if('objectFit' in document.documentElement.style === false) {
