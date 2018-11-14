@@ -361,6 +361,9 @@
 	   		date_format(a.start, '%Y-%m-%d') = #{date}
 	   	and 
 	   		a.del_flag = "N"
+		<if test='searchWord!="" and searchWord!=null'>
+			AND a.name LIKE CONCAT('%',#{searchWord},'%')
+		</if>
 	</select>
 	
 	<resultMap id="vodListResult" type="java.util.HashMap">
@@ -411,7 +414,9 @@
 		    IFNULL(b.board_keyword,'') AS vod_keyword,
 		    a.vod_play_time AS vod_play_time,
 		    b.favorite_count AS favorite_count,
-		    b.view_count AS view_count,
+		    (SELECT COUNT(idx) FROM tb_web_vod_history WHERE vod_idx=a.idx)+
+		    (SELECT COUNT(idx) FROM tb_stb_vod_history WHERE vod_idx=b.idx)+
+		    (SELECT COUNT(idx) FROM tb_app_vod_history WHERE vod_idx=a.idx) AS view_count,
 		    a.main_thumbnail,
 		    b.category_idx AS board_cate_idx,
 		    (SELECT category_name FROM tb_board_category WHERE idx=a.category_idx) AS board_cate_name,
@@ -425,5 +430,61 @@
 			OR (select category_name from tb_vod_category where idx=a.category_idx) like CONCAT('%',#{searchWord},'%') 
 			OR vod_keyword like CONCAT('%',#{searchWord},'%')) 
 		</if>
-	</select>	
+	</select>
+	
+	<!-- 새 VOD 리스트 -->
+	<select id="vod_newList" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
+		SELECT
+		    MAX(b.reg_dt) max_reg,
+		    b.reg_dt,
+		    b.idx AS vod_idx,
+		    a.vod_path,
+		    b.board_title  AS vod_title,
+		    b.board_content AS vod_content,
+		    IFNULL(b.board_keyword,'') AS vod_keyword,
+		    a.vod_play_time AS vod_play_time,
+		    b.favorite_count AS favorite_count,
+		    (SELECT COUNT(idx) FROM tb_web_vod_history WHERE vod_idx=a.idx)+
+		    (SELECT COUNT(idx) FROM tb_stb_vod_history WHERE vod_idx=b.idx)+
+		    (SELECT COUNT(idx) FROM tb_app_vod_history WHERE vod_idx=a.idx) AS view_count,
+		    a.main_thumbnail,
+		    b.category_idx AS board_cate_idx,
+		    c.category_name AS board_cate_name,
+		    DATE_FORMAT(b.reg_dt,'%Y.%m.%d') AS vod_regdate
+		FROM tb_vod_repository a
+		LEFT OUTER JOIN tb_board_repository b ON a.idx=b.vod_repo
+		LEFT OUTER JOIN tb_board_category c ON b.category_idx=c.idx
+		WHERE 1=1 AND b.del_flag='N'
+		GROUP BY vod_idx
+		ORDER BY max_reg DESC LIMIT 5
+	</select>
+	
+	<!-- 인기 VOD 리스트 -->
+	<select id="vod_hitList" resultType="hanibal.ibs.model.app.VodListAppDTO" parameterType="java.util.Map">
+		SELECT
+		    a.idx,
+		    b.reg_dt,
+		    b.idx AS vod_idx,
+		    a.vod_path,
+		    b.board_title  AS vod_title,
+		    b.board_content AS vod_content,
+		    IFNULL(b.board_keyword,'') AS vod_keyword,
+		    a.vod_play_time AS vod_play_time,
+		    b.favorite_count AS favorite_count,
+		    (SELECT COUNT(idx) FROM tb_web_vod_history WHERE vod_idx=a.idx)+
+		    (SELECT COUNT(idx) FROM tb_stb_vod_history WHERE vod_idx=b.idx)+
+		    (SELECT COUNT(idx) FROM tb_app_vod_history WHERE vod_idx=a.idx) AS view_count,
+		    a.main_thumbnail,
+		    b.category_idx AS board_cate_idx,
+		    c.category_name AS board_cate_name,
+		    DATE_FORMAT(b.reg_dt,'%Y.%m.%d') AS vod_regdate
+		FROM tb_vod_repository a
+		LEFT OUTER JOIN tb_board_repository b ON a.idx=b.vod_repo
+		LEFT OUTER JOIN tb_board_category c ON b.category_idx=c.idx
+		WHERE b.del_flag='N'
+		GROUP BY a.idx
+		ORDER BY view_count DESC
+		LIMIT 5
+	</select>
+	
 </mapper>

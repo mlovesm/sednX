@@ -317,6 +317,7 @@ public class IbsAppDAO {
 		List<HashMap<String, Object>> channelList = sqlTemplate.selectList("getChannelList", map);
 		System.out.println("channelList=" + channelList);
 		
+		map.put("searchWord", commandMap.get("searchWord"));
 		for(int i=0;i<channelList.size();i++) {
 			map.put("ch_idx", channelList.get(i).get("ch_idx"));
 			List<HashMap<String, Object>> schList = sqlTemplate.selectList("getSchList", map);
@@ -366,7 +367,7 @@ public class IbsAppDAO {
 	public HashMap<String, Object> getSettingInfo() {
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("start_page", "vod");
-		map.put("conf_server_ip", "52.78.175.141");
+		map.put("conf_server_ip", "182.162.172.133");
 		map.put("conf_server_port", "8443");
 		
 		return map;
@@ -377,8 +378,11 @@ public class IbsAppDAO {
 		sqlTemplate.insert("tb_sedn_logInsert",commandMap);	
 	}
 	
-	public List<VodListAppDTO> getSearchList(Map<String, Object> paramMap, String mediaIp) throws Exception {
-		List<VodListAppDTO> lists=sqlTemplate.selectList("vod_searchList",paramMap);
+	public List<VodListAppDTO> getVodList(Map<String, Object> paramMap, String mediaIp) throws Exception {
+		System.out.println(paramMap);
+		String sql="vod_searchList";
+		if(paramMap.get("type")!=null) sql= "vod_"+paramMap.get("type")+"List";
+		List<VodListAppDTO> lists=sqlTemplate.selectList(sql, paramMap);
 		
 		for(int i=0;i<lists.size();i++) {
 			lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());

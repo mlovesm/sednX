@@ -587,7 +587,7 @@ var menuTree={
 				videojs(oldPlayer).dispose();
 			}
 		}
- };
+ };	//arange
   /**
    *카렌더 관련 스크립트 시작 
    */
@@ -738,7 +738,7 @@ $('#calendar').fullCalendar({
       
      //On Day Select
      select: function(start, end, allDay) {
-		console.log('들어옴', allDay);
+		console.log('Calendar select', allDay);
     	$('#scheduleEdit').css('display','block');
     	$('#scheduleView').css('display','none');
     	$('#vodArr').val('');
@@ -804,13 +804,13 @@ $('body').on('click', '.calendar-actions > li > a', function(e){
  overflowRegular = $('.overflow').niceScroll();     
 });                    
  /***/
- $('#addLiveTarget').click(function(){
-		arange.targetView($('#treeIdx').val());
-		$('#liveTargetAdd').modal();
+$('#addLiveTarget').click(function(){	//설정
+	arange.targetView($('#treeIdx').val());
+	$('#liveTargetAdd').modal();
 });
+ 
 var calClick={
-		viewEvent:function(idx){
-			console.log('LIVE 스케쥴 클릭', idx);
+		viewEvent:function(idx){	// LIVE 스케쥴 클릭
 			arange.delJsPlayer();
 			$('#defaultPlayer').css('display','block');
 			$('#liveJsPlayer').css('display','none');
@@ -823,7 +823,6 @@ var calClick={
     	 		url:'/api/web/stb-schedule/'+$("#order").val()+"/"+idx,
     	 		success : function(responseData){
     	 			var data=JSON.parse(responseData);
-					console.log(data);
     	 			var nowDate=new Date();
     	 			//idx 값셋팅 
     	 			$("#idx").val(data.idx);

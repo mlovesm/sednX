@@ -255,16 +255,29 @@ public class IbsAppController {
 					mainData.put("ret", subData);
 				}
 			}
-			else if(order.equals("searchList")) {
+			else if(order.equals("newList")) {
 				try {
-					System.out.println("commandMap="+commandMap);
-					List<VodListAppDTO> lists=ibsAppDAO.getSearchList(commandMap, sednIp);	//VOD
-					subData.put("vodList",lists);
-					
-					List<FavoriteListDTO> getFavoriteListMap = ibsAppDAO.getFavoriteList(commandMap);	//favoriteList
-					subData.put("vodFavoriteList", getFavoriteListMap);
-					
-					
+					commandMap.put("type", "new");
+					List<VodListAppDTO> lists=ibsAppDAO.getVodList(commandMap, sednIp);	//VOD
+					subData.put("vodNewList",lists);
+					mainData.put("code","200");
+					mainData.put("type","0");
+					mainData.put("msg","");
+					mainData.put("ret", subData);
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+					mainData.put("code","400");
+					mainData.put("type","1");
+					mainData.put("msg", "앱을 로딩하는데 오류가 있습니다.");
+					mainData.put("ret", subData);
+				}
+			}
+			else if(order.equals("hitList")) {
+				try {
+					commandMap.put("type", "hit");
+					List<VodListAppDTO> lists=ibsAppDAO.getVodList(commandMap, sednIp);	//VOD
+					subData.put("vodHitList",lists);
 					mainData.put("code","200");
 					mainData.put("type","0");
 					mainData.put("msg","");
@@ -485,4 +498,49 @@ public class IbsAppController {
 		res.setCharacterEncoding("utf8");
 		res.getWriter().print(mapper.writeValueAsString(mainData));
 	}	
+	
+	// 검색 API
+	@RequestMapping("/api/app/searchList")
+	public void searchAPI(@RequestParam(required=false) Map<String, Object> commandMap, ModelMap mav, HttpServletResponse res, HttpServletRequest req) throws JsonGenerationException, JsonMappingException, IOException {
+		subData.clear();
+		mainData.clear();
+		int tokenCount=ibsAppDAO.checkToken((String)commandMap.get("token"));
+		if(tokenCount==0) {
+			mainData.put("code","000");
+			mainData.put("type","1");
+			mainData.put("msg", "로그인을 해주세요.");
+			mainData.put("ret", subData);
+			
+		} else {
+			try {
+				commandMap.put("type", "search");
+				List<VodListAppDTO> lists=ibsAppDAO.getVodList(commandMap, sednIp);	//VOD
+				subData.put("vodList",lists);
+				
+				List<FavoriteListDTO> getFavoriteListMap = ibsAppDAO.getFavoriteList(commandMap);	//favoriteList
+				subData.put("vodFavoriteList", getFavoriteListMap);
+				
+				List<HashMap<String, Object>> getLivePairingList = ibsAppDAO.getLivePairing(commandMap);
+				subData.put("liveList", getLivePairingList);
+				subData.put("currentTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
+				
+				
+				mainData.put("code","200");
+				mainData.put("type","0");
+				mainData.put("msg","");
+				mainData.put("ret", subData);
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+				mainData.put("code","400");
+				mainData.put("type","1");
+				mainData.put("msg", "앱을 로딩하는데 오류가 있습니다.");
+				mainData.put("ret", subData);
+			}
+		}
+		
+		res.setCharacterEncoding("utf8");
+		res.getWriter().print(mapper.writeValueAsString(mainData));
+	}
+	
 }
