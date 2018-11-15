@@ -1838,11 +1838,12 @@ $(function(){
 			common.repolist('');
 			$('#repositoryList').modal();
 		};
-		var settopCmd=function(){
+		var settopCmd=function(message, topic){
 			jQuery.ajaxSettings.traditional = true;
 			$.ajax({
-				url : '/api/web/scheduleDownLoadToAllSTB',
+				url : '/api/web/changeToAllSTB',
 				type : 'post',
+				data:{'message':message, "topic":topic},
 				success : function(result) {
 					console.log('schedule send to OTT');
 				},
@@ -2205,12 +2206,12 @@ $(function(){
       }
       ev.preventDefault();
   });
-  $("#boardConfirm").click(function(ev){
+  $("#boardConfirm").click(function(ev){	//PAGE 영상 추가, 수정
 	  var eventForm =  $(this).closest('.modal').find('.form-validation-6');
       eventForm.validationEngine('validate');
       if (!(eventForm).find('.formErrorContent')[0]) {
     	  $.ajax({
-    		  	url : '/cms/excute/'+$("#sort").val()+'/'+$("#boardOrder").val(),
+    		  	url : '/cms/excute/'+$("#sort").val()+'/'+$("#boardOrder").val(),	//board, {insert, update}
     			data :{
     				"vod_repo":$("#vodRepo").val(),
     				"photo_repo":$("#photoRepo").val(),
@@ -2232,14 +2233,14 @@ $(function(){
     				common.delCashPlayer('vodPlayer');
     				arange.contentsView($("#categoryIdx").val());
     				$("#boardViewModal").modal('hide');
-    				common.settopCmd();
+    				common.settopCmd('vod_update', 'broadcast');
     			},
     			error : exception.ajaxException
     		});
       }
       ev.preventDefault();
   });
-  $("#mediaDel").click(function(){
+  $("#mediaDel").click(function(){	// CONTENTS VOD 삭제
 		var idx=$('#vodIdx').val();
 		$("#confirmText").text("선택한 동영상을 삭제하시겠습니까?.");
 		$("#confirmModal").modal('show');
@@ -2251,7 +2252,7 @@ $(function(){
 		});
 		return false;
 	});
-  $("#photoDel").click(function(){
+  $("#photoDel").click(function(){	// CONTENTS PHOTO 삭제
 		var idx=$('#photoIdx').val();
 		$("#confirmText").text("선택한 사진을 삭제하시겠습니까?.");
 		$("#confirmModal").modal('show');
@@ -2263,7 +2264,7 @@ $(function(){
 		});
 		return false;
 	});
-  $("#fileDel").click(function(){
+  $("#fileDel").click(function(){	// CONTENTS FILE 삭제
 		var idx=$('#fileIdx').val();
 		$("#confirmText").text("선택한 파일을 삭제하시겠습니까?.");
 		$("#confirmModal").modal('show');
@@ -2275,7 +2276,7 @@ $(function(){
 		});
 		return false;
 	});
-  $("#streamDel").click(function(){
+  $("#streamDel").click(function(){	// CONTENTS STREMING 삭제
 		var idx=$('#streamIdx').val();
 		$("#confirmText").text("선택한 파일을 삭제하시겠습니까?.");
 		$("#confirmModal").modal('show');
@@ -2287,13 +2288,14 @@ $(function(){
 		});
 		return false;
 	});
-  $("#boardDel").click(function(){
+  $("#boardDel").click(function(){	// PAGE 영상 삭제
 		var idx=$('#boardIdx').val();
 		$("#confirmText").text("선택한 파일을 삭제하시겠습니까?.");
 		$("#confirmModal").modal('show');
 		exception.delConfirm(function(confirm) {
 			if (confirm) {
 				common.deleteByIdxArr(idx);
+				common.settopCmd('vod_update', 'broadcast');
 				$('#boardViewModal').modal('hide');
 			}
 		});

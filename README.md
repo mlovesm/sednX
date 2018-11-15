@@ -56,6 +56,8 @@ PAGE
 페이지= leftMenu, 함수: 재생= modalLayer.vodPlayer
 
 
-	
+mosquitto => 함수: common.settopCmd();
+PAGE 영상 추가
+
 path: /  VOD 재생 param
 

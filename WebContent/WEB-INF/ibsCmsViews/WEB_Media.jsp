@@ -200,37 +200,46 @@ $('#selectSort').change(function(){
 	$('#editBtns').css('display','none');
 	
 });
-$('#goEdit').click(function(){	//편집
+$('#goEdit').click(function(){	//CONTENT 편집 메뉴 열기
+	var selector = ".vodCheck";
 	if($('#selectSort').val()=="vod"){
-		$('.vodCheck').css('display','block');
+		selector = ".vodCheck";
 		
 	}else if($('#selectSort').val()=="stream"){
-		$('.streamCheck').css('display','block');
+		selector = ".streamCheck";
 		
 	}else if($('#selectSort').val()=="photo"){
-		$('.photoCheck').css('display','block');
-		$('.photoCheck').parent().css({'height':'100%','display':'block'});
-		$('.imgPopup').css('height', 0);
+		selector = ".photoCheck";
 		
 	}else if($('#selectSort').val()=="file"){
-		$('.fileCheck').css('display','block');
+		selector = ".fileCheck";
 	}
+	$(selector).css('display','block');
+	$(selector).parent().css({'height':'100%','display':'block'});
+	$('.imgPopup').css('height', 0);
+	
 	$('#addBtns').css('display','none');
 	$('#editBtns').css('display','block');
 });
-$('#backAddBtns').click(function(){	//완료
+
+$('#backAddBtns').click(function(){	// 메뉴 완료 버튼
+	var selector = ".vodCheck";
 	if($('#selectSort').val()=="vod"){
-		$('.vodCheck').css('display','none');
+		selector = ".vodCheck";
+		
 	}else if($('#selectSort').val()=="stream"){
-		$('.streamCheck').css('display','none');
+		selector = ".streamCheck";
+		
 	}else if($('#selectSort').val()=="photo"){
-		$('.photoCheck').css('display','none');
-		$('.photoCheck').parent().css('display', 'none');
-		$('.imgPopup').css('height', '100%');
+		selector = ".photoCheck";
 		
 	}else if($('#selectSort').val()=="file"){
-		$('.fileCheck').css('display','none');
+		selector = ".fileCheck";
 	}
+	$(selector).css('display','none');
+	$(selector).parent().css('display', 'none');
+	$('.imgPopup').css('height', '100%');
+	
 	$('#addBtns').css('display','block');
 	$('#editBtns').css('display','none');
 });
@@ -245,7 +254,7 @@ $('#contents-search').keyup(function(key){
 	}
 	
 });
-$('#media-add').click(function(){
+$('#media-add').click(function(){ // 메뉴 추가 버튼
 	if($('#sort').val()=='vod'&&$('#treeProperty').val()!=0){
 		$('#mediaDel').css('display','none');
 		$('#vodMediaView').css('display','none');
@@ -295,7 +304,7 @@ $('#thumRepositoryAdd').click(function(){
 	//arange.repolist('');
 	$('#repositoryList').modal();
 });
-$('#vodViewEdit').click(function(){
+$('#vodViewEdit').click(function(){	// VOD 영상 편집
 	common.delCashPlayer('vodPlayer');
 	$('#mediaDel').css('display','block');
 	$('#vodMediaView').css('display','none');
@@ -324,7 +333,7 @@ $('#checkMove').click(function(){
 		menuJs.makeSelJstree();
 	}
 });
-$('#checkDel').click(function(){	//삭제
+$('#checkDel').click(function(){	// CONTENT 편집 삭제
 	var checkValArr=$("#selectedIdxs").val();
 	if(checkValArr.length==0){
 		exception.checkboxException();

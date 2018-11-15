@@ -15,13 +15,10 @@
 		
 		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
 				 background-size: cover; display: inline-block;">
-		<%-- <label for="check_${list.idx}" style="display: unset; cursor: pointer;"> --%>
+			<label for="check_${list.idx}" style="display: unset; cursor: pointer;">
+				<input class="pull-left m-l-5 vodCheck" type="checkbox" id="check_${list.idx}" value="${list.idx}"/>
+			</label>
 			<div class="imgPopup" id="${list.idx}" data-title="${list.vod_path}" style="height: 100%;"></div>
-		<!-- </label> -->
-			<div>
-				<input class="pull-left m-l-5 vodCheck" type="checkbox" value="${list.idx}"/>
-				<%-- <input class="pull-left m-l-5 vodRadio" type="radio" name="redioVal" value="${list.idx}" title="${list.vod_path}" /> --%>	
-			</div>
 			<div class="vod_text_box">
 				<h6>${list.vod_title}</h6>
 			</div>
@@ -64,9 +61,10 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				$('#vodViewResolution').html(data.info.resolution);
 				$('#vodViewRuntime').html(data.info.vod_play_time);
 				$('#vodViewFilesize').html(common.number_to_human_size(data.info.file_size));
-				$('#vodViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
+				var thumnailFullPath = 'http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path;
 				
-				$('#vodDefaultImg').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$('#vodViewMainThumb').attr('src', thumnailFullPath);
+				$('#vodDefaultImg').attr('src', thumnailFullPath);
 				$("#vod_title").val(data.info.vod_title);
 				$("#vod_content").val(data.info.vod_content);
 				$("#vod_path").val(data.info.vodFile);
@@ -91,7 +89,7 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 				$('#vodSlideShow').append('<li id="addLi"><a class="add" onclick="arange.selectSource();"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
 				slide.init();
 				$("#play_url").val(data.info.vod_path);
-				$("#play_thum").val('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.thumnail_path);
+				$("#play_thum").val(thumnailFullPath);
 				
 				$('#vodViewArea').empty();
 				$('#vodPreview').empty();
@@ -134,8 +132,7 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 	});
 	
 	var arr=[];
-	$(".vodCheck").click(function(e){
-		console.log('media');
+	$(".vodCheck").click(function(e){	// CONTENT 체크박스 클릭
 		//e.stopPropagation();
 		if($(this).is(":checked")==true){
 			arr.push($(this).val());
@@ -145,14 +142,13 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 		$("#selectedIdxs").val(arr);
 	});
 	
-}else if($('#requestRepo').val()=='vod'){	//PAGE 영상추가
+}else if($('#requestRepo').val()=='vod'){	//PAGE 영상 가져오기
 	$('.vodCheck').css('display','none');
 	//$('.vodRadio').css('display','block');
 	
 	$('.imgPopup').click(function(){
 		$(this).parent().siblings().css("border", "none");
 		$(this).parent().css("border", "2px solid red");
-		console.log($(this).data("title"));
 		$('#tempVodList').val($(this).attr('id'));
 		common.delCashPlayer('vodPlayer');
 		$('#boardPreview').empty();

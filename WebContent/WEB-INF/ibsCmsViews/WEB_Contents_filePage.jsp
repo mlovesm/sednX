@@ -12,8 +12,12 @@
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}"  style="background: url(${pageContext.request.contextPath}/ibsImg/doc_icon2_${list.resolution}.png) no-repeat 50% 40%; cursor: pointer;">
-                 <input class="pull-left m-l-5 fileCheck" type="checkbox" value="${list.idx}"/>
-                 <p class="text-center imgPopup" id="${list.idx}" style="margin-top: 110px; font-size:12px;">${list.file_title}<br/>[${list.file_path}]</p>
+				<label for="check_${list.idx}" style="display: unset; cursor: pointer;">
+					<input class="pull-left m-l-5 fileCheck" type="checkBox" id="check_${list.idx}" value="${list.idx}"/>
+				</label>
+             	<p class="file_text" data-id="${list.idx}">${list.file_title}<br/>[${list.file_path}]</p>
+             	<div class="imgPopup" data-id="${list.idx}" style="height: 100%;"></div>
+
              </div>
 		</c:forEach>
 	</c:otherwise>
@@ -25,14 +29,14 @@
 <script>
 if($('#requestRepo').val()=='media'){
 	$('.fileCheck').css('display','none');
-	$('.imgPopup').click(function(){
+	$('.imgPopup, .file_text').click(function(){
 		common.fileDefault();
 		$('#fileMediaView').css('display','block');
 		$('#fileMediaEdit').css('display','none');
 		$('#fileOrder').val('update');
 		$('#fileViewModal').modal();
 		$.ajax({
-			url : "${pageContext.request.contextPath}/api/media/"+ $("#sort").val() + "/"+$(this).attr('id'),
+			url : "${pageContext.request.contextPath}/api/media/"+ $("#sort").val() + "/"+$(this).data('id'),
 			cache : false,
 			async : false,
 			success : function(responseData){

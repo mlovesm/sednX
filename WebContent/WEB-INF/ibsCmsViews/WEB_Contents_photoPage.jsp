@@ -31,13 +31,14 @@
 <script>
 if($('#requestRepo').val()=='media'&&$('#repoOrder').val()==""){
 	$('.photoCheck').css('display','none');
+	
 	$('.imgPopup').click(function(){
 		common.photoDefault();
 		$('#photoMediaView').css('display','block');
 		$('#photoMediaEdit').css('display','none');
 		$('#photoOrder').val('update');
 		$('#photoViewModal').modal();
-		$.ajax({
+		$.ajax({	// sort= photo
 			url : "${pageContext.request.contextPath}/api/media/"+ $("#sort").val() + "/"+$(this).attr('id'),
 			cache : false,
 			async : false,
@@ -50,9 +51,9 @@ if($('#requestRepo').val()=='media'&&$('#repoOrder').val()==""){
 				$('#photoViewResolution').html(data.info.resolution);
 				$('#photoViewFilesize').html(common.number_to_human_size(data.info.file_size));
 				$('#photoViewText').html(data.info.photo_content);
-				$('#photoViewMainThumb').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.photo_path);
-				
-				$('#photoDefaultImg').attr('src','http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.photo_path);
+				var photoFullPath = 'http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.info.photo_path;
+				$('#photoViewMainThumb').attr('src', photoFullPath);
+				$('#photoDefaultImg').attr('src', photoFullPath);
 				$("#photo_title").val(data.info.photo_title);
 				$("#photo_content").val(data.info.photo_content);
 				$("#photo_path").val(data.info.photoFile);
@@ -63,6 +64,7 @@ if($('#requestRepo').val()=='media'&&$('#repoOrder').val()==""){
 			error : exception.ajaxException
 		});
 	});
+	
 	$('#photoSection').change(function(){
 		//용량
 		var file=this.files;

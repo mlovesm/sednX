@@ -13,9 +13,11 @@
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}"  style="position: relative; background: url('${pageContext.request.contextPath}/img/live.jpg') no-repeat center; background-size: cover;">
 				<%-- <input class="pull-left m-l-5 streamCheck" type="radio"  name="redioVal" value="${list.idx}" title="${list.live_path}" /> --%>
-				<input class="pull-left m-l-5 streamCheck" type="checkBox"  name="redioVal" value="${list.idx}" title="${list.live_path}" style="display:none;"/>
-				 <p class="text-center" style="margin-top: 110px; font-size:12px;" id="streamText" title="${list.live_title}">${list.live_title}<br/>
-				 <div class="imgPopup" id="${list.idx}" data-title="${list.live_path}" style="left:18px;top:0;width:90%;height:100%;position:absolute;"></div>
+				<label for="check_${list.idx}" style="display: unset; cursor: pointer;">
+					<input class="pull-left m-l-5 streamCheck" type="checkBox" id="check_${list.idx}" name="redioVal" value="${list.idx}" title="${list.live_path}" style="display:none;"/>
+				</label>
+				<p class="text-center" style="margin-top: 110px; font-size:12px;" id="streamText" title="${list.live_title}">${list.live_title}<br/>
+				<div class="imgPopup" id="${list.idx}" data-title="${list.live_path}" style="height: 100%;"></div>
 			</div>
 		</c:forEach>
 	</c:otherwise>

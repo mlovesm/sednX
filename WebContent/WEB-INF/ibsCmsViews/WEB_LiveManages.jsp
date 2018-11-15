@@ -681,7 +681,7 @@ $('#liveMenuLi').addClass('active');
      		dataObject['forceLive']=0;
      	 }
      	 dataObject['order']=$('#order').val();
-     	 if($('#order').val()=="update"){
+     	 if($('#order').val()=="update"){	// LIVE 스케줄 변경
      		 dataObject['idx']=$('#idx').val();
      	 }
 				$.ajax({
@@ -874,7 +874,7 @@ var calClick={
     	 		error:exception.ajaxException
     	 	});
 		},
-		updateScheduleDate:function(idx,start,end){
+		updateScheduleDate:function(idx,start,end){	//LIVE 스케줄 이동
 			var result="success";
      		$.ajax({
      			url:'/cms/update/ScheduleDate',
@@ -894,7 +894,7 @@ var calClick={
      		});	
      		return result;
 		},
-		deleteEvent:function(){
+		deleteEvent:function(){	// LIVE 스케줄 삭제
 			$("#confirmText").text("선택 파일을 삭제하시겠습니까?.");
 			 $("#confirmModal").modal();
 			 exception.scheduleDelConfirm(function(confirm){
@@ -920,7 +920,7 @@ $('#addLiveTarget').click(function(){
 	$('#channelName').val($('#categoryName').val());
 	$('#liveTargetAdd').modal();
 });
-$('#targetInsert').click(function(){
+$('#targetInsert').click(function(){	// LIVE 타겟 설정 확인
 	$.ajax({
 		url : "${pageContext.request.contextPath}/cms/target/insert",
 		cache : false,

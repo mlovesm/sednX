@@ -635,17 +635,12 @@ public class IbsWebApiController {
 		res.getWriter().print(mapper.writeValueAsString(map));
 	}
 	
-	@RequestMapping("/api/web/scheduleDownLoadToAllSTB")
-	public  void scheduleDownLoadToAllSTB(HttpServletResponse res,@RequestParam Map<String, Object> commandMap) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException {
-		String command = "schedule_download";
-		//모든 셋탑 리스트 담기 
-		List<String> stbList=webApiDao.getAllSTBList();
-		for(int i=0;i<stbList.size();i++) {
-			String stb=stbList.get(i).replaceAll(":", "");
-			HanibalWebDev.sendCommandToSTB(command,stb);
-			log.info("-------------------------------->"+stb);
-			Thread.sleep(1000);
-		}
+	// PAGE 셋탑박스 메시지 송신
+	@RequestMapping("/api/web/changeToAllSTB")
+	public  void changeToAllSTB(HttpServletResponse res,@RequestParam Map<String, Object> commandMap) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException {
+		//모든 셋탑 리스트 담기 topic= BroardCast
+		HanibalWebDev.sendCommandToSTB(commandMap.get("message").toString(), commandMap.get("topic").toString());
+
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("result", "success");
 		res.getWriter().print(mapper.writeValueAsString(map));
