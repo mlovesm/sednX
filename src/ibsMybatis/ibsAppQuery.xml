@@ -483,7 +483,7 @@
 		LEFT OUTER JOIN tb_board_category c ON b.category_idx=c.idx
 		WHERE b.del_flag='N'
 		GROUP BY a.idx
-		ORDER BY view_count DESC
+		ORDER BY view_count DESC, reg_dt DESC
 		LIMIT 5
 	</select>
 	
