@@ -142,11 +142,12 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 		$("#selectedIdxs").val(arr);
 	});
 	
-}else if($('#requestRepo').val()=='vod'){	//PAGE 영상 가져오기
+}else if($('#requestRepo').val()=='vod'){	//PAGE
 	$('.vodCheck').css('display','none');
 	//$('.vodRadio').css('display','block');
 	
-	$('.imgPopup').click(function(){
+	$('.imgPopup').click(function(){	//영상 가져오기 이미지 클릭
+		console.log('vodPage');
 		$(this).parent().siblings().css("border", "none");
 		$(this).parent().css("border", "2px solid red");
 		$('#tempVodList').val($(this).attr('id'));

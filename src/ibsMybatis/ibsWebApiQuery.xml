@@ -1424,7 +1424,11 @@
 		</select>
 		
 		<select id="getAllSTBList" resultType="String">
-			SELECT mac FROM ibsdata.tb_stb where del_flag='N' order by idx desc;
+			SELECT mac FROM ibsdata.tb_stb where del_flag='N' 
+			<if test='group_idx!=""'>
+				and category_idx=#{group_idx}
+			</if>
+			order by idx desc;
 		</select>
 		
 		<resultMap id="vodMenuResult" type="java.util.HashMap">

@@ -78,6 +78,7 @@ if($('#requestRepo').val()=='media'){
 		}
 		$("#file_ext").val(ext);
 		var formData = new FormData();
+		console.log(formData);
 		formData.append("uploadFile", file[0]);
 		$.ajax({
 			xhr: function() {

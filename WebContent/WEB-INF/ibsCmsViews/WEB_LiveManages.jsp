@@ -601,6 +601,7 @@ $('#liveMenuLi').addClass('active');
  $("#getEnd").datetimepicker({format:'Y-m-d H:i',step:10,theme:'dark'});
  menuJs.makeJsTree();
  arange.naviBar($('#sort').val(), $("#categoryIdx").val(), $("#categoryName").val());
+ 
  $('body').on('click', '#addEvent', function(ev){	//스케쥴 모달 등록
  	/*if($('#source_type').val()=='VOD'){
  		var optionCount=$('#vodSource > option').length;
@@ -691,7 +692,7 @@ $('#liveMenuLi').addClass('active');
          	 		async:false,
          	 		success : function(result){
                          $('#addNew-event').modal('hide');
-                         common.settopCmd();
+                         common.settopCmd('schedule_download', $("#categoryIdx").val());
 						var insertedEvent={
         	 					title: $('#eventName').val(),
                               	url:'javascript:calClick.viewEvent('+result+');',
@@ -888,7 +889,7 @@ var calClick={
      					$("#msgModal").modal();
      					result="fail";
      				}
-     				common.settopCmd();
+     				common.settopCmd('schedule_download', $("#categoryIdx").val());
      			},
      			error : exception.ajaxException 
      		});	
@@ -905,7 +906,7 @@ var calClick={
    							var data=JSON.parse(responseData);
    							if(data.result=="success"){
    								arange.getEvents();
-   								common.settopCmd();
+   								common.settopCmd('schedule_download', $("#categoryIdx").val());
    							}
    						},
    						error : exception.ajaxException
@@ -929,7 +930,7 @@ $('#targetInsert').click(function(){	// LIVE 타겟 설정 확인
 		async : false,
 		success : function(data){
 			arange.targetView($('#categoryIdx').val());
-			common.settopCmd();
+			common.settopCmd('schedule_download', $("#categoryIdx").val());
 			$('#liveTargetAdd').modal('hide');
 		},
 		error : exception.ajaxException

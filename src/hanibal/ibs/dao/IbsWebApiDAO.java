@@ -357,6 +357,11 @@ public class IbsWebApiDAO {
 		return lists;
 	}
 	
+	// 그룹별 셋탑 정보 MGS 추가
+	public List<String> getGroupSTBList(String group_idx) {
+		List<String> list=sqlTemplate.selectList("getAllSTBList", group_idx);
+		return list;
+	}	
 
 
 	

@@ -1799,7 +1799,7 @@ $(function(){
 				error : exception.ajaxException
 			});
 		};
-		var selectRepoSource=function(sort){
+		var selectRepoSource=function(sort){	// PAGE 추가 > 영상 가져오기
 			$('#requestRepo').val(sort);
 			var html="";
 			if($('#requestRepo').val()=="schedule"){

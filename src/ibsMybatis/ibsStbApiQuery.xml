@@ -83,7 +83,7 @@
 	</select>
 	<select id="vodListInfo" resultType="hanibal.ibs.model.stb.VodListDTO" parameterType="String">
 		SELECT
-			(a.idx) AS id,
+			c.idx AS id,
 			(a.board_title) AS title,
 			a.board_content AS vod_content,
 			CONCAT((a.category_idx), ',', (SELECT pid FROM tb_board_category WHERE idx=a.category_idx)) AS menu,
@@ -179,7 +179,8 @@
  		select
 			(a.vod_id) as vod_id,
     		(b.vod_path) as file_path,
-    		(b.vod_play_time) as vod_play_time
+    		(b.vod_play_time) as vod_play_time,
+    		b.main_thumbnail
 		from 
 			tb_stb_schedule_vod a
 		left join 

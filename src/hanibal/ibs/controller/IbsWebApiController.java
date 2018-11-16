@@ -638,8 +638,29 @@ public class IbsWebApiController {
 	// PAGE 셋탑박스 메시지 송신
 	@RequestMapping("/api/web/changeToAllSTB")
 	public  void changeToAllSTB(HttpServletResponse res,@RequestParam Map<String, Object> commandMap) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException {
-		//모든 셋탑 리스트 담기 topic= BroardCast
-		HanibalWebDev.sendCommandToSTB(commandMap.get("message").toString(), commandMap.get("topic").toString());
+		
+		//topic= BroardCast
+		String topic= "";
+		if(commandMap.get("topic")!=null) topic= commandMap.get("topic").toString();
+		if(topic.equals("broadcast")) {
+			HanibalWebDev.sendCommandToSTB(commandMap.get("message").toString(), topic);
+			
+		}else{
+			String childIdx= "";
+			if(commandMap.get("topic")!=null) childIdx= commandMap.get("topic").toString();
+			//모든 셋탑 리스트 담기 
+			List<HashMap<String, Object>> targetList=webApiDao.getTargetView(childIdx);
+			for(int i=0;i<targetList.size();i++) {
+				List<String> stbList=webApiDao.getGroupSTBList(targetList.get(i).get("group_idx").toString());
+				
+				for (String s : stbList) {
+					String stb=s.replaceAll(":", "");
+					HanibalWebDev.sendCommandToSTB(commandMap.get("message").toString(),stb);
+					log.info("-------------------------------->"+stb);
+					Thread.sleep(1000);
+				}
+			}
+		}
 
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("result", "success");
@@ -669,6 +690,7 @@ public class IbsWebApiController {
 		res.getWriter().print(mapper.writeValueAsString(basicInfo));
 		
 	}
+	// LIVE Calendar 스케줄
 	@RequestMapping("/api/web/scheduleJson")
 	public void scheduleJson(@RequestParam(required=false) String childIdx,HttpServletResponse res) throws JsonGenerationException, JsonMappingException, IOException {
 		List<ScheduleDTO> eventLists=webApiDao.eventList(childIdx);
