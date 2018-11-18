@@ -2364,7 +2364,7 @@ a.list-group-item.active > .badge,
  
 .dropdown-menu.open {max-height: 654px; overflow: auto;}
 .img_box {position: relative}
-
+.img_box p.text-center {width:100%; top:65%; position: absolute; margin-top: 0 !important;}
 
 /* add */
 #contentView { width: 100%; }

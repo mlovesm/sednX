@@ -18,6 +18,9 @@
 			<label for="check_${list.idx}" style="display: unset; cursor: pointer;">
 				<input class="pull-left m-l-5 vodCheck" type="checkbox" id="check_${list.idx}" value="${list.idx}"/>
 			</label>
+			<label for="radio_${list.idx}" style="display: unset; cursor: pointer;">
+				<input class="pull-left m-l-5 vodRadio" type="radio" id="radio_${list.idx}"  name="redioVal" value="${list.idx}" title="${list.vod_path}" />
+			</label>
 			<div class="imgPopup" id="${list.idx}" data-title="${list.vod_path}" style="height: 100%;"></div>
 			<div class="vod_text_box">
 				<h6>${list.vod_title}</h6>
@@ -35,7 +38,7 @@
 <script>
 if($('#requestRepo').val()=='media'){	//CONTENT
 	$('.vodCheck').css('display','none');
-	//$('.vodRadio').css('display','none');
+	$('.vodRadio').css('display','none');
 	
 	$('.imgPopup').click(function(){
 		console.log('imgPopup');
@@ -144,20 +147,20 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 	
 }else if($('#requestRepo').val()=='vod'){	//PAGE
 	$('.vodCheck').css('display','none');
-	//$('.vodRadio').css('display','block');
+	$('.vodRadio').css('display','block');
+	$('input[name="redioVal"]').parent().css({'display':'block', 'height': '100%'});
 	
-	$('.imgPopup').click(function(){	//영상 가져오기 이미지 클릭
-		console.log('vodPage');
-		$(this).parent().siblings().css("border", "none");
-		$(this).parent().css("border", "2px solid red");
-		$('#tempVodList').val($(this).attr('id'));
+	$('.vodRadio').click(function(){	//영상 가져오기 이미지 클릭
+		$(this).parent().parent().siblings().css("border", "none");
+		$(this).parent().parent().css("border", "2px solid red");
+		$('#tempVodList').val($(this).val());
 		common.delCashPlayer('vodPlayer');
 		$('#boardPreview').empty();
-		modalLayer.vodPlayer($(this).data("title"),"${pageContext.request.contextPath}/img/live.jpg","boardPreview");
+		modalLayer.vodPlayer($(this).attr("title"),"${pageContext.request.contextPath}/img/live.jpg","boardPreview");
 	});
 }else{
 	$('.vodCheck').css('display','block');
-	//$('.vodRadio').css('display','none');
+	$('.vodRadio').css('display','none');
 	var arr=[];
 	$('.vodCheck').click(function(){	//LIVE > vod
 		console.log('기타');

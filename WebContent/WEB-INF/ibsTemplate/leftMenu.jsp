@@ -2085,7 +2085,6 @@ $(function(){
 		}else if($('#requestRepo').val()=="vod"){	//PAGE 영상 추가 정보 자동 입력 by MGS
 			if($('#tempVodList').val()!=""){
 				$('#vodRepo').val($('#tempVodList').val());
-				console.log('들어옴');
 				$.ajax({
 					url : '/cms/page/getVodContents',
 					cache : false,

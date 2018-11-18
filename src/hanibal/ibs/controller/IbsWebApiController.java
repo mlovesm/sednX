@@ -651,10 +651,12 @@ public class IbsWebApiController {
 			//모든 셋탑 리스트 담기 
 			List<HashMap<String, Object>> targetList=webApiDao.getTargetView(childIdx);
 			for(int i=0;i<targetList.size();i++) {
+				System.out.println(childIdx+", "+targetList);
 				List<String> stbList=webApiDao.getGroupSTBList(targetList.get(i).get("group_idx").toString());
 				
-				for (String s : stbList) {
-					String stb=s.replaceAll(":", "");
+				for (String mac : stbList) {
+					System.out.println("mac="+mac);
+					String stb=mac.replaceAll(":", "");
 					HanibalWebDev.sendCommandToSTB(commandMap.get("message").toString(),stb);
 					log.info("-------------------------------->"+stb);
 					Thread.sleep(1000);

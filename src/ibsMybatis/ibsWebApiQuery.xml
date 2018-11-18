@@ -1423,12 +1423,10 @@
 			where idx=#{idx};
 		</select>
 		
-		<select id="getAllSTBList" resultType="String">
-			SELECT mac FROM ibsdata.tb_stb where del_flag='N' 
-			<if test='group_idx!=""'>
-				and category_idx=#{group_idx}
-			</if>
-			order by idx desc;
+		<select id="getAllSTBList" resultType="String" parameterType="String">
+			SELECT mac FROM tb_stb
+			where del_flag='N' and category_idx=#{value}
+			order by idx desc
 		</select>
 		
 		<resultMap id="vodMenuResult" type="java.util.HashMap">

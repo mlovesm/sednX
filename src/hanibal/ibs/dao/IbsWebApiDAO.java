@@ -348,10 +348,6 @@ public class IbsWebApiDAO {
 		Map<String, Object> info=sqlTemplate.selectOne("vodMediaInfo",idx);
 		return info;
 	}
-	public List<String> getAllSTBList() {
-		List<String> list=sqlTemplate.selectList("getAllSTBList");
-		return list;
-	}
 	public List<HashMap<String, Object>> getVodMainDepth(int idx) {
 		List<HashMap<String, Object>> lists=sqlTemplate.selectList("getVodMainMenu",idx);
 		return lists;
@@ -361,7 +357,7 @@ public class IbsWebApiDAO {
 	public List<String> getGroupSTBList(String group_idx) {
 		List<String> list=sqlTemplate.selectList("getAllSTBList", group_idx);
 		return list;
-	}	
+	}
 
 
 	

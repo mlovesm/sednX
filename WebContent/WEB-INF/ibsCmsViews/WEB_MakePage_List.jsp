@@ -51,7 +51,6 @@
  <script>
 	$('.boardCheck').css('display','none');
 	$('.imgPopup').click(function(){
-		console.log('make');
 		$('#downloadList').css('display','none');
 		$('#boardDel').css('display','block');
 		$('#boardMediaView').css('display','block');
