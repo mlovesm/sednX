@@ -84,6 +84,7 @@
 	<select id="vodListInfo" resultType="hanibal.ibs.model.stb.VodListDTO" parameterType="String">
 		SELECT
 			c.idx AS id,
+			a.idx AS board_id,
 			(a.board_title) AS title,
 			a.board_content AS vod_content,
 			CONCAT((a.category_idx), ',', (SELECT pid FROM tb_board_category WHERE idx=a.category_idx)) AS menu,

@@ -73,6 +73,31 @@
   ${pagingStr}
 </div>
 <script>
+$(document).ready(function() {
+
+	$(".total-info > span").text("${fn:length(allLists)}");
+	
+	var list = [];
+	<c:forEach items="${allLists}" var="item">
+	    <c:if test="${item.status eq 1 || item.on_check < -3 }">
+	    	list.push(1);
+		</c:if>
+		 <c:if test="${item.status eq 2 && item.on_check >= -3 }">
+		 	list.push(2);
+		</c:if>
+		<c:if test="${item.status eq 3}">
+			list.push(3);
+		</c:if>
+		<c:if test="${item.status eq 4}">
+			list.push(4);
+		</c:if>
+	</c:forEach>
+
+	console.log(list);
+	$(".on-list").text(list.reduce((pre, cur) => (cur === 2) ? ++pre : pre, 0));
+	$(".off-list").text(list.reduce((pre, cur) => (cur === 1) ? ++pre : pre, 0));
+});
+
 $(function(){
 	var arr = [];
 	var macArr = [];

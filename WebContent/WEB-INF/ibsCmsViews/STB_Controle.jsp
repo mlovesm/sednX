@@ -52,6 +52,10 @@ pageEncoding="UTF-8"%>
                     <button type="button" class="btn btn-sm icon" id="contentForm"><span>&#61943;</span> <span class="text">STB 추가</span></button>
                     <button type="button" class="btn btn-sm icon" id="selectDeleteBtn"><span>&#61918;</span> <span class="text">STB 삭제</span></button>
               </div>
+              <div style="clear: both;"></div>
+              <div class="total-info">
+              	총 등록 대수 : <span class=""></span> 연결 대수: <span class="on-list"></span> 미연결 대수 <span class="off-list"></span>
+              </div>
           	</div>
             <!-- CONTENTS START -->
 			<div id="listView" class="tile"></div>

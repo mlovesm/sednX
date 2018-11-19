@@ -27,7 +27,15 @@ pageEncoding="UTF-8"%>
 					</div>
 				</div>
 			</div>		
-			<div class="right">							
+			<div class="right">		
+<a href="#" data-toggle="sns_share"  data-service="naver" data-title="네이버 SNS공유" class="btn btn-default">네이버 SNS 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="twitter" data-title="트위터 SNS공유" class="btn btn-default">트위터 SNS 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="facebook" data-title="페이스북 SNS공유" class="btn btn-default">페이스북 SNS 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="google" data-title="구글 SNS공유" class="btn btn-default">구글 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="band" data-title="네이버밴드 SNS공유" class="btn btn-default">네이버 밴드 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="pinterest" data-title="핀터레스트 SNS공유" class="btn btn-default">핀터레스트 공유하기</a>
+<a href="#" data-toggle="sns_share"  data-service="kakaostory" data-title="카카오스토리 SNS공유" class="btn btn-default">카카오스토리 공유하기</a>
+				
 				<div class="table_container text-center mb30">
 					<table summary="통계 분석/이 표는 날짜, 재생시간, 재생 수, 평균 재생 시간으로 구성">
 						<colgroup>
@@ -154,6 +162,52 @@ pageEncoding="UTF-8"%>
 
 
 <script>
+$(document).ready(function(){
+    
+   $("a[data-toggle='sns_share']").click(function(e){
+		e.preventDefault();
+		
+		var _this = $(this);
+		var sns_type = _this.attr('data-service');
+		var href = "http://192.168.0.147:8080/sedn/statistics/vodDetail?idx="+ "${map.idx}";
+		var title = _this.attr('data-title');
+		var loc = "";
+		var img = $("meta[name='og:image']").attr('content');
+		
+		if( ! sns_type || !href || !title) return;
+		
+		if( sns_type == 'facebook' ) {
+			loc = '//www.facebook.com/sharer/sharer.php?u='+href+'&t='+encodeURIComponent(title);
+		}
+		else if ( sns_type == 'twitter' ) {
+			loc = '//twitter.com/home?status='+encodeURIComponent(title)+' '+href;
+		}
+		else if ( sns_type == 'google' ) {
+			loc = '//plus.google.com/share?url='+href;
+		}
+		else if ( sns_type == 'pinterest' ) {
+			
+			loc = '//www.pinterest.com/pin/create/button/?url='+href+'&media='+img+'&description='+encodeURIComponent(title);
+		}
+		else if ( sns_type == 'kakaostory') {
+			loc = 'https://story.kakao.com/share?url='+encodeURIComponent(href);
+		}
+		else if ( sns_type == 'band' ) {
+			loc = 'http://www.band.us/plugin/share?body='+encodeURIComponent(title)+'%0A'+encodeURIComponent(href);
+		}
+		else if ( sns_type == 'naver' ) {
+			loc = "http://share.naver.com/web/shareView.nhn?url="+encodeURIComponent(href)+"&title="+encodeURIComponent(title);
+		}
+		else {
+			return false;
+		}
+		
+		window.open(loc);
+		return false;
+	});
+    
+});
+	
 (function() {
 
 })();

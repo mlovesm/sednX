@@ -36,7 +36,6 @@ import com.nimbusds.jwt.SignedJWT;
 import hanibal.ibs.library.HanibalWebDev;
 import hanibal.ibs.model.app.FavoriteListDTO;
 import hanibal.ibs.model.app.VodListAppDTO;
-import hanibal.ibs.model.cms.BoardDTO;
 
 public class IbsAppDAO {
 	Logger log = Logger.getLogger(this.getClass());
@@ -310,7 +309,7 @@ public class IbsAppDAO {
 	public List<HashMap<String, Object>> getLivePairing(Map<String, Object> commandMap) throws ParseException {
 		List<String> liveChannelTartgetListArray = sqlTemplate.selectList("getLiveChannelTarget");
 		String liveChannelTargetList = liveChannelTartgetListArray.toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "");
-		System.out.println("liveChannelTargetList=" + liveChannelTargetList);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("category_idx", HanibalWebDev.StringToIntArray(liveChannelTargetList));
 		map.put("date", (String)commandMap.get("date"));
@@ -321,7 +320,6 @@ public class IbsAppDAO {
 		for(int i=0;i<channelList.size();i++) {
 			map.put("ch_idx", channelList.get(i).get("ch_idx"));
 			List<HashMap<String, Object>> schList = sqlTemplate.selectList("getSchList", map);
-			System.out.println("schList=" + schList);
 			
 			for(int n=0;n<schList.size();n++) {
 				schList.get(n).put("sch_thumbnail", "/REPOSITORY/THUMBNAIL" + HanibalWebDev.getDataPath((String)schList.get(n).get("sch_thumbnail")) + (String)schList.get(n).get("sch_thumbnail"));

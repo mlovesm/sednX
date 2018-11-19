@@ -2,6 +2,7 @@ package hanibal.ibs.model.stb;
 
 public class VodListDTO {
 	int id;
+	int board_id;
 	String title;
 	String menu;
 	String thumbnail_path; 
@@ -20,6 +21,12 @@ public class VodListDTO {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public int getBoard_id() {
+		return board_id;
+	}
+	public void setBoard_id(int board_id) {
+		this.board_id = board_id;
 	}
 	public String getTitle() {
 		return title;

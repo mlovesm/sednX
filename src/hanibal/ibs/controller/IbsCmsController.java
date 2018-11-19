@@ -393,7 +393,9 @@ public class IbsCmsController {
 			start = (Integer.parseInt(nowPage)-1)*pageSize;
 			end = blockPage;
 			List<StbDTO> lists=ibsCmsDao.stbList(searchWord,childIdx,start,end);
+			List<StbDTO> allLists=ibsCmsDao.stbList(searchWord,childIdx);
 			model.addAttribute("lists", lists);
+			model.addAttribute("allLists", allLists);
 			model.addAttribute("childIdx", childIdx);
 			model.addAttribute("totalPage", totalPage);
 			model.addAttribute("totalRecordCount", totalRecordCount);

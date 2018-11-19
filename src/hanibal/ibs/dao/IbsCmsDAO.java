@@ -298,6 +298,19 @@ public class IbsCmsDAO {
 		List<BoardDTO> lists=sqlTemplate.selectList("BoardList", map);
 		return lists;
 	}
+	public List<StbDTO> stbList(String searchWord, String childIdx) {
+		Map<String,Object> map= new HashMap<String,Object>();
+		String eachFlag="";
+		if(childIdx.length()!=0) {
+			int childIdxArr[]=HanibalWebDev.StringToIntArray(childIdx);
+			eachFlag="Y";
+			map.put("childIdxArr", childIdxArr);
+		}
+		map.put("searchWord",searchWord);
+		map.put("eachFlag",eachFlag);
+		List<StbDTO> lists=sqlTemplate.selectList("StbList", map);
+		return lists;
+	}
 	public List<StbDTO> stbList(String searchWord, String childIdx, int start, int end) {
 		Map<String,Object> map= new HashMap<String,Object>();
 		String eachFlag="";

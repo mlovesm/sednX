@@ -478,7 +478,11 @@
          			#{type}
       			</foreach>
       		</if>
-      		order by on_check DESC, a.reg_dt desc limit #{start},#{end};
+      			order by on_check DESC, a.reg_dt desc 
+      		<if test='start!="" and start!=null'>
+      			limit #{start},#{end}
+      		</if>
+      		
 		</select>
 		
 		<select id="ScheduleList" parameterType="java.util.Map" resultType="hanibal.ibs.model.cms.ScheduleDTO">
