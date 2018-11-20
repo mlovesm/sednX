@@ -69,8 +69,6 @@ $(function(){
 		}
 		naviString=all_parents.join(' / ');
 		console.log(sel);
-		console.log(all_children);
-		console.log(all_parents);
 		contents.naviBar($('#sort').val(),$('#treeIdx').val(),naviString);
 		contents.list($("#treeIdx").val());
 		$("#categoryIdx").val(sel.id);

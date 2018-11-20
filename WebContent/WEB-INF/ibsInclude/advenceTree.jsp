@@ -69,7 +69,7 @@ $(function(){
 		all_children=all_children.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[]);//중복제거
 		$("#treeIdx").val(all_children);
 		$('#treeProperty').val(sel.original.property);
-		console.log(sel.original.property);
+		console.log('advancedTree', sel.original.property);
 		all_parents=sel.parents;
 		all_parents=all_parents.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[]);//중복제거
 		//#삭제 

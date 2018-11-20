@@ -301,20 +301,26 @@
 				(b.bitrate) as bitrate,
 				(b.file_size) as file_size
 			from tb_vod_repository a 
-      		left join tb_vod_box b on a.idx=b.repoIdx where 1=1 
+      		left join tb_vod_box b on a.idx=b.repoIdx
+		  	<if test='innerData!=null'>
+		  		LEFT JOIN tb_board_repository c ON c.vod_repo=a.idx
+		  	</if>
       		 <if test='searchWord!=""'>
 		  		and (vod_title like concat('%',#{searchWord},'%')
 		  		or vod_content like concat('%',#{searchWord},'%')
 		  		or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
 		  		or vod_keyword like concat('%',#{searchWord},'%')) 
 		  	</if>
-		  	and del_flag='N'
+		  	WHERE a.del_flag='N'
 			<if test='eachFlag!=""'>
-		  		and category_idx in
+		  		and a.category_idx in
 	  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
          			#{type}
       			</foreach>
 	  		</if>
+		  	<if test='innerData!=null'>
+		  		AND c.vod_repo IS NULL
+		  	</if>
 	  	order by edit_dt desc limit #{start},#{end};
 		</select>
 		
@@ -1001,6 +1007,15 @@
         	 #{type}
       		</foreach>
 		</update>
+		
+		<delete id="boardDeleteContents"  parameterType="java.util.Map">
+			delete from
+			tb_board_repository
+			where idx in
+			<foreach collection="checkValArr" item="type" index="index"  open="(" close=")" separator=",">
+        	 #{type}
+      		</foreach>
+		</delete>
 		
 		<select id="vodBoxExist" parameterType="String" resultType="int">
 			select count(idx) from tb_vod_box where repoIdx=#{file};

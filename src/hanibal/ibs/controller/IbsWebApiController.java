@@ -187,7 +187,8 @@ public class IbsWebApiController {
 		}else {
 			totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
 		}
-		if(totalRate==100) {
+		if(totalRate==100 || totalRate>100) {
+			totalRate= 100;
 			String runtime=HanibalWebDev.getMediaRuntime(repositoryPath+"SH/get_duration.sh",encodingPath+file);
 			String[] hhmmss=HanibalWebDev.getSliceTimeArr(runtime);
 			for(int i=0;i<hhmmss.length;i++) {

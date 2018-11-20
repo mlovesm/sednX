@@ -1361,7 +1361,7 @@ $(function(){
 				return options.allrules.validate2fields.alertSchedule;
 			}
 		};
-		/**인코팅이 100% 될때까지 호출실제 동작하는 함수 */
+		/**인코딩이 100% 될때까지 호출실제 동작하는 함수 */
 		var mediaEncoding=function(file){
 			var trans_rate=0;
 			$.ajax({
@@ -1370,7 +1370,7 @@ $(function(){
 				success : function(responseData) {
 					var data = JSON.parse(responseData);
 					var trans_rate=0;
-					console.log(data.rate);
+					console.log('mediaEncoding', data);
 					trans_rate =data.rate;
 					if(trans_rate<100){
 						setTimeout(function(){
@@ -1757,9 +1757,11 @@ $(function(){
 			$('#boardForm')[0].reset();
 		};
 		var repolist=function(childIdx) {
+			var vodListUrl = "${pageContext.request.contextPath}/cms/list/"
+				+ $("#repoOrder").val() + "?childIdx=" + childIdx+"&searchWord="+$('#schedule-contents-search').val()
+			if($("#sort").val() === 'board') vodListUrl+= "&innerData=true";
 			$.ajax({
-				url : "${pageContext.request.contextPath}/cms/list/"
-						+ $("#repoOrder").val() + "?childIdx=" + childIdx+"&searchWord="+$('#schedule-contents-search').val(),
+				url : vodListUrl,
 				success : function(data) {
 					$("#repoListPage").empty();
 					$("#repoListPage").html(data);
@@ -2430,7 +2432,7 @@ $(function(){
 			}
 		});
   });
-  $("#vodSection").change(function(){
+  $("#vodSection").change(function(){	// CONTENTS > 영상 업로드
 		//용량
 		$('#thumnailSource').css('display','none')
 		var file=this.files;

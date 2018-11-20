@@ -242,7 +242,9 @@ public class IbsCmsController {
 			//end = blockPage;
 			start=0;
 			end = totalRecordCount;
-			List<VodDTO> lists=ibsCmsDao.vodList(searchWord,childIdx,start,end);
+			String innerData= req.getParameter("innerData");
+			System.out.println("innerData= "+req.getParameter("innerData"));
+			List<VodDTO> lists=ibsCmsDao.vodList(searchWord,childIdx,start,end, innerData);
 			for(int i=0;i<lists.size();i++) {
 				lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());
 			}
@@ -577,7 +579,16 @@ public class IbsCmsController {
 			}else{
 				map.put("result", "fail");
 			}
-		}else if(order.equals("vod")||order.equals("stream")||order.equals("file")||order.equals("photo")||order.equals("board")||order.equals("stb-controle")) {
+		}
+		else if(order.equals("board")) {
+			affectcount=ibsCmsDao.deleteContents(HanibalWebDev.StringToIntArray(checkValArr));
+			if(affectcount>0) {
+				map.put("result","success");
+			}else{
+				map.put("result", "fail");
+			}
+		}
+		else if(order.equals("vod")||order.equals("stream")||order.equals("file")||order.equals("photo")||order.equals("stb-controle")) {
 			affectcount=ibsCmsDao.deleteContents(order,HanibalWebDev.StringToIntArray(checkValArr));
 			if(affectcount>0) {
 				map.put("result","success");

@@ -58,8 +58,8 @@ pageEncoding="UTF-8"%>
               </div>
               <div style="clear: both;"></div>
               <div class="total-info">
-              	총 등록 대수 : <span class="all-list"></span> &nbsp;
-              	연결 대수: <span class="on-list"></span> &nbsp;
+              	총 등록 대수 : <span class="all-list"></span> &nbsp;/
+              	연결 대수: <span class="on-list"></span> &nbsp;/
               	미연결 대수: <span class="off-list"></span>
               </div>
           	</div>

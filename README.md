@@ -26,6 +26,8 @@ GET request for [/api/vodSchedule/vod] are [/api/vodSchedule/{order}] are {order
 GET request for [/api/seqKeyList]
 request [/cms/list/vod] are [/cms/list/{order}] are {order=vod}
 
+편집 -> 삭제 = 함수: common.deleteByIdxArr(board_id)
+
 LIVE
 페이지 구성: leftMenu, WEB_LiveManages
 스케쥴 등록 모달 : $('#addNew-event').modal
