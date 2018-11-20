@@ -1,12 +1,15 @@
 package hanibal.ibs.controller;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +58,24 @@ public class IbsWebApiController {
 	String mediaIp;
 	String tomcatPort;
 	String dbProperties;
+	
+	private static String OS = System.getProperty("os.name").toLowerCase();
+	
+    public static boolean isWindows() {
+        return (OS.indexOf("win") >= 0);
+    }
+  
+    public static boolean isMac() {
+        return (OS.indexOf("mac") >= 0);
+    }
+  
+    public static boolean isUnix() {
+        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+    }
+  
+    public static boolean isSolaris() {
+        return (OS.indexOf("sunos") >= 0);
+    }
 	
 	public void setLog(Logger log) {
 		this.log = log;
@@ -156,6 +177,125 @@ public class IbsWebApiController {
 		msg.put("fileName", newFileName);
 		res.getWriter().print(mapper.writeValueAsString(msg));
 	}
+	
+	public static final String FFMPEG_PATH = "C:\\dev\\sedn\\ffmpeg\\bin";
+	public static final String FFMPEG_EXEC_FILE = "ffmpeg.exe";
+    
+    /**
+     * 멀티미디어 파일 변환 
+
+     *
+     * @return
+     * @throws Exception
+     */
+       public String convert(String filePath, String fileName, String fileExt) throws Exception {
+           File orgFile = new File(filePath + File.separator+ fileName);
+           String outputName = fileName.substring(0, fileName.indexOf(".")) + "." + fileExt;
+           File outFile = new File(filePath + File.separator+ "converted" + File.separator+ outputName);
+
+           List<String> commands = new ArrayList<String>();
+           commands.add(FFMPEG_EXEC_FILE);
+
+          // 중복된 파일이 존재할 경우 에러 없이 process가 멈추는 현상 발생. 파일명이 중복되지 않는 방향으로 코딩할 것.
+           commands.add("-y");    
+           commands.add("-i");
+           commands.add(orgFile.getPath());
+           commands.add("-ar");
+           commands.add("22050");
+           commands.add("-s");
+           commands.add("cga");
+           commands.add(outFile.getPath());
+//           // 파일명이 연속으로 나올 경우 연속된 파일명으로 인코딩함. 그러나 각각 인코딩 하는 것보다 속도는 현저하게 느려짐.
+//           commands.add("C:\\download\\converted\\" + outputName + ".ogg");
+//           commands.add("C:\\download\\converted\\" + outputName + ".webm");
+           Process p = null;
+
+           try { 
+               ProcessBuilder pb = new ProcessBuilder();
+               // 에러 스트림을 분리하지않음(stderr > stdout)
+               pb.redirectErrorStream(true);
+               pb.directory(new File(FFMPEG_PATH));
+               pb.command(commands);
+
+               // 프로세스 작업을 실행함.
+               p = pb.start();
+               
+               // 자식 프로세스에서 발생되는 인풋 스트림+에러 스트림(FFMPEG이 콘솔로 보내는 표준출력 및 표준에러) 처리
+               exhaustWithScannerInputStream(p.getInputStream());
+
+               // p의 자식 프로세스의 작업(동영상 등 변환 작업)이 완료될 동안 p를 대기시킴
+               int exitValue = p.waitFor();  
+        
+               if (exitValue == 0) {
+                   if (outFile.length() == 0) {
+                       throw new Exception("* 변환된 파일의 사이즈가 0임!");
+                   }
+               }
+               else {
+                   throw new Exception("* 변환 중 에러 발생(Probably FFMPEG option error)!");
+               }
+           } 
+           catch (Exception e) {
+               e.printStackTrace();
+               throw e;
+           }
+
+           finally {
+               try { if (p != null) p.destroy(); } catch(Exception e) {}
+           }
+           return outputName;
+       }
+       
+       /**
+
+        * 
+
+        * @param is
+
+        */
+	public void exhaustWithScannerInputStream(final InputStream is) {
+
+           // InputStream.read() 에서 블럭 상태에 빠지기 때문에 따로 쓰레드를 구현하여 스트림을 소비한다.
+           new Thread() {
+               public void run() {
+               try {
+                       Scanner sc = new Scanner(is);
+                       // Find duration         
+                       Pattern durPattern = Pattern.compile("(?<=Duration: )[^,]*");
+                       String dur = sc.findWithinHorizon(durPattern, 0);         
+
+                       if (dur == null) {
+                          throw new RuntimeException("Could not parse duration.");
+                       }
+                       String[] hms = dur.split(":");
+
+                       double totalSecs = Integer.parseInt(hms[0])*3600 + Integer.parseInt(hms[1])*60 + Double.parseDouble(hms[2]);
+                       System.out.println("* Total duration: " + totalSecs + " seconds.");
+                       
+
+                       // Find time as long as possible.         
+                       Pattern timePattern = Pattern.compile("(?<=time=)[^ ]*");
+
+                       String match = null;
+
+                       while (null != (match = sc.findWithinHorizon(timePattern, 0))) {
+
+                       String[] times = match.split(":");
+
+                       double progress = (Integer.parseInt(times[0])*3600 + Integer.parseInt(times[1])*60 + Double.parseDouble(times[2]))/totalSecs;           
+
+                       System.out.printf("* Progress: %.2f%%%n", progress * 100);
+
+                       }
+               }
+               catch (Exception e) {
+               e.printStackTrace();
+               }
+               }
+
+           }.start();
+       }     
+	
 	@RequestMapping("/api/web/mediaEncodingRate")
 	@ResponseBody
 	public void getEncodingRate(@RequestParam(required=false) String file,HttpServletResponse res) throws JsonGenerationException, JsonMappingException, IOException, InterruptedException {
@@ -174,29 +314,51 @@ public class IbsWebApiController {
 		if(!destFile.exists()){
 			destFile.mkdirs();
 		}
+		
 		if(recodCount==0) {
 			webApiDao.vodBoxInsert(file);
 			if(ext.equals("mp4")) {
 				totalRate=100;
 			}else {
-				HanibalWebDev.mediaEncoding(repositoryPath+"SH/ffmpeg_transcode.sh",encodingPath+file,encodingPath+fileName+".mp4",encodingPath+fileName+"_log.log" ,encodingPath+fileName+"_process.log");
-				Thread.sleep(2000);
-				HanibalWebDev.getRateProcess(repositoryPath+"SH/ffmpeg_progress.sh",encodingPath+file,encodingPath+fileName+"_process.log",encodingPath+fileName+"_rate.log");
-				Thread.sleep(1000);
+				if (isWindows()){
+					System.out.println("윈도우="+encodingPath+", desetFile="+destFile);
+					
+//					 HanibalWebDev.execute("ffmpeg");
+					try {
+						convert(encodingPath, fileName, ext);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					HanibalWebDev.mediaEncoding(repositoryPath+"SH/ffmpeg_transcode.sh",encodingPath+file,encodingPath+fileName+".mp4",encodingPath+fileName+"_log.log" ,encodingPath+fileName+"_process.log");
+					Thread.sleep(2000);
+					HanibalWebDev.getRateProcess(repositoryPath+"SH/ffmpeg_progress.sh",encodingPath+file,encodingPath+fileName+"_process.log",encodingPath+fileName+"_rate.log");
+					Thread.sleep(1000);
+				}
+
 			}
 		}else {
-			totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
+			System.out.println("드러오니?");
+			//totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
 		}
 		if(totalRate==100 || totalRate>100) {
 			totalRate= 100;
-			String runtime=HanibalWebDev.getMediaRuntime(repositoryPath+"SH/get_duration.sh",encodingPath+file);
-			String[] hhmmss=HanibalWebDev.getSliceTimeArr(runtime);
-			for(int i=0;i<hhmmss.length;i++) {
-				HanibalWebDev.getThumbnail(repositoryPath+"SH/get_thumbnail.sh",encodingPath+fileName+".mp4",hhmmss[i],thumbnailPath+fileName+"_"+i+".jpg");
-				if(i==0) {
-					main_thumbnail=fileName+"_"+i+".jpg";
+			String runtime= "";
+			//썸네일
+			if(isUnix()){
+				runtime=HanibalWebDev.getMediaRuntime(repositoryPath+"SH/get_duration.sh",encodingPath+file);
+				String[] hhmmss=HanibalWebDev.getSliceTimeArr(runtime);
+				for(int i=0;i<hhmmss.length;i++) {
+					HanibalWebDev.getThumbnail(repositoryPath+"SH/get_thumbnail.sh",encodingPath+fileName+".mp4",hhmmss[i],thumbnailPath+fileName+"_"+i+".jpg");
+					if(i==0) {
+						main_thumbnail=fileName+"_"+i+".jpg";
+					}
 				}
+			}else{
+				System.out.println("윈도우2");
 			}
+
 			String file_size=HanibalWebDev.getFileSize(encodingPath+file);
 			webApiDao.updateRate(file,fileName+".mp4",100);
 			if(!ext.equals("mp4")) {
