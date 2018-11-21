@@ -60,7 +60,9 @@ pageEncoding="UTF-8"%>
               <div class="total-info">
               	총 등록 대수 : <span class="all-list"></span> &nbsp;/
               	연결 대수: <span class="on-list"></span> &nbsp;/
-              	미연결 대수: <span class="off-list"></span>
+              	VOD 방송중: <span class="vod-list"></span> &nbsp;/
+              	LIVE 방송중: <span class="live-list"></span> &nbsp;/
+              	미연결 대수: <span class="on-list"></span>
               </div>
           	</div>
             <!-- CONTENTS START -->

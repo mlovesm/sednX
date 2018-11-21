@@ -19,8 +19,10 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.TimeZone;
@@ -424,27 +426,52 @@ public class HanibalWebDev  extends MysqlConnect{
 		 }
 		return result;
 	}
-	public static String mediaEncoding(String shellPath,String inputFile,String outPutFile,String logOne,String logTwo) {
+	public static String mediaEncoding(String [] cmd) {
 		String result="";  
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
+		BufferedReader bufferReader = null;
+		StringBuffer output = new StringBuffer();
 		try{
-			  String[] cmd = {"/bin/sh",shellPath,inputFile,outPutFile,logOne,logTwo};     
-			  proc = rt.exec(cmd);
-		      proc.getInputStream();
-		      while(true){
-			  String info ="";
-				  if(info == null || info.equals("")){
-					  break;
-				  }
-				  log.info(info);
-				  result=info;
-		   		}
+		  proc = rt.exec(cmd);
+//		  proc.getInputStream();
+//
+//		  while(true){
+//			  String info ="";
+//			  if(info == null || info.equals("")){
+//				  break;
+//			  }
+//			  log.info(info);
+//			  result=info;
+//		  }
+		  
+          // shell 실행이 정상 동작
+          bufferReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+          String msg = null;
+          while((msg=bufferReader.readLine()) != null) {
+              output.append(msg + System.getProperty("line.separator"));
+              //System.out.println("output="+output);
+          }
+          bufferReader.close();
+
+          // shell 실행시 에러가 발생
+          bufferReader = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+          while((msg=bufferReader.readLine()) != null) {
+              output.append(msg + System.getProperty("line.separator"));
+          }
+      
 		      
-			}catch(Exception e){
-			  log.info("EXCEPTION : "+e.getMessage());
-		 }
-		return result;
+		}catch(Exception e){
+			log.info("EXCEPTION : "+e.getMessage());
+		} finally {
+            try {
+                proc.destroy();
+                if(bufferReader != null) bufferReader.close();
+            } catch(IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return output.toString();
 	}
 	
     public static String execute(String command) {
@@ -469,6 +496,7 @@ public class HanibalWebDev  extends MysqlConnect{
             String msg = null;
             while((msg=bufferReader.readLine()) != null) {
                 output.append(msg + System.getProperty("line.separator"));
+                //System.out.println("output="+output);
             }
             bufferReader.close();
  

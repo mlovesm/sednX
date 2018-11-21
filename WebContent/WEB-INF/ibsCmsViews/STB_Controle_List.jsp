@@ -94,8 +94,10 @@ $(document).ready(function() {
 	</c:forEach>
 
 	console.log(list);
-	$(".on-list").text(list.reduce((pre, cur) => (cur === 2) ? ++pre : pre, 0));
-	$(".off-list").text(list.reduce((pre, cur) => (cur === 1) ? ++pre : pre, 0));
+	$(".total-info > .on-list").text(list.reduce((pre, cur) => (cur !== 1) ? ++pre : pre, 0));
+	$(".total-info > .off-list").text(list.reduce((pre, cur) => (cur === 1) ? ++pre : pre, 0));
+	$(".total-info > .vod-list").text(list.reduce((pre, cur) => (cur === 3) ? ++pre : pre, 0));
+	$(".total-info > .live-list").text(list.reduce((pre, cur) => (cur === 4) ? ++pre : pre, 0));
 });
 
 $(function(){
