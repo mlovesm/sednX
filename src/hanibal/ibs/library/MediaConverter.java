@@ -183,9 +183,15 @@ public class MediaConverter {
 
                     if (dur == null) {
                        throw new RuntimeException("Could not parse duration.");
+                    }else{
+                    	duration= dur;
+                        System.out.println("duration="+duration);
+        				int index= duration.lastIndexOf(".");
+        				duration= duration.substring(0, index);
                     }
-                    String[] hms = dur.split(":");
-                    System.out.println("dur="+dur);
+
+                    String[] hms = duration.split(":");
+                    
                     double totalSecs = Integer.parseInt(hms[0])*3600 + Integer.parseInt(hms[1])*60 + Double.parseDouble(hms[2]);
                     System.out.println("* Total duration: " + totalSecs + " seconds.");
 
@@ -203,6 +209,11 @@ public class MediaConverter {
                     System.out.println("progress rate="+rate);
                     if(rate == 100) {
                     	System.out.println("인코딩 완료");
+                    	String[] hhmmss=HanibalWebDev.getSliceTimeArr(duration);
+                    	
+                    	for(int i=0;i<hhmmss.length;i++) {
+                    		
+                    	}
                     }
 	            }catch (Exception e) {
 	            	e.printStackTrace();
