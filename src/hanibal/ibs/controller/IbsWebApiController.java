@@ -163,11 +163,25 @@ public class IbsWebApiController {
 	
 	@RequestMapping("/api/test")
 	public void test(HttpServletResponse res) throws IOException {
-	     String result= HanibalWebDev.execute("c:\\dev\\ffmpeg\\bin\\ffmpeg -i c:\\dev\\ffmpeg\\bin\\test.wmv -y c:\\dev\\test2.mp4");
-	     System.out.println("result="+result);
+		int totalRate=0;
+		String duration= "0:00:30";
+		String file= "20181122093003.wmv";
+		String fileName=file.substring(0,file.lastIndexOf("."));
+		String datePath=HanibalWebDev.getDataPath(file);
+		String encodingPath=repositoryPath+"VOD"+datePath;
+		String sh = "";
+	    String[] cmd = {sh, repositoryPath+"SH/sh_test.sh"};
+	    String result = "";
+//	    result= HanibalWebDev.mediaEncoding(cmd);
+	    double rate = Math.round(0.998365478914678 * 100);
+	    String[] hhmmss= HanibalWebDev.getSliceTimeArr(duration);
+		for(int i=0;i<hhmmss.length;i++) {
+			System.out.println(hhmmss[i]);
+		}
+	    System.out.println("hhmmss"+hhmmss);
 	     
-	     res.setContentType("application/json; charset=UTF-8");
-	     res.getWriter().print(result);
+	    res.setContentType("application/json; charset=UTF-8");
+	    res.getWriter().print(hhmmss);
 	}
 
 	@RequestMapping("/api/web/mediaEncodingRate")
@@ -199,7 +213,7 @@ public class IbsWebApiController {
 					System.out.println("윈도우="+encodingPath);
 					try {
 					     long startingTime = System.currentTimeMillis();
-					     
+
 					     MediaConverter mc = new MediaConverter();
 					     mc.setFileName(file);
 					     mc.setFilePath(encodingPath);
@@ -207,12 +221,14 @@ public class IbsWebApiController {
 					     mc.convert();
 					     
 					     long endingTime = System.currentTimeMillis();
-					     sh="cmd ";
-					     String[] cmd = {sh, repositoryPath+"SH/win_ffmpeg_transcode.sh",encodingPath+file, 
-					    		 encodingPath+fileName+".mp4",encodingPath+fileName+"_log.log", encodingPath+fileName+"_process.log"};
+					     sh="";
+//					     String[] cmd = {sh,encodingPath+file, 
+//					    		 encodingPath+fileName+".mp4",encodingPath+fileName+"_log.log", encodingPath+fileName+"_process.log"};
 //					     String med= HanibalWebDev.mediaEncoding(cmd);
 //					     System.out.println("med="+med);
 					     System.out.println("* FFMPEG processing time: " + ((endingTime-startingTime)/1000) + "초.");
+					     System.out.println("rate= "+mc.getRate());
+					     totalRate= mc.getRate();
 					     
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -231,14 +247,15 @@ public class IbsWebApiController {
 			}
 		}else {
 			System.out.println("드러오니?");
-			totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
+			if(IbsWebApiDAO.isUnix()) {
+				totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
+			}
 		}
-		if(totalRate==100 || totalRate>100) {
-			totalRate= 100;
+		if(totalRate==100) {
 			String runtime= "";
 			//썸네일
 			if(IbsWebApiDAO.isUnix()){
-				runtime=HanibalWebDev.getMediaRuntime(repositoryPath+"SH/get_duration.sh",encodingPath+file);
+				runtime=HanibalWebDev.getMediaRuntime(repositoryPath+"SH/get_duration.sh",encodingPath+file);	// HH:mm:ss
 				String[] hhmmss=HanibalWebDev.getSliceTimeArr(runtime);
 				for(int i=0;i<hhmmss.length;i++) {
 					HanibalWebDev.getThumbnail(repositoryPath+"SH/get_thumbnail.sh",encodingPath+fileName+".mp4",hhmmss[i],thumbnailPath+fileName+"_"+i+".jpg");
@@ -247,7 +264,7 @@ public class IbsWebApiController {
 					}
 				}
 			}else{
-				System.out.println("윈도우2");
+				System.out.println("getThumbnail");
 			}
 
 			String file_size=HanibalWebDev.getFileSize(encodingPath+file);

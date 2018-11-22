@@ -17,6 +17,9 @@ public class MediaConverter {
     private String fileName;
     private String filePath;
     private String fileExt;
+    
+    private String duration;
+    private int rate;
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -29,6 +32,23 @@ public class MediaConverter {
     public void setFileExt(String fileExt) {
         this.fileExt = fileExt;
     }
+    
+    public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+	public int getRate() {
+		return rate;
+	}
+
+	public void setRate(int rate) {
+		this.rate = rate;
+	}
+
 
 	 /**
 	  * 멀티미디어 파일 변환 
@@ -54,6 +74,8 @@ public class MediaConverter {
 	    // 중복된 파일이 존재할 경우 에러 없이 process가 멈추는 현상 발생. 파일명이 중복되지 않는 방향으로 코딩할 것.
         commands.add("-i");
         commands.add(orgFile.getPath());
+        commands.add("-progress");
+        commands.add(this.filePath + outputFile+"_process.log");
 //        commands.add("-b:a 128k");
 //        commands.add("-ar 44100");
 //        commands.add("-profile:a aac_low");
@@ -69,11 +91,9 @@ public class MediaConverter {
 //        commands.add("-coder 1");
         commands.add("-y");
         commands.add(outFile.getPath());
-        commands.add("-progress");
-        commands.add(this.filePath + outputFile+"_progress.log");
-        commands.add("2>");
-        commands.add(this.filePath + outputFile+"_rate.log");
-        commands.add("&");
+//        commands.add("2>");
+//        commands.add(this.filePath + outputFile+"_log.log");
+//        commands.add("&");
 //	        // 파일명이 연속으로 나올 경우 연속된 파일명으로 인코딩함. 그러나 각각 인코딩 하는 것보다 속도는 현저하게 느려짐.
 //	        commands.add("C:\\download\\converted\\" + outputName + ".ogg");
 //	        commands.add("C:\\download\\converted\\" + outputName + ".webm");
@@ -152,7 +172,8 @@ public class MediaConverter {
     private void exhaustWithScannerInputStream(final InputStream is) {
         // InputStream.read() 에서 블럭 상태에 빠지기 때문에 따로 쓰레드를 구현하여 스트림을 소비한다.
         new Thread() {
-            public void run() {
+            @SuppressWarnings("resource")
+			public void run() {
 	            try {
                     Scanner sc = new Scanner(is);
 
@@ -164,6 +185,7 @@ public class MediaConverter {
                        throw new RuntimeException("Could not parse duration.");
                     }
                     String[] hms = dur.split(":");
+                    System.out.println("dur="+dur);
                     double totalSecs = Integer.parseInt(hms[0])*3600 + Integer.parseInt(hms[1])*60 + Double.parseDouble(hms[2]);
                     System.out.println("* Total duration: " + totalSecs + " seconds.");
 
@@ -176,6 +198,11 @@ public class MediaConverter {
 	                    String[] times = match.split(":");
 	                    progress = (Integer.parseInt(times[0])*3600 + Integer.parseInt(times[1])*60 + Double.parseDouble(times[2]))/totalSecs;           
 	                    System.out.printf("* Progress: %.2f%%%n", progress * 100);
+                    }
+                    rate= (int) Math.round(progress*100);
+                    System.out.println("progress rate="+rate);
+                    if(rate == 100) {
+                    	System.out.println("인코딩 완료");
                     }
 	            }catch (Exception e) {
 	            	e.printStackTrace();
