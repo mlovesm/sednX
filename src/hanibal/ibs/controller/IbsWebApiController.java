@@ -209,21 +209,16 @@ public class IbsWebApiController {
 			}else {
 				
 				if (IbsWebApiDAO.isWindows()){
-					System.out.println("윈도우="+encodingPath);
 					try {
 					     long startingTime = System.currentTimeMillis();
 
 					     mc.setFileName(file);
 					     mc.setFilePath(encodingPath);
+					     mc.setThumbnailPath(thumbnailPath);
 					     mc.setFileExt("mp4");
 					     mc.convert();
 					     
 					     long endingTime = System.currentTimeMillis();
-					     sh="";
-//					     String[] cmd = {sh,encodingPath+file, 
-//					    		 encodingPath+fileName+".mp4",encodingPath+fileName+"_log.log", encodingPath+fileName+"_process.log"};
-//					     String med= HanibalWebDev.mediaEncoding(cmd);
-//					     System.out.println("med="+med);
 					     System.out.println("* FFMPEG processing time: " + ((endingTime-startingTime)/1000) + "초.");
 					     totalRate= mc.getRate();
 					     
@@ -243,12 +238,12 @@ public class IbsWebApiController {
 
 			}
 		}else {
-			System.out.println("드러오니?");
 			if(IbsWebApiDAO.isUnix()) {
 				totalRate=webApiDao.getEncodingRate(encodingPath+fileName+"_rate.log");
 			}
 		}
-		if(totalRate==100) {
+		System.out.println("totalRate="+totalRate);
+		if(totalRate==100 || totalRate>100) {
 			String runtime= "";
 			//썸네일
 			if(IbsWebApiDAO.isUnix()){
@@ -262,17 +257,7 @@ public class IbsWebApiController {
 				}
 			}else{
 				System.out.println("getThumbnail");
-				runtime= mc.getDuration();
-				int index= runtime.lastIndexOf(".");
-				runtime= runtime.substring(0, index);
-				
-				String[] hhmmss=HanibalWebDev.getSliceTimeArr(runtime);
-//				for(int i=0;i<hhmmss.length;i++) {
-//					HanibalWebDev.getThumbnail(repositoryPath+"SH/get_thumbnail.sh",encodingPath+fileName+".mp4",hhmmss[i],thumbnailPath+fileName+"_"+i+".jpg");
-//					if(i==0) {
-//						main_thumbnail=fileName+"_"+i+".jpg";
-//					}
-//				}
+				main_thumbnail=fileName+"_0.jpg";
 			}
 
 			String file_size=HanibalWebDev.getFileSize(encodingPath+file);

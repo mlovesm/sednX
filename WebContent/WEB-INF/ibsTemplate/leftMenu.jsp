@@ -1400,7 +1400,7 @@ $(function(){
 							$("#vodSlideShow").css("display","none");
 							retHtml="";
 							thumbnailArr.push(fileHead[0]+'_'+i+".jpg");
-							var backgroundUrl="${pageContext.request.contextPath}/REPOSITORY/THUMBNAIL/"+data.datePath+fileHead[0]+'_'+i+".jpg";
+							var backgroundUrl="${pageContext.request.contextPath}/REPOSITORY/THUMBNAIL"+data.datePath+fileHead[0]+'_'+i+".jpg";
 							var fileIdx=fileHead[0]+'_'+i+'.jpg';
 							retHtml+='<li class="thum" style="float:left;background: url('+backgroundUrl
 							+') no-repeat center; background-size: cover;" id="thumbLi_'+fileIdx.split('.')[0]+'" onClick="arange.makeMainThumb(\''+fileIdx.split('.')[0]+'\',\''+fileIdx.split('.')[1]+'\')">'
@@ -1759,7 +1759,7 @@ $(function(){
 		var repolist=function(childIdx) {
 			var vodListUrl = "${pageContext.request.contextPath}/cms/list/"
 				+ $("#repoOrder").val() + "?childIdx=" + childIdx+"&searchWord="+$('#schedule-contents-search').val()
-			if($("#sort").val() === 'board') vodListUrl+= "&innerData=true";
+			// if($("#sort").val() === 'board') vodListUrl+= "&innerData=true";
 			$.ajax({
 				url : vodListUrl,
 				success : function(data) {

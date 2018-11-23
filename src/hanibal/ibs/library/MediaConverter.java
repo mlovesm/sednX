@@ -11,11 +11,12 @@ import java.util.regex.Pattern;
 
 public class MediaConverter {
 	public static final String FFMPEG_PATH = "C:\\dev\\ffmpeg\\bin";
-
-	public static final String FFMPEG_EXEC_FILE = "C:\\dev\\ffmpeg\\bin\\ffmpeg";
+	
+	public static final String FFMPEG_EXEC = FFMPEG_PATH+"\\ffmpeg";
 
     private String fileName;
     private String filePath;
+    private String thumbnailPath;
     private String fileExt;
     
     private String duration;
@@ -28,8 +29,11 @@ public class MediaConverter {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+	public void setThumbnailPath(String thumbnailPath) {
+		this.thumbnailPath = thumbnailPath;
+	}
 
-    public void setFileExt(String fileExt) {
+	public void setFileExt(String fileExt) {
         this.fileExt = fileExt;
     }
     
@@ -69,7 +73,7 @@ public class MediaConverter {
 	    System.out.println("fileName="+this.fileName);
 	    
 	    List<String> commands = new ArrayList<String>();
-	    commands.add(FFMPEG_EXEC_FILE);
+	    commands.add(FFMPEG_EXEC);
 
 	    // 중복된 파일이 존재할 경우 에러 없이 process가 멈추는 현상 발생. 파일명이 중복되지 않는 방향으로 코딩할 것.
         commands.add("-i");
@@ -205,15 +209,21 @@ public class MediaConverter {
 	                    progress = (Integer.parseInt(times[0])*3600 + Integer.parseInt(times[1])*60 + Double.parseDouble(times[2]))/totalSecs;           
 	                    System.out.printf("* Progress: %.2f%%%n", progress * 100);
                     }
-                    rate= (int) Math.round(progress*100);
+                    System.out.println("Progress="+progress);
+                    rate= (int) Math.round(progress) * 100;
                     System.out.println("progress rate="+rate);
-                    if(rate == 100) {
+                    if(rate == 100 || rate > 100) {
+                    	rate= 100;
                     	System.out.println("인코딩 완료");
-                    	String[] hhmmss=HanibalWebDev.getSliceTimeArr(duration);
                     	
+                    	String[] hhmmss=HanibalWebDev.getSliceTimeArr(duration);
+                	    String noExtMediaName= fileName.substring(0, fileName.indexOf("."));
                     	for(int i=0;i<hhmmss.length;i++) {
-                    		
+                    		String command = FFMPEG_EXEC+" -v quiet -vsync 2 -ss "+ hhmmss[i] +" -i "+ 
+                    				(filePath+noExtMediaName+"."+fileExt) +" -an -r 2 -vframes 1 -y "+(thumbnailPath+noExtMediaName)+"_"+i+".jpg";
+                    		HanibalWebDev.execute(command);
                     	}
+                    	Thread.sleep(2000);
                     }
 	            }catch (Exception e) {
 	            	e.printStackTrace();

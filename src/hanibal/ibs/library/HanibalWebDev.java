@@ -430,48 +430,23 @@ public class HanibalWebDev  extends MysqlConnect{
 		String result="";  
 		Runtime rt = Runtime.getRuntime();
 		Process proc = null;
-		BufferedReader bufferReader = null;
-		StringBuffer output = new StringBuffer();
 		try{
 		  proc = rt.exec(cmd);
-//		  proc.getInputStream();
-//
-//		  while(true){
-//			  String info ="";
-//			  if(info == null || info.equals("")){
-//				  break;
-//			  }
-//			  log.info(info);
-//			  result=info;
-//		  }
-		  
-          // shell 실행이 정상 동작
-          bufferReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-          String msg = null;
-          while((msg=bufferReader.readLine()) != null) {
-              output.append(msg + System.getProperty("line.separator"));
-              //System.out.println("output="+output);
-          }
-          bufferReader.close();
+		  proc.getInputStream();
 
-          // shell 실행시 에러가 발생
-          bufferReader = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-          while((msg=bufferReader.readLine()) != null) {
-              output.append(msg + System.getProperty("line.separator"));
-          }
-      
+		  while(true){
+			  String info ="";
+			  if(info == null || info.equals("")){
+				  break;
+			  }
+			  log.info(info);
+			  result=info;
+		  }    
 		      
 		}catch(Exception e){
 			log.info("EXCEPTION : "+e.getMessage());
-		} finally {
-            try {
-                proc.destroy();
-                if(bufferReader != null) bufferReader.close();
-            } catch(IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return output.toString();
+		}
+        return result;
 	}
 	
     public static String execute(String command) {
@@ -496,7 +471,7 @@ public class HanibalWebDev  extends MysqlConnect{
             String msg = null;
             while((msg=bufferReader.readLine()) != null) {
                 output.append(msg + System.getProperty("line.separator"));
-                //System.out.println("output="+output);
+                System.out.println("output="+output);
             }
             bufferReader.close();
  
