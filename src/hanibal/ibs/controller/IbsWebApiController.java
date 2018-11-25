@@ -794,8 +794,11 @@ public class IbsWebApiController {
 		
 	}
 	
+	// LIVE 선택 된 영상 정보 (duration 정보 추가 by MGS)
 	@RequestMapping("/api/imageNames")
 	public void imageNames(@RequestParam(required=false) Map<String, Object> commandMap,HttpServletResponse res) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println(commandMap);
+		
 		String eachFlag="";
 		if(String.valueOf(commandMap.get("idxArr")).length()!=0) {
 			eachFlag="Y";

@@ -1328,7 +1328,11 @@
 			<result javaType="java.lang.String" column="img_url" property="img_url"/>
 		</resultMap>
 		<select id="getImgNames" resultMap="imgResult" parameterType="java.util.Map">
-			select idx as img_idx,main_thumbnail as img_url from tb_vod_repository 
+			select 
+				idx as img_idx,
+				main_thumbnail as img_url,
+				vod_play_time
+			from tb_vod_repository 
 			where 1=1
 			<if test='eachFlag!=""'>
 	  			and idx in

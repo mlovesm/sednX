@@ -493,7 +493,7 @@ var menuTree={
 				});
 			}
 		},
-		vodImgFactory : function(imgArr){
+		vodImgFactory : function(imgArr){	// 스케줄 이미지 추가 함수
 			if(imgArr.length!=0){
 				$.ajax({
 					url : "${pageContext.request.contextPath}/api/imageNames",
@@ -504,13 +504,38 @@ var menuTree={
 					success : function(responseData){
 						var data=JSON.parse(responseData);
 						var retHtml='';
+						var durationList= [];
+						var timeSecondList= [];
 						for(var i=0;i<data.imgList.length;i++){
+							durationList[i]= data.imgList[i].vod_play_time;
 			                retHtml+='<li style="float:left; background: url(http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}'+data.imgList[i].img_url
 									+') no-repeat center; background-size: cover;" id="vodImgLi_'+data.imgList[i].img_idx+'">'
 		                  			+'<a class="close" onClick="arange.removeVodLi('+data.imgList[i].img_idx+')"><img src="${pageContext.request.contextPath}/ibsImg/img_close_sm.png" alt="닫기"/></a>'
 		                  			+'</li>'
 						}
 						$('#slideShow').append(retHtml);
+						var second= 0;
+						var minute= 0;
+						for (var i = 0; i < durationList.length; i++) {
+							timeSecondList= durationList[i].split(":");
+							for (var k = 0; k < timeSecondList.length; k++) {
+								if(k == 0) second+= parseInt(timeSecondList[k]*60*60);
+								if(k == 1) second+= parseInt(timeSecondList[k]*60);
+								if(k == 2) second+= parseInt(timeSecondList[k]);
+							}
+						}
+				         minute= Math.ceil(second/60);
+				         var startTime= moment().format('YYYY-MM-DD HH:mm');
+				         var endMinute= startTime.substr(15);
+				         if(endMinute != 0) startTime= moment().add(10-endMinute, 'minute').format('YYYY-MM-DD HH:mm');
+				         
+				         var endTime= moment(startTime).add(minute, 'minute').format('YYYY-MM-DD HH:mm');
+				         endMinute= endTime.substr(15);
+				         if(endMinute != 0) minute+= (10-endMinute);
+				         endTime= moment(startTime).add(minute, 'minute').format('YYYY-MM-DD HH:mm');
+				         
+				         $('#getStart').val(startTime);
+				         $('#getEnd').val(endTime); 
 						
 					},
 					error : exception.ajaxException
@@ -738,7 +763,7 @@ $('#calendar').fullCalendar({
      },
       
      //On Day Select
-     select: function(start, end, allDay) {
+     select: function(start, end, allDay) {	// 캘린더 날짜 클릭
 		console.log('Calendar select', allDay);
     	$('#scheduleEdit').css('display','block');
     	$('#scheduleView').css('display','none');
@@ -824,6 +849,7 @@ var calClick={
     	 		url:'/api/web/stb-schedule/'+$("#order").val()+"/"+idx,
     	 		success : function(responseData){
     	 			var data=JSON.parse(responseData);
+    	 			console.log(data);
     	 			var nowDate=new Date();
     	 			//idx 값셋팅 
     	 			$("#idx").val(data.idx);
@@ -831,11 +857,9 @@ var calClick={
     	 			$('#eventName').val(data.name);
     	 			$('#scheduleTitle').html(data.name);
                     //시작날짜 
-    	 			var setStart=common.setDate(data.start);
-    	 			$("#getStart").val(setStart);
+    	 			$("#getStart").val(moment(data.start).format('YYYY-MM-DD HH:mm'));
     	 			//종료 날짜 
-    	 			var setEnd=common.setDate(data.end);
-    	 			$("#getEnd").val(setEnd);
+    	 			$("#getEnd").val(moment(data.end).format('YYYY-MM-DD HH:mm'));
     	 			//view 날짜 셋팅 
     	 			$('#scheduleTime').html(common.setScheduleDate(data.start,data.end));
     	 			//소스 타입
@@ -852,7 +876,6 @@ var calClick={
     	 			if(data.source_type=="VOD"){
     	 				var imgArr=data.vodArr;
     	 				$('#vodArr').val(imgArr);
-    	 				console.log(imgArr);
     	 				$("#scheduleVodList").css('display','none');
     	 				//var imgToArray=imgArr.split(',');
     	 				$('#slideShow').empty();

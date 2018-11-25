@@ -15,7 +15,7 @@
 		
 		<div class="img_box" id="layer_${list.idx}" style="position: relative; background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${list.main_thumbnail}') no-repeat center;
 				 background-size: cover; display: inline-block;">
-			<label for="check_${list.idx}" style="display: unset; cursor: pointer;">
+			<label for="check_${list.idx}" class="label_vodCheck" style="display: unset; cursor: pointer;">
 				<input class="pull-left m-l-5 vodCheck" type="checkbox" id="check_${list.idx}" value="${list.idx}"/>
 			</label>
 			<label for="radio_${list.idx}" style="display: unset; cursor: pointer;">
@@ -145,12 +145,12 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 		$("#selectedIdxs").val(arr);
 	});
 	
-}else if($('#requestRepo').val()=='vod'){	//PAGE
+}else if($('#requestRepo').val()=='vod'){	//PAGE > 추가 > 영상가져오기 클릭
 	$('.vodCheck').css('display','none');
 	$('.vodRadio').css('display','block');
 	$('input[name="redioVal"]').parent().css({'display':'block', 'height': '100%'});
 	
-	$('.vodRadio').click(function(){	//영상 가져오기 이미지 클릭
+	$('.vodRadio').click(function(){	//영상 이미지 클릭
 		$(this).parent().parent().siblings().css("border", "none");
 		$(this).parent().parent().css("border", "2px solid red");
 		$('#tempVodList').val($(this).val());
@@ -161,9 +161,11 @@ if($('#requestRepo').val()=='media'){	//CONTENT
 }else{
 	$('.vodCheck').css('display','block');
 	$('.vodRadio').css('display','none');
+	$('.label_vodCheck').css({'display':'block', 'height': '100%'});
+	
 	var arr=[];
 	$('.vodCheck').click(function(){	//LIVE > vod
-		console.log('기타');
+		console.log('#requestRepo.value= else');
 		if ($(this).is(":checked") == true) {
 			arr.push($(this).val());
 		} else {

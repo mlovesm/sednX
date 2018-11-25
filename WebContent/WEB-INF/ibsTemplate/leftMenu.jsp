@@ -961,7 +961,7 @@
          	<div class="modal-header">업로드 </div> 
              <div class="modal-body" style="text-align: center;">
              	
-                 <p style="left: 50%;" id="encodginText" style="display:none;">파일 업로드 중 입니다.</p>
+                 <p style="left: 50%;" id="encodingText" style="display:none;">파일 업로드 중 입니다.</p>
                  <!-- <div class="progress progress-small">
                      <a href="#" class="tooltips progress-bar progress-bar-info" style="width: 78%;"></a>
                  </div> -->
@@ -1367,6 +1367,9 @@ $(function(){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/api/web/mediaEncodingRate?file="
 						+ file,
+				beforeSend : function() {
+					$("#encodingText").text('인코딩이 진행 중 입니다.');
+				},
 				success : function(responseData) {
 					var data = JSON.parse(responseData);
 					var trans_rate=0;
@@ -1376,7 +1379,7 @@ $(function(){
 						setTimeout(function(){
 							$("#encodingBar").css('width',trans_rate+'%');
 							if(trans_rate>0){
-								$("#encodginText").text('인코딩 '+trans_rate+'% 완료');
+								$("#encodingText").text('인코딩 '+trans_rate+'% 완료');
 							}
 							mediaEncoding(data.file);
 						},500);
@@ -1756,7 +1759,7 @@ $(function(){
 			$('#boardSlideShow').empty();
 			$('#boardForm')[0].reset();
 		};
-		var repolist=function(childIdx) {
+		var repolist=function(childIdx) {	//common.repolist
 			var vodListUrl = "${pageContext.request.contextPath}/cms/list/"
 				+ $("#repoOrder").val() + "?childIdx=" + childIdx+"&searchWord="+$('#schedule-contents-search').val()
 			// if($("#sort").val() === 'board') vodListUrl+= "&innerData=true";
@@ -1801,10 +1804,10 @@ $(function(){
 				error : exception.ajaxException
 			});
 		};
-		var selectRepoSource=function(sort){	// PAGE 추가 > 영상 가져오기
+		var selectRepoSource=function(sort){
 			$('#requestRepo').val(sort);
 			var html="";
-			if($('#requestRepo').val()=="schedule"){
+			if($('#requestRepo').val()=="schedule"){	// LIVE 스케줄 추가 선택 모달
 		  		if($('#repoOrder').val()=='vod'){
     	  			html+='<option value="VOD" selected>VOD</option>';
                 	html+='<option value="LIVE">LIVE</option>';
@@ -1829,7 +1832,7 @@ $(function(){
 		  		$('#repoType').empty();
 		  		$('#repoType').html(html);
 		  		$('#repoOrder').val('file');
-		  	}else if($('#requestRepo').val()=="vod"){
+		  	}else if($('#requestRepo').val()=="vod"){	// PAGE 추가 > 영상 가져오기 선택 모달
 		  		html+='<option value="VOD">VOD</option>';
 		  		$('#repoType').empty();
 		  		$('#repoType').html(html);
@@ -1980,8 +1983,8 @@ $(function(){
    	}); 
      $('#selectIdxArr').click(function(){
     	 //저장소 불러오기 라이브 일경우  
-		if($('#requestRepo').val()=="schedule"){	
-		   	 if($('#repoOrder').val()=="vod"){
+		if($('#requestRepo').val()=="schedule"){	// LIVE > 스케줄 추가 > 영상 선택 > 확인
+		   	 if($('#repoOrder').val()=="vod"){	// VOD
 		   			$("#source_type").val("VOD");
 		   			$('#live_stream_url').val('');
 		   			$('#live_ch_idx').val('');
@@ -1992,12 +1995,9 @@ $(function(){
 		   			}
 		   			$("#slideShow").empty();
 		   			if($('#tempVodList').val()!="") {
-		   				var imgToArray=$('#vodArr').val().split(',');
-		   				$.each(imgToArray,function(index,value){
-		   					arange.vodImgFactory(value);
-		   				});
+		   				arange.vodImgFactory($('#vodArr').val());
 		   			}
-		   		}else{
+		   		}else{	// LIVE
 		   			$("#slideShow").empty();
 		   			$("#vodArr").val('');
 		   			$("#source_type").val("LIVE");
@@ -2437,7 +2437,7 @@ $(function(){
 		$('#thumnailSource').css('display','none')
 		var file=this.files;
 		if (file[0].size > 6000*1024 * 1024) {
-			jQuery('#vod_path').validationEngine('showPrompt', '6GB 이하 파일만 업로드 하세요.', 'pass')
+			$('#vod_path').validationEngine('showPrompt', '6GB 이하 파일만 업로드 하세요.', 'pass')
 			return;
 		}
 		$("#file_size").val(file[0].size);
@@ -2445,7 +2445,7 @@ $(function(){
 		var localPath = $(this).val();
 		var ext = localPath.split('.').pop().toLowerCase();
 		if ($.inArray(ext, [ 'wmv','avi','mov','flv','mp4','mpg','mpeg','mkv','3gp']) == -1) {
-			jQuery('#vod_path').validationEngine('showPrompt', 'wmv,avi,mov,flv,mp4,mpg,mpeg 파일만 업로드 가능합니다.', 'pass');
+			$('#vod_path').validationEngine('showPrompt', 'wmv,avi,mov,flv,mp4,mpg,mpeg 파일만 업로드 가능합니다.', 'pass');
 			return;
 		}
 		var formData = new FormData();
@@ -2455,20 +2455,23 @@ $(function(){
 			    	var xhr = new window.XMLHttpRequest();
 			    	var barValue=0;
 					xhr.upload.addEventListener("progress", function(evt) {
-			      	if (evt.lengthComputable) {
-			      		var percentComplete = evt.loaded / evt.total;
-			        	percentComplete = parseInt(percentComplete * 100);
-			        	if(percentComplete>parseInt(barValue)){
-			        		$("#progressBar").css("width",percentComplete+"%");
-			        		barValue=percentComplete;
-			        		console.log(barValue);
-			        	}
-			        	$("#barText").text(percentComplete+"% Complete");
-						if (percentComplete === 100) {
-							$("#progressBarLayout").css('display','none');
-			        	}
-					}
-			 }, false);
+				      	if (evt.lengthComputable) {
+				      		var percentComplete = evt.loaded / evt.total;
+				        	percentComplete = parseInt(percentComplete * 100);
+				        	if(percentComplete>parseInt(barValue)){
+				        		$("#progressBar").css("width",percentComplete+"%");
+				        		barValue=percentComplete;
+				        		console.log(barValue);
+				        	}
+				        	$("#barText").text(percentComplete+"% Complete");
+
+						}
+			 		}, false);
+					xhr.addEventListener("load", function(evt) {
+						console.log('load 100%');
+						$("#progressBar").css("width","100%");
+						$("#progressBarLayout").css('display','none');
+					}, false);
 				return xhr;
 			},
 			url : '${pageContext.request.contextPath}/SEQ/UPLOAD/'+$("#sort").val().toUpperCase(),
