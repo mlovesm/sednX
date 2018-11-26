@@ -514,28 +514,29 @@ var menuTree={
 		                  			+'</li>'
 						}
 						$('#slideShow').append(retHtml);
-						var second= 0;
-						var minute= 0;
-						for (var i = 0; i < durationList.length; i++) {
-							timeSecondList= durationList[i].split(":");
-							for (var k = 0; k < timeSecondList.length; k++) {
-								if(k == 0) second+= parseInt(timeSecondList[k]*60*60);
-								if(k == 1) second+= parseInt(timeSecondList[k]*60);
-								if(k == 2) second+= parseInt(timeSecondList[k]);
+						if($("#order").val() === "insert") {	// VOD 재생시간만큼 스케줄 시간 적용
+							var second= 0;
+							var minute= 0;
+							for (var i = 0; i < durationList.length; i++) {
+								timeSecondList= durationList[i].split(":");
+								for (var k = 0; k < timeSecondList.length; k++) {
+									if(k == 0) second+= parseInt(timeSecondList[k]*60*60);
+									if(k == 1) second+= parseInt(timeSecondList[k]*60);
+									if(k == 2) second+= parseInt(timeSecondList[k]);
+								}
 							}
+					         minute= Math.ceil(second/60);
+					         console.log('minute=', minute);
+					         var startTime= moment().format('YYYY-MM-DD HH:mm');
+					         var endMinute= startTime.substr(15);
+					         if(endMinute != 0) startTime= moment().add(10-endMinute, 'minute').format('YYYY-MM-DD HH:mm');
+					         
+					         var endTime= moment(startTime).add(minute, 'minute').format('YYYY-MM-DD HH:mm');
+
+					         
+					         $('#getStart').val(startTime);
+					         $('#getEnd').val(endTime); 
 						}
-				         minute= Math.ceil(second/60);
-				         var startTime= moment().format('YYYY-MM-DD HH:mm');
-				         var endMinute= startTime.substr(15);
-				         if(endMinute != 0) startTime= moment().add(10-endMinute, 'minute').format('YYYY-MM-DD HH:mm');
-				         
-				         var endTime= moment(startTime).add(minute, 'minute').format('YYYY-MM-DD HH:mm');
-				         endMinute= endTime.substr(15);
-				         if(endMinute != 0) minute+= (10-endMinute);
-				         endTime= moment(startTime).add(minute, 'minute').format('YYYY-MM-DD HH:mm');
-				         
-				         $('#getStart').val(startTime);
-				         $('#getEnd').val(endTime); 
 						
 					},
 					error : exception.ajaxException
@@ -773,6 +774,7 @@ $('#calendar').fullCalendar({
      	$('#addNew-event form')[0].reset();
      	//슬라이드 초기화 
      	arange.liveSlideDefault();
+     	slide.init();
      	 $('#order').val('insert');
          var nowDate= moment().format('YYYY-MM-DD HH:mm');
          var endMinute= nowDate.substr(15);
@@ -836,7 +838,7 @@ $('#addLiveTarget').click(function(){	//설정
 });
  
 var calClick={
-		viewEvent:function(idx){	// LIVE 스케쥴 클릭
+		viewEvent:function(idx){	// LIVE 스케줄 클릭
 			arange.delJsPlayer();
 			$('#defaultPlayer').css('display','block');
 			$('#liveJsPlayer').css('display','none');
@@ -883,6 +885,7 @@ var calClick={
     	 					arange.vodImgFactory(value);
     	 				});
     	 				$('#slideShow').append('<li onclick="common.selectRepoSource(\'schedule\');"><a class="add"><img src="/ibsImg/img_add.png" alt="추가" style="cursor:pointer;"></a></li>');
+    	 				slide.init();
     	 			}
     	 			if(data.forceLive){
     	 				$('#forceLive').prop("checked",true);

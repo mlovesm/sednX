@@ -13,7 +13,7 @@
 	<c:otherwise>
 		<c:forEach items="${lists}" var="list" varStatus="loop">
 			<div class="img_box" id="layer_${list.idx}" style="background: url('http://${sednIp}:${tomcatPort}${pageContext.request.contextPath}${list.photo_path}') no-repeat center; background-size: cover;">
-				<label for="check_${list.idx}" style="display: contents; cursor: pointer;">
+				<label for="check_${list.idx}" class="label_photoCheck" style="display: contents; cursor: pointer;">
 					<input class="pull-left m-l-5 photoCheck" id="check_${list.idx}" type="checkbox" value="${list.idx}"/>
 				</label>
 				<div class="imgPopup" id="${list.idx}" style="height:100%;"></div>
@@ -136,9 +136,11 @@ if($('#requestRepo').val()=='media'&&$('#repoOrder').val()==""){
 		}
 		$("#selectedIdxs").val(arr);
 	});
-}else{
+}else{	// CONTENTS > 추가 > 저장소에서 썸네일 가져오기
 	var arr=[];
 	$('.photoCheck').css('display','block');
+	$('.label_photoCheck').css({'display':'block', 'height': '100%'});
+	
 	$('.photoCheck').click(function(){
 		if ($(this).is(":checked") == true) {
 			arr.push($(this).val());

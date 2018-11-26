@@ -1817,7 +1817,7 @@ $(function(){
     	  		}
 	            $('#repoType').empty();
 	            $('#repoType').html(html);
-		  	}else if($('#requestRepo').val()=="media"){
+		  	}else if($('#requestRepo').val()=="media"){	// CONTENTS 추가 > 저장소에서 썸네일 가져오기
 		  		html+='<option value="PHOTO">PHOTO</option>';
 		  		$('#repoType').empty();
 		  		$('#repoType').html(html);
@@ -2011,7 +2011,7 @@ $(function(){
 		   		slide.init();
 		   		$('#repositoryList').modal('hide');
 		   		
-		}else if($('#requestRepo').val()=="media"){
+		}else if($('#requestRepo').val()=="media"){	// CONTENTS > 추가 > 저장소에서 썸네일 가져오기 > 확인
 			//저장소 미디어일 경우 사진 추가 라이브 일경우 
 			if($('#tempPhotoList').val()!=""){
 				//이미지 옮겨놓는다. 
@@ -2095,7 +2095,6 @@ $(function(){
 						"idx": $("#vodRepo").val()
 					},
 					success : function(result) {
-						console.log(result.map);
 						if (result.msg) {
 							$("#board_title").val(result.map.vod_title);
 							$("#board_content").val(result.map.vod_content);

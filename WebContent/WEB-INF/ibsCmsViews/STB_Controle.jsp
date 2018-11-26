@@ -217,6 +217,15 @@ pageEncoding="UTF-8"%>
 		$('.menuLi').removeClass('active');
 		$('#ottMenuLi').addClass('active');
 		contents.list('');
+		
+		$('#mainSearch').keyup(function(key){
+			var regExp =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+			var retString=$('#mainSearch').val();
+			if(regExp.test(retString)){
+				$('#mainSearch').val(retString.replace(regExp,""));	
+			}
+		});
+		
 		$("#mainSearch").keydown(function(key) {
 			if (key.keyCode == 13) {
 				if ($("#mainSearch").val().length == 0) {
@@ -226,6 +235,7 @@ pageEncoding="UTF-8"%>
 				}
 			}
 		});
+		
 		$("#contentForm").click(function() {
 			contents.contentForm($("#sort").val(), "insert", "0");
 		});
