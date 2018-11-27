@@ -62,7 +62,7 @@ pageEncoding="UTF-8"%>
               	연결 대수: <span class="on-list"></span> &nbsp;/
               	VOD 방송중: <span class="vod-list"></span> &nbsp;/
               	LIVE 방송중: <span class="live-list"></span> &nbsp;/
-              	미연결 대수: <span class="on-list"></span>
+              	미연결 대수: <span class="off-list"></span>
               </div>
           	</div>
             <!-- CONTENTS START -->

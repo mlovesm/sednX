@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import hanibal.ibs.dao.IbsWebApiDAO;
@@ -118,15 +119,25 @@ public class StatisticsController {
 	
 	// VOD 통계
 	@RequestMapping("/statistics/vod/VODListData/{categoryIdx}")
-	public void getVODListData(@PathVariable String categoryIdx,HttpServletResponse res) throws IOException, JSONException {
+	public void getVODListData(@RequestParam(required=false) Map<String, Object> paramMap,  @PathVariable String categoryIdx,HttpServletResponse res) throws IOException, JSONException {
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonContents = new JSONObject();
-				
-		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", categoryIdx);
+		
+		System.out.println("paramMap="+paramMap);
+		int page= Integer.parseInt(paramMap.get("page").toString());
+		int perPage= Integer.parseInt(paramMap.get("perPage").toString());
+		int pageStart= (page - 1) * perPage;
+		int pageEnd= perPage;
+		
+		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", categoryIdx, pageStart, pageEnd);
+		int totalCount= statisticsDAO.totalCountRecords();
+		System.out.println("totalCount="+totalCount);
+		
 		res.setContentType("application/json; charset=UTF-8");
 		jsonContents.put("contents", statisticsVODList);
 		
 		jsonObject.put("result", true);
+		jsonObject.put("totalCount", totalCount);
 		jsonObject.put("data", jsonContents);
 		
 		res.getWriter().print(mapper.writeValueAsString(jsonObject));
@@ -143,14 +154,20 @@ public class StatisticsController {
 		
 		String childIdx = String.valueOf(dataMap.get("childIdx"));
 		System.out.println("dataMap= "+dataMap);
-		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", childIdx);
+		int page= 1;
+		int perPage= 10;
+		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", childIdx, page, perPage);
+		int totalCount= statisticsDAO.totalCountRecords();
+		System.out.println("totalCount="+totalCount);
+		
 		res.setContentType("application/json; charset=UTF-8");
-		jsonPagination.put("page", 1);
-		jsonPagination.put("totalCount", statisticsVODList.size());
+		jsonPagination.put("page", page);
+		jsonPagination.put("totalCount", totalCount);
 		jsonContents.put("contents", statisticsVODList);
 		jsonContents.put("pagination", jsonPagination);
 		
 		jsonObject.put("result", true);
+		jsonObject.put("totalCount", totalCount);
 		jsonObject.put("data", jsonContents);
 		
 		mv.addObject("response", jsonObject);
@@ -186,7 +203,6 @@ public class StatisticsController {
 		
 		String treeMenu="";
 		List<AdvenceTree> lists=webApiDao.getAdvenceTree(order);
-		System.out.println("tree list="+lists);
 		if(order.equals("live")) {
 			selected_node_id=lists.get(1).getId();
 		}

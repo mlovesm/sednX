@@ -71,9 +71,12 @@ public class StatisticsDAO {
 		sqlTemplate.insert("insertVODHistory",commandMap);
 	}
 	
-	
+	public int totalCountRecords() {
+		int totalCountRecords= sqlTemplate.selectOne("selectTotalRecords");
+		return totalCountRecords;
+	}	
 
-	public List<HashMap<String, Object>> statisticsVODList(String searchWord, String childIdx) {
+	public List<HashMap<String, Object>> statisticsVODList(String searchWord, String childIdx, int pageStart, int pageEnd) {
 		Map<String,Object> map= new HashMap<String,Object>();
 		String eachFlag="";
 		if(childIdx.length()!=0) {
@@ -81,6 +84,8 @@ public class StatisticsDAO {
 			eachFlag="Y";
 			map.put("childIdxArr", childIdxArr);
 		}
+		map.put("pageStart", pageStart);
+		map.put("pageEnd", pageEnd);
 		map.put("searchWord", searchWord);
 		map.put("eachFlag",eachFlag);
 		

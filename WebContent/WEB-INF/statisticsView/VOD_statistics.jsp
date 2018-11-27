@@ -61,8 +61,7 @@ pageEncoding="UTF-8"%>
 					<button class="disapp">삭제</button>
 				</div> -->
 				
-				<div id="grid"></div>			
-				<!-- <div id="pagination1" class="tui-pagination"></div> -->
+				<div id="grid"></div>
 			</div>
 		</div>
 	</div> <!-- //contents_container -->
@@ -139,8 +138,8 @@ var grid = new tui.Grid({
     scrollX: false,
     scrollY: 'auto',
     virtualScrolling: true,
-    //pagination: true,
-    bodyHeight: 650,
+    pagination: true,
+    bodyHeight: 350,
 /*     
     rowHeaders: [
     	{ type: 'checkbox' }
@@ -158,9 +157,36 @@ var grid = new tui.Grid({
         { title: '카테고리', name: 'category_name', width: 200, align: 'center' },
         { title: '영상시간', name: 'vod_play_time', width: 100, align: 'center' },
         { title: '등록일', name: 'reg_dt', width: 100, align: 'center', sortable: true },
-        { title: '총 조회수', name: 'vod_title_link', width: 150, align: 'right', sortable: true }
+        { title: '총 조회수', name: 'idx', width: 150, align: 'right', sortable: true }
     ],
 });
+
+var options = {
+		  totalItems: 100,
+		  itemsPerPage: 5,
+		  visiblePages: 10,
+		  page: 1,
+		  centerAlign: false,
+		  firstItemClassName: 'tui-first-child',
+		  lastItemClassName: 'tui-last-child',
+		  template: {
+		      page: '<a href="#" class="tui-page-btn">{{page}}</a>',
+		      currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
+		      moveButton:
+		          '<a href="#" class="tui-page-btn tui-{{type}}">' +
+		              '<span class="tui-ico-{{type}}">{{type}}</span>' +
+		          '</a>',
+		      disabledMoveButton:
+		          '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
+		              '<span class="tui-ico-{{type}}">{{type}}</span>' +
+		          '</span>',
+		      moreButton:
+		          '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
+		              '<span class="tui-ico-ellip">...</span>' +
+		          '</a>'
+		   }
+		};
+
 
 tui.Grid.applyTheme('striped', {
     outline: {
@@ -175,7 +201,7 @@ tui.Grid.applyTheme('striped', {
 grid.use('Net', {
     readDataMethod: 'GET',
     initialRequest: true,
-    //perPage: 2,
+    perPage: 10,
     api: {
         'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData/"+$('#categoryIdx').val(),
         'createData': './api/create',
@@ -188,13 +214,20 @@ grid.use('Net', {
 });
 
 
-var pagination = grid.getPagination(
-	{
-	    totalItems: 500,
-	    //itemsPerPage: 10,
-	    visiblePages: 5
-	}
-);
+
+//var container = document.getElementById('pagination1');
+//var pagination = new tui.Pagination(container, options);
+var pagination = grid.getPagination();
+
+pagination.on('beforeMove', function(evt) {
+    var ePage = evt.page;
+    console.log(ePage);
+});
+
+pagination.on('afterMove', function(evt) {
+    var ePage = evt.page;
+    console.log(ePage);
+});
 
 /* var grid_net = grid.getAddOn('Net');
 
@@ -222,14 +255,9 @@ grid.on('beforeRequest', function(data) {
 }).on('errorResponse', function(data) {
 	console.log('errorResponse', data);
 });
-/* 
-pagination.on('beforeMove', function(eventData) {
-    return confirm('Go to page ' + eventData.page + '?');
-});
-pagination.on('afterMove', function(eventData) {
-    alert('The current page is ' + eventData.page);
-});
- */
+
+
+
 grid.on('click', function(ev) {
 	var target = ev.nativeEvent.target;
 	var obj = grid.getRow(ev.rowKey);
@@ -260,9 +288,9 @@ $(document).ready(function() {
 		//net.download('excel');
 		//net.reloadData();
 		//net.readData(2, {"test":"test"}, true);
-		var options = {
-			'childIdx': $('#categoryIdx').val()
-		};
+			
+
+
 		//net.request('readData', options);
 		//net.readData(1, {"childIdx":$('#categoryIdx').val()}, true);
 	});

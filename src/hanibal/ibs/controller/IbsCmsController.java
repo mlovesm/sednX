@@ -243,7 +243,6 @@ public class IbsCmsController {
 			start=0;
 			end = totalRecordCount;
 			String innerData= req.getParameter("innerData");
-			System.out.println("innerData= "+req.getParameter("innerData"));
 			List<VodDTO> lists=ibsCmsDao.vodList(searchWord,childIdx,start,end, innerData);
 			for(int i=0;i<lists.size();i++) {
 				lists.get(i).setMain_thumbnail("/REPOSITORY/THUMBNAIL"+HanibalWebDev.getDataPath(lists.get(i).getMain_thumbnail())+lists.get(i).getMain_thumbnail());

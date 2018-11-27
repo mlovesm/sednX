@@ -50,13 +50,10 @@
     
 	<!-- VOD list -->
 	<select id="statisticsVODList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
-		SELECT
+		SELECT SQL_CALC_FOUND_ROWS
 		  a.idx,
 		  a.vod_path,
 		  a.vod_title,
-		  <![CDATA[
-		  '<a href="test.do?idx='+a.idx+'" class="norgrid" title="'+ a.vod_title +'">'+ a.vod_title +'</a>' as vod_title_link,
-		  ]]>
 		  a.vod_play_time,
 		  DATE_FORMAT(a.reg_dt,'%Y-%m-%d') as reg_dt,
 		  a.reg_id,
@@ -79,6 +76,7 @@
 			or (select category_name from tb_vod_category where idx=a.category_idx) like concat('%',#{searchWord},'%') 
 			or vod_keyword like concat('%',#{searchWord},'%')) 
 		</if>
+		limit #{pageStart}, #{pageEnd}
 	</select>
 	
 	<select id="statisticsVODDetail" resultType="java.util.HashMap" parameterType="java.util.HashMap">
@@ -144,5 +142,8 @@
 		ORDER BY a.Date
 	</select>
 
+    <select id="selectTotalRecords" resultType="int">
+        SELECT FOUND_ROWS() AS total_count
+    </select>
     
 </mapper>

@@ -8,7 +8,7 @@
 <html>
 <!--[if IE 9 ]><html class="ie9"><![endif]-->
 <head>
-<title>SEDN ORGIN v1.0 Management System</title>
+<title>SEDN ORGIN v1.0 Statistics System</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 	<meta name="format-detection" content="telephone=no">
 	<meta charset="UTF-8">

@@ -134,9 +134,10 @@ var menuTree=(function(){
 			//net.download('excel');
 			//net.reloadData();
 			grid.setData(data.response.data.contents);
- 			//pagination.setTotalItems(data.response.data.pagination.total);
+			console.log('total', data.totalCount);
+ 			pagination.setTotalItems(data.totalCount);
             //pagination._currentPage = data.response.data.pagination.page;
-            //pagination.reset();
+            pagination.reset();
 			//net.readData(1, {"childIdx": childIdx}, false);
 		},
 		error:exception.ajaxException
