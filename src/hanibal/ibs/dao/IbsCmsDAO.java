@@ -476,13 +476,6 @@ public class IbsCmsDAO {
 		int affectcount=sqlTemplate.insert("insertSchedule",commandMap);
 		return affectcount;
 	}
-	//board_repository 삭제 전용 by MGS
-	public int deleteContents(int[] checkValArr) {
-		Map<String,Object> map= new HashMap<String,Object>();
-		map.put("checkValArr",checkValArr);
-		int affectcount=sqlTemplate.delete("boardDeleteContents",map);
-		return affectcount;
-	}	
 	public int deleteContents(String order, int[] checkValArr) {
 		Map<String,Object> map= new HashMap<String,Object>();
 		String repoTable=HanibalWebDev.targetRepoTable(order);
@@ -491,6 +484,17 @@ public class IbsCmsDAO {
 		int affectcount=sqlTemplate.update("deleteContents",map);
 		return affectcount;
 	}
+	
+	//삭제 전용 by MGS
+	public int deleteRealData(String order, int[] checkValArr) {
+		Map<String,Object> map= new HashMap<String,Object>();
+		String repoTable=HanibalWebDev.targetRepoTable(order);
+		map.put("repoTable", repoTable);
+		map.put("checkValArr",checkValArr);
+		int affectcount=sqlTemplate.delete("deleteRealData",map);
+		return affectcount;
+	}	
+	
 	public int getVodTopIdx(String file ) {
 		int vodTopIdx=sqlTemplate.selectOne("getVodTopIdx",file);
 		return vodTopIdx;

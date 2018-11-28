@@ -142,8 +142,19 @@
 		ORDER BY a.Date
 	</select>
 
-    <select id="selectTotalRecords" resultType="int">
-        SELECT FOUND_ROWS() AS total_count
+    <select id="selectTotalRecords" resultType="int" parameterType="java.util.HashMap">
+		SELECT <!-- SQL_CALC_FOUND_ROWS -->
+		  COUNT(a.idx) AS total_count
+		FROM 
+		tb_vod_repository a
+		LEFT OUTER JOIN tb_content_category b ON a.category_idx=b.idx
+		WHERE del_flag='N'
+		<if test='eachFlag!=""'>
+	  		AND b.idx in
+  			<foreach collection="childIdxArr" item="type" index="index"  open="(" close=")" separator=",">
+        		#{type}
+     		</foreach>
+  		</if>
     </select>
     
 </mapper>

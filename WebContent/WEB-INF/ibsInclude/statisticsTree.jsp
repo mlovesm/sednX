@@ -119,35 +119,35 @@ var menuTree=(function(){
 		ref.edit(sel, sel.original.name);
 	};
 
- var getVODListData=function(childIdx){
-	$.ajax({
-		url:"${pageContext.request.contextPath}/statistics/vod/VODListData",
-		type:'post',
-		data: {
-			"childIdx": childIdx
-		},
-		async:false,
-		success:function(data){
-			console.log(data.response.data);
-			
-			var net = grid.getAddOn('Net');
-			//net.download('excel');
-			//net.reloadData();
-			grid.setData(data.response.data.contents);
-			console.log('total', data.totalCount);
- 			pagination.setTotalItems(data.totalCount);
-            //pagination._currentPage = data.response.data.pagination.page;
-            pagination.reset();
-			//net.readData(1, {"childIdx": childIdx}, false);
-		},
-		error:exception.ajaxException
-	});
- };
+	var getVODListData=function(childIdx){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/statistics/vod/VODListData",
+			type:'POST',
+			data: {
+				"childIdx": childIdx
+			},
+			async:false,
+			success:function(data){
+				console.log(data);
+				
+				var net = grid.getAddOn('Net');
+				//net.download('excel');
+				//net.reloadData();
+				//net.readData(1, {"childIdx": childIdx}, false);
+				
+				grid.setData(data.contents);
+				console.log('total', data.totalCount);
+	 			pagination.setTotalItems(data.totalCount);
+	            pagination.reset();
+			},
+			error:exception.ajaxException
+		});
+	};
 
- return{
+return{
 	renameGroup:renameGroup,
 	getVODListData:getVODListData
- };
+};
 }());
 
 </script>

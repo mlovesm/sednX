@@ -71,8 +71,18 @@ public class StatisticsDAO {
 		sqlTemplate.insert("insertVODHistory",commandMap);
 	}
 	
-	public int totalCountRecords() {
-		int totalCountRecords= sqlTemplate.selectOne("selectTotalRecords");
+	public int totalCountRecords(String searchWord, String childIdx) {
+		Map<String,Object> map= new HashMap<String,Object>();
+		String eachFlag="";
+		if(childIdx.length()!=0) {
+			int childIdxArr[]=HanibalWebDev.StringToIntArray(childIdx);
+			eachFlag="Y";
+			map.put("childIdxArr", childIdxArr);
+		}
+		map.put("searchWord", searchWord);
+		map.put("eachFlag",eachFlag);
+		
+		int totalCountRecords= sqlTemplate.selectOne("selectTotalRecords", map);
 		return totalCountRecords;
 	}	
 

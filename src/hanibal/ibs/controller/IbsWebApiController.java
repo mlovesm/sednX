@@ -318,12 +318,23 @@ public class IbsWebApiController {
 		res.getWriter().print(mapper.writeValueAsString(msg));
 	}
 	@RequestMapping("/api/seqKeyList")
-	public void seqKeyList(HttpServletResponse res) throws JsonGenerationException, JsonMappingException, IOException {
+	public void seqKeyList(HttpServletResponse res) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("dbProperties",dbProperties);
 		map.put("repositoryPath",repositoryPath);
 		map.put("mediaIp",mediaIp);
-		res.getWriter().print(mapper.writeValueAsString(map));
+		try {
+			res.getWriter().print(mapper.writeValueAsString(map));
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@RequestMapping("/api/jstree/{order}")
 	public String jstree(@PathVariable String order,

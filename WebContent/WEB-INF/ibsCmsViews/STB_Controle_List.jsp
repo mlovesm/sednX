@@ -93,7 +93,6 @@ $(document).ready(function() {
 		</c:if>
 	</c:forEach>
 
-	console.log(list);
 	$(".total-info > .on-list").text(list.reduce((pre, cur) => (cur !== 1) ? ++pre : pre, 0));
 	$(".total-info > .off-list").text(list.reduce((pre, cur) => (cur === 1) ? ++pre : pre, 0));
 	$(".total-info > .vod-list").text(list.reduce((pre, cur) => (cur === 3) ? ++pre : pre, 0));

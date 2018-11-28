@@ -95,15 +95,6 @@ var menuJs={
 				},
 				error : exception.ajaxException
 			});
-		},
-		getData: function(idx){
-			$.ajax({
-				url : "${pageContext.request.contextPath}/statistics/vod/VODListData/"+idx,
-				async : false,
-				success : function(data) {
-					console.log(data);
-				},
-			});
 		}
 
 };
@@ -161,33 +152,6 @@ var grid = new tui.Grid({
     ],
 });
 
-var options = {
-		  totalItems: 100,
-		  itemsPerPage: 5,
-		  visiblePages: 10,
-		  page: 1,
-		  centerAlign: false,
-		  firstItemClassName: 'tui-first-child',
-		  lastItemClassName: 'tui-last-child',
-		  template: {
-		      page: '<a href="#" class="tui-page-btn">{{page}}</a>',
-		      currentPage: '<strong class="tui-page-btn tui-is-selected">{{page}}</strong>',
-		      moveButton:
-		          '<a href="#" class="tui-page-btn tui-{{type}}">' +
-		              '<span class="tui-ico-{{type}}">{{type}}</span>' +
-		          '</a>',
-		      disabledMoveButton:
-		          '<span class="tui-page-btn tui-is-disabled tui-{{type}}">' +
-		              '<span class="tui-ico-{{type}}">{{type}}</span>' +
-		          '</span>',
-		      moreButton:
-		          '<a href="#" class="tui-page-btn tui-{{type}}-is-ellip">' +
-		              '<span class="tui-ico-ellip">...</span>' +
-		          '</a>'
-		   }
-		};
-
-
 tui.Grid.applyTheme('striped', {
     outline: {
         //border: '#d3d3d3',
@@ -199,11 +163,12 @@ tui.Grid.applyTheme('striped', {
 });
 
 grid.use('Net', {
-    readDataMethod: 'GET',
+    readDataMethod: 'POST',
     initialRequest: true,
     perPage: 10,
+    categoryIdx: $("#categoryIdx").val(),
     api: {
-        'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData/"+$('#categoryIdx').val(),
+        'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData",
         'createData': './api/create',
         'updateData': './api/update',
         'deleteData': './api/delete',
@@ -283,6 +248,7 @@ grid.on('uncheck', function(ev) {
 });
 
 $(document).ready(function() {
+	menuTree.getVODListData($('#categoryIdx').val());
 	$(".btn-search").bind('click', function(){
 		var net = grid.getAddOn('Net');
 		//net.download('excel');

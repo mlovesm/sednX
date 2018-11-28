@@ -579,16 +579,16 @@ public class IbsCmsController {
 				map.put("result", "fail");
 			}
 		}
-		else if(order.equals("board")) {
-			affectcount=ibsCmsDao.deleteContents(HanibalWebDev.StringToIntArray(checkValArr));
+		else if(order.equals("vod")||order.equals("stream")||order.equals("file")||order.equals("photo")) {
+			affectcount=ibsCmsDao.deleteContents(order,HanibalWebDev.StringToIntArray(checkValArr));
 			if(affectcount>0) {
 				map.put("result","success");
 			}else{
 				map.put("result", "fail");
 			}
 		}
-		else if(order.equals("vod")||order.equals("stream")||order.equals("file")||order.equals("photo")||order.equals("stb-controle")) {
-			affectcount=ibsCmsDao.deleteContents(order,HanibalWebDev.StringToIntArray(checkValArr));
+		else if(order.equals("board")||order.equals("stb-controle")) {
+			affectcount=ibsCmsDao.deleteRealData(order, HanibalWebDev.StringToIntArray(checkValArr));
 			if(affectcount>0) {
 				map.put("result","success");
 			}else{
