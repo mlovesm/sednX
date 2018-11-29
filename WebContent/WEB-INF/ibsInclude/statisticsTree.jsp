@@ -135,7 +135,7 @@ var menuTree=(function(){
 				//net.reloadData();
 				//net.readData(1, {"childIdx": childIdx}, false);
 				
-				grid.setData(data.contents);
+				grid.setData(data.response.data.contents);
 				console.log('total', data.totalCount);
 	 			pagination.setTotalItems(data.totalCount);
 	            pagination.reset();

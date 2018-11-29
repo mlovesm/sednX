@@ -118,36 +118,37 @@ public class StatisticsController {
 	}
 	
 	// VOD 통계
-//	@RequestMapping("/statistics/vod/VODListData/{categoryIdx}")
-//	public void getVODListData(@RequestParam(required=false) Map<String, Object> paramMap,  @PathVariable String categoryIdx,HttpServletResponse res) throws IOException, JSONException {
-//		JSONObject jsonObject = new JSONObject();
-//		JSONObject jsonContents = new JSONObject();
-//		
-//		System.out.println("paramMap="+paramMap);
-//		int page= 1;
-//		int perPage= 10;
-//		if(paramMap.get("page")!=null) {
-//			page= Integer.parseInt(paramMap.get("page").toString());
-//		}
-//		if(paramMap.get("perPage")!=null) {
-//			perPage= Integer.parseInt(paramMap.get("perPage").toString());
-//		}
-//		int pageStart= (page - 1) * perPage;
-//		int pageEnd= perPage;
-//		
-//		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", categoryIdx, pageStart, pageEnd);
-//		int totalCount= statisticsDAO.totalCountRecords("", categoryIdx);
-//		System.out.println("totalCount="+totalCount);
-//		
-//		res.setContentType("application/json; charset=UTF-8");
-//		jsonContents.put("contents", statisticsVODList);
-//		
-//		jsonObject.put("result", true);
-//		jsonObject.put("totalCount", totalCount);
-//		jsonObject.put("data", jsonContents);
-//		
-//		res.getWriter().print(mapper.writeValueAsString(jsonObject));
-//	}
+	@RequestMapping(value="/statistics/vod/VODListData", method=RequestMethod.GET)
+	public void getVODListData(@RequestParam(required=false) Map<String, Object> paramMap, HttpServletResponse res) throws IOException, JSONException {
+		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonContents = new JSONObject();
+		
+		System.out.println("paramMap="+paramMap);
+		String categoryIdx= paramMap.get("categoryIdx").toString();
+		int page= 1;
+		int perPage= 10;
+		if(paramMap.get("page")!=null) {
+			page= Integer.parseInt(paramMap.get("page").toString());
+		}
+		if(paramMap.get("perPage")!=null) {
+			perPage= Integer.parseInt(paramMap.get("perPage").toString());
+		}
+		int pageStart= (page - 1) * perPage;
+		int pageEnd= perPage;
+		
+		List<HashMap<String,Object>> statisticsVODList=statisticsDAO.statisticsVODList("", categoryIdx, pageStart, pageEnd);
+		int totalCount= statisticsDAO.totalCountRecords("", categoryIdx);
+		System.out.println("totalCount="+totalCount);
+		
+		res.setContentType("application/json; charset=UTF-8");
+		jsonContents.put("contents", statisticsVODList);
+		
+		jsonObject.put("result", true);
+		jsonObject.put("totalCount", totalCount);
+		jsonObject.put("data", jsonContents);
+		
+		res.getWriter().print(mapper.writeValueAsString(jsonObject));
+	}
 	
 	@RequestMapping(value="/statistics/vod/VODListData", method=RequestMethod.POST)
 	public ModelAndView getVODListDataPOST(HttpServletRequest request, HttpServletResponse res) throws IOException, JSONException {
@@ -158,8 +159,7 @@ public class StatisticsController {
 		
 		ModelAndView mv = new ModelAndView("jsonView");
 		
-//		String childIdx = String.valueOf(dataMap.get("childIdx"));
-		String childIdx = "237";
+		String childIdx = String.valueOf(dataMap.get("childIdx"));
 		System.out.println("dataMap= "+dataMap);
 		int page= 1;
 		int perPage= 10;

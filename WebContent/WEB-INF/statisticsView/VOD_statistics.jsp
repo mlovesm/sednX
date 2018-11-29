@@ -163,12 +163,12 @@ tui.Grid.applyTheme('striped', {
 });
 
 grid.use('Net', {
-    readDataMethod: 'POST',
+    readDataMethod: 'GET',
     initialRequest: true,
     perPage: 10,
-    categoryIdx: $("#categoryIdx").val(),
+    //categoryIdx: $("#categoryIdx").val(),
     api: {
-        'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData",
+        'readData': "${pageContext.request.contextPath}/statistics/vod/VODListData?categoryIdx="+$("#treeIdx").val(),
         'createData': './api/create',
         'updateData': './api/update',
         'deleteData': './api/delete',
@@ -206,6 +206,7 @@ grid_net.readData({
 
 // Bind event handlers
 grid.on('beforeRequest', function(data) {
+	
 	console.log('beforeRequest', data);
 	
 }).on('response', function(data) {
@@ -248,7 +249,6 @@ grid.on('uncheck', function(ev) {
 });
 
 $(document).ready(function() {
-	menuTree.getVODListData($('#categoryIdx').val());
 	$(".btn-search").bind('click', function(){
 		var net = grid.getAddOn('Net');
 		//net.download('excel');
